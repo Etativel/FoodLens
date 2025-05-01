@@ -23,7 +23,7 @@ def home():
 
 
 # load the current mode
-MODEL_DIR = "../food" 
+MODEL_DIR = "../../model" 
 model = AutoModelForImageClassification.from_pretrained(MODEL_DIR)
 processor = AutoImageProcessor.from_pretrained(MODEL_DIR)
 model.eval()

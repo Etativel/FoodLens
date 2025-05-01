@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from transformers import AutoModelForImageClassification, AutoImageProcessor
 from PIL import Image
 import torch

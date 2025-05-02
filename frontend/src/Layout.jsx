@@ -1,7 +1,13 @@
 import "./Layout.css";
-
+import BottomNavigation from "./components/Navigation/BottomNavigation";
+import Home from "./pages/Home/Home";
 function Layout() {
-  return <h1>Hello</h1>;
+  return (
+    <div class="h-screen relative overflow-hidden">
+      <Home />
+      <BottomNavigation />
+    </div>
+  );
 }
 
 export default Layout;

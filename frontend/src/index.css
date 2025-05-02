@@ -4,6 +4,14 @@ html {
   background-color: black;
 }
 
+@layer base {
+  *,
+  *::before,
+  *::after {
+    @apply box-border;
+  }
+}
+
 /* hide-scrollbar utility */
 .hide-scrollbar {
   /* Firefox */

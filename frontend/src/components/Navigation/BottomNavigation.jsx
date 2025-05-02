@@ -5,7 +5,7 @@ function BottomNavigation() {
   const navigate = useNavigate;
 
   return (
-    <div className=" flex rounded-t-3xl shadow h-20 justify-center gap-5 z-50 pt-2  absolute bottom-0 bg-white w-full">
+    <div className=" flex rounded-t-3xl shadow h-20 justify-center gap-5 z-50 pt-2  absolute bottom-0 bg-white w-full ">
       <div>
         <button
           onClick={() => navigate("/hello")}

@@ -1,10 +1,10 @@
 import "./Layout.css";
 import BottomNavigation from "./components/Navigation/BottomNavigation";
-import Home from "./pages/Home/Home";
+import { Outlet } from "react-router-dom";
 function Layout() {
   return (
-    <div class="h-screen relative overflow-hidden">
-      <Home />
+    <div className="h-screen relative overflow-hidden">
+      <Outlet />
       <BottomNavigation />
     </div>
   );

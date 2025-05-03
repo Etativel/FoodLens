@@ -3,19 +3,22 @@ import SearchBar from "../../components/SearchBar/SearchBard";
 function Home() {
   return (
     <div className="flex flex-col  h-screen">
-      <div className="flex flex-col bg-blue-600 sticky z-10 top-0 h-30 justify-end ">
-        <div className="h-40 w-40 transform -translate-y-20 translate-x-6 bg-blue-200 opacity-40 absolute right-0 top-0 rounded-full"></div>
-        <div className="h-25 w-25 transform translate-y-5 translate-x-15 bg-blue-200 opacity-40 absolute right-0 top-0 rounded-full"></div>
-
+      <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-20 justify-end ">
+        {/* <div className="h-40 w-40 transform -translate-y-20 translate-x-6 bg-blue-200 opacity-40 absolute right-0 top-0 rounded-full"></div>
+        <div className="h-25 w-25 transform translate-y-5 translate-x-15 bg-blue-200 opacity-40 absolute right-0 top-0 rounded-full"></div> */}
+        <div className="bg-neutral-800 z-10 mb-auto flex justify-between">
+          <div>Location</div>
+          <div>Lang</div>
+        </div>
         <div className="transform translate-y-1/2 ">
           <SearchBar />
         </div>
       </div>
 
-      <div className=" flex-1 overflow-y-auto bg-white [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
+      <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col gap-1 pb-20">
-          <div className="flex justify-evenly mt-16 mb-16">
-            <div className="flex flex-col justify-center items-center h-20 w-24 bg-white text-blue-500 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
+          <div className="flex justify-evenly mt-15 mb-10">
+            <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-blue-500 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -31,8 +34,23 @@ function Home() {
 
               <p className="font-semibold text-md">Scan</p>
             </div>
+            <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-blue-500 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="h-8 w-8 fill-current"
+              >
+                <path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />
+                <path
+                  fillRule="evenodd"
+                  d="M9.344 3.071a49.52 49.52 0 0 1 5.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 0 0 1.11-.71l.822-1.315a2.942 2.942 0 0 1 2.332-1.39ZM6.75 12.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0Zm12-1.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
+                  clipRule="evenodd"
+                />
+              </svg>
 
-            <div className="flex flex-col justify-center items-center h-20 w-24 bg-white text-blue-500 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
+              <p className="font-semibold text-md">Calories</p>
+            </div>
+            <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-blue-500 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -61,11 +79,167 @@ function Home() {
               <p className="font-semibold text-md">Scan</p>
             </div> */}
           </div>
-          <div className="h-24 bg-red-400">a</div>
-          <div className="h-24 bg-red-400">a</div>
-          <div className="h-24 bg-red-400">a</div>
+          <div className=" mx-3 flex flex-col ">
+            <span className="text-lg font-semibold text-white">
+              Trending Recipes
+            </span>
+            <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 ">
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
 
-          <div className="h-20 bg-yell">asdfghjg</div>
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className=" mx-3 flex flex-col mt-5">
+            <span className="text-lg font-semibold text-white">
+              Your Local Food
+            </span>
+            <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 ">
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className=" mx-3 flex flex-col mt-5">
+            <span className="text-lg font-semibold text-white">Topics</span>
+            <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 ">
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+              <div className="inline-block mx-1">
+                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
+                  <div className="h-full w-full">
+                    <img
+                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      alt="Fried rice"
+                      className="h-full w-full object-cover rounded-t-sm"
+                    />
+                  </div>
+
+                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
+                    Fried rice
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="h-20 bg-yellow-500 text-white">Know More</div>
         </div>
       </div>
     </div>

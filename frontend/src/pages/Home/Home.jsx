@@ -74,7 +74,7 @@ function Home() {
                 <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
                   <div className="h-full w-full">
                     <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      src="https://www.allrecipes.com/thmb/RMuYXLYcV_DKnGuYwc1x0jLrYTo=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/256306-mexican-hash-4x3-ea7194e395e34ada9378707e4b793da1.jpg"
                       alt="Fried rice"
                       className="h-full w-full object-cover rounded-t-sm"
                     />
@@ -180,7 +180,7 @@ function Home() {
                 <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
                   <div className="h-full w-full">
                     <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
+                      src="https://www.allrecipes.com/thmb/FmMHiogj-CWhU1lY4iXTyWeVmEQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699652-strawberry-banana-blended-baked-oats-4x3-58bc4afb95364c8da217c3bec2d57b4a.jpg"
                       alt="Fried rice"
                       className="h-full w-full object-cover rounded-t-sm"
                     />

@@ -10,6 +10,7 @@ import More from "./pages/More/More.jsx";
 import Calories from "./pages/Calories/Calories.jsx";
 import Result from "./pages/Result/Result.jsx";
 import Layout from "./Layout.jsx";
+import Processing from "./components/Processing/Processing.jsx";
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 
 const router = createBrowserRouter([
@@ -17,29 +18,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Onboarding />,
   },
+  { path: "/results", element: <Result /> },
   {
     element: <Layout />,
     children: [
-      {
-        path: "/home",
-        element: <Home />,
-      },
-      {
-        path: "/calories",
-        element: <Calories />,
-      },
-      {
-        path: "/my-food",
-        element: <MyFood />,
-      },
-      {
-        path: "/more",
-        element: <More />,
-      },
-      {
-        path: "/result",
-        element: <Result />,
-      },
+      { path: "/home", element: <Home /> },
+      { path: "/calories", element: <Calories /> },
+      { path: "/my-food", element: <MyFood /> },
+      { path: "/more", element: <More /> },
     ],
   },
 ]);

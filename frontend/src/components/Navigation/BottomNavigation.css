@@ -1,0 +1,15 @@
+.fixed-bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: auto;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background-color: rgb(38, 38, 38);
+  transform: translateZ(0);
+  will-change: transform;
+  border-top-left-radius: 1.5r em;
+  border-top-right-radius: 1.5rem;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaBowlFood } from "react-icons/fa6";
 import { useState, useRef, useEffect } from "react";
-
+import "./BottomNavigation.css";
 import {
   CameraIcon,
   HomeIcon,
@@ -146,13 +146,8 @@ function BottomNavigation() {
     setIsProcessing(true);
 
     try {
-      // Don't call closeCamera() here - keep the camera UI open during processing
       await predictImage(capturedImage);
-      // Navigation happens in predictImage() before we clean up
-      // The closeCamera() call was moved inside the predictImage function
-      // after navigation is triggered
     } catch (error) {
-      // If there's an error, we should close the camera and reset processing state
       console.log(error);
       setIsProcessing(false);
       closeCamera();
@@ -260,89 +255,91 @@ function BottomNavigation() {
               )}
             </div>
           ) : (
-            <div className="flex rounded-t-3xl shadow h-20 justify-center gap-5 z-50 pt-2 absolute bottom-0 bg-neutral-800 w-full">
-              <div>
-                <button
-                  onClick={() => redirection("home")}
-                  className="p-2 w-13 pt-4 flex flex-col items-center"
-                >
-                  <HomeIcon currentPage={currentPage} />
-                  <p
-                    className={`text-sm font-semibold ${
-                      currentPage === "home"
-                        ? "text-[#2b7fff]"
-                        : "text-[#8e8e8e]"
-                    }`}
+            <div className="fixed-bottom-nav">
+              <div className="flex  shadow h-20 justify-center gap-5 z-50 pt-2 absolute bottom-0 bg-neutral-800 w-full">
+                <div>
+                  <button
+                    onClick={() => redirection("home")}
+                    className="p-2 w-13 pt-4 flex flex-col items-center"
                   >
-                    Home
-                  </p>
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={() => redirection("calories")}
-                  className="p-2 w-13 pt-4 flex flex-col items-center"
-                >
-                  <CalculatorIcon currentPage={currentPage} />
-                  <p
-                    className={`text-sm font-semibold ${
-                      currentPage === "calories"
-                        ? "text-[#2b7fff]"
-                        : "text-[#8e8e8e]"
-                    }`}
+                    <HomeIcon currentPage={currentPage} />
+                    <p
+                      className={`text-sm font-semibold ${
+                        currentPage === "home"
+                          ? "text-[#2b7fff]"
+                          : "text-[#8e8e8e]"
+                      }`}
+                    >
+                      Home
+                    </p>
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={() => redirection("calories")}
+                    className="p-2 w-13 pt-4 flex flex-col items-center"
                   >
-                    Calories
-                  </p>
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={openCamera}
-                  className="p-4 border-0 rounded-full bg-blue-500"
-                >
-                  <CameraIcon />
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={() => redirection("my-food")}
-                  className="p-2 w-13 pt-4 flex flex-col items-center"
-                >
-                  <FaBowlFood
-                    className={`size-6 ${
-                      currentPage === "my-food"
-                        ? "text-[#2b7fff]"
-                        : "text-[#8e8e8e]"
-                    }`}
-                  />
-                  <p
-                    className={`whitespace-nowrap text-sm font-semibold ${
-                      currentPage === "my-food"
-                        ? "text-[#2b7fff]"
-                        : "text-[#8e8e8e]"
-                    }`}
+                    <CalculatorIcon currentPage={currentPage} />
+                    <p
+                      className={`text-sm font-semibold ${
+                        currentPage === "calories"
+                          ? "text-[#2b7fff]"
+                          : "text-[#8e8e8e]"
+                      }`}
+                    >
+                      Calories
+                    </p>
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={openCamera}
+                    className="p-4 border-0 rounded-full bg-blue-500"
                   >
-                    My Food
-                  </p>
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={() => redirection("more")}
-                  className="p-2 w-13 pt-4 flex flex-col items-center"
-                >
-                  <SquareIcon currentPage={currentPage} />
+                    <CameraIcon />
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={() => redirection("my-food")}
+                    className="p-2 w-13 pt-4 flex flex-col items-center"
+                  >
+                    <FaBowlFood
+                      className={`size-6 ${
+                        currentPage === "my-food"
+                          ? "text-[#2b7fff]"
+                          : "text-[#8e8e8e]"
+                      }`}
+                    />
+                    <p
+                      className={`whitespace-nowrap text-sm font-semibold ${
+                        currentPage === "my-food"
+                          ? "text-[#2b7fff]"
+                          : "text-[#8e8e8e]"
+                      }`}
+                    >
+                      My Food
+                    </p>
+                  </button>
+                </div>
+                <div>
+                  <button
+                    onClick={() => redirection("more")}
+                    className="p-2 w-13 pt-4 flex flex-col items-center"
+                  >
+                    <SquareIcon currentPage={currentPage} />
 
-                  <p
-                    className={`text-sm font-semibold ${
-                      currentPage === "more"
-                        ? "text-[#2b7fff]"
-                        : "text-[#8e8e8e]"
-                    }`}
-                  >
-                    More
-                  </p>
-                </button>
+                    <p
+                      className={`text-sm font-semibold ${
+                        currentPage === "more"
+                          ? "text-[#2b7fff]"
+                          : "text-[#8e8e8e]"
+                      }`}
+                    >
+                      More
+                    </p>
+                  </button>
+                </div>
               </div>
             </div>
           )}

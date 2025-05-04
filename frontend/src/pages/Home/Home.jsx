@@ -1,4 +1,5 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
+import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
 
 function Home() {
   return (
@@ -16,7 +17,7 @@ function Home() {
       </div>
 
       <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
-        <div className="flex flex-col gap-1 pb-20">
+        <div className="flex flex-col  pb-20">
           <div className="flex justify-evenly mt-15 mb-10">
             <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg
@@ -65,7 +66,7 @@ function Home() {
               <p className="font-semibold text-md">Recipes</p>
             </div>
           </div>
-          <div className=" mx-3 flex flex-col ">
+          <div className=" mx-3 flex flex-col mt-2 ">
             <span className="text-lg font-semibold text-white">
               Trending Recipes
             </span>
@@ -119,7 +120,7 @@ function Home() {
             </div>
           </div>
 
-          <div className=" mx-3 flex flex-col mt-5">
+          <div className=" mx-3 flex flex-col mt-7">
             <span className="text-lg font-semibold text-white">
               Your Local Food
             </span>
@@ -173,7 +174,7 @@ function Home() {
             </div>
           </div>
 
-          <div className=" mx-3 flex flex-col mt-5">
+          <div className="px-3 pt-3 flex flex-col mt-7 bg-neutral-800  ">
             <span className="text-lg font-semibold text-white">Topics</span>
             <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
               <div className="inline-block mx-1">
@@ -192,7 +193,7 @@ function Home() {
                 </div>
               </div>
 
-              <div className="inline-block mx-1">
+              <div className="inline-block mx-1 border-t border-t-solid border-t-1px">
                 <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
                   <div className="h-full w-full">
                     <img
@@ -224,8 +225,12 @@ function Home() {
               </div>
             </div>
           </div>
-
-          <div className="h-20 bg-yellow-500 text-white">Know More</div>
+          <div className="h-40 flex justify-center items-center bg-neutral-800 text-white flex-col border-t border-neutral-600">
+            <img className="size-15" src={foodLensIcon} alt="" />
+            <p className="text-[#8e8e8e] font-semibold">
+              The Nutritionist in Your Pocket
+            </p>
+          </div>
         </div>
       </div>
     </div>

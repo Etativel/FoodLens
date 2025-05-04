@@ -8,6 +8,7 @@ import {
   CalculatorIcon,
   SquareIcon,
   GalleryIcon,
+  CheckIcon,
 } from "../../assets/icons";
 import XIcon from "../../assets/icons/XIcon";
 
@@ -179,23 +180,26 @@ function BottomNavigation() {
               {capturedImage ? (
                 // show captured image
                 <div className="w-full h-full flex flex-col items-center justify-center">
+                  <div></div>
                   <img
                     src={capturedImage}
                     alt="Captured"
                     className=" w-full h-auto
                  max-w-[100vw] max-h-[80vh] lg:max-w-[400px]"
                   />
-                  <div className="flex gap-4 mt-4">
+                  <div className="flex gap-4 absolute bottom-0 bg-transparent w-full justify-center p-4">
                     <button
                       onClick={closeCamera}
-                      className="bg-red-500 text-white py-2 px-6 rounded-full"
+                      className="bg-transparent text-[#cccccc] font-semibold py-2 px-6 rounded-full flex gap-1"
                     >
+                      <XIcon stroke="oklch(64.5% 0.246 16.439)" size="6" />
                       Cancel
                     </button>
                     <button
                       onClick={handleSaveImage}
-                      className="bg-green-500 text-white py-2 px-6 rounded-full"
+                      className="bg-transparent text-[#cccccc] py-2 px-6 rounded-full flex gap-1"
                     >
+                      <CheckIcon stroke="oklch(72.3% 0.219 149.579)" />
                       Use Photo
                     </button>
                   </div>
@@ -207,7 +211,7 @@ function BottomNavigation() {
                     onClick={closeCamera}
                     className=" absolute top-0 right-0 bg-transparent text-white py-2 px-2 mr-2 mt-2 rounded-full"
                   >
-                    <XIcon />
+                    <XIcon stroke="#cccccc" size="6" />
                   </button>
                   <video
                     ref={videoRef}

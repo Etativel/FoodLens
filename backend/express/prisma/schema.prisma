@@ -1,15 +1,48 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+/*
+Prisma schema for FoodLens application.
+- Users can capture/upload images of food, which are sent to an ML model for prediction.
+- Each scan (FoodScan) stores image URL (Cloudinary), predicted name, timestamp, and links to user.
+- Predicted foods can be linked to a FoodInfo record containing details (recipe, calories, origin, etc.).
+- Additional arbitrary data can be stored in JSON fields.
+*/
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        String     @id @default(uuid())
+  email     String     @unique
+  name      String?
+  createdAt DateTime   @default(now())
+  scans     FoodScan[] // Relation: user scans
+}
+
+model FoodScan {
+  id                   String       @id @default(uuid())
+  user                 User         @relation(fields: [userId], references: [id])
+  userId               String
+  imageUrl             String       // Cloudinary URL
+  predictedName        String       // prediction returned by the ML model
+  predictedAt          DateTime     @default(now())
+  foodInfo             FoodInfo?    @relation(fields: [foodInfoId], references: [id])
+  foodInfoId           String?
+  extraData            Json?        // any additional model data
+}
+
+model FoodInfo {
+  id          String        @id @default(uuid())
+  name        String        @unique
+  description String?
+  recipe      String?      
+  calories    Float?
+  origin      String?
+  metadata    Json?         // additional fields (e.g., nutrients, allergens)
+  scans       FoodScan[]
+}
+

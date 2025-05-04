@@ -1,12 +1,24 @@
 from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
 from transformers import AutoModelForImageClassification, AutoImageProcessor
-from PIL import Image
+from PIL import Image, UnidentifiedImageError
 import torch
 import io
+import logging
 
-# 1️Initialize Flask
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("FoodLensAPI")
 
 app = Flask(__name__, static_folder="static")
+CORS(
+    app,
+    resources={r"/*": {"origins": [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173"
+    ]}}
+)
+
 
 @app.route('/favicon.ico')
 def favicon():
@@ -21,37 +33,63 @@ def home():
         }
     })
 
-
-# load the current mode
-MODEL_DIR = "../../model" 
+MODEL_DIR = "../../model"
+logger.info(f"Loading model from {MODEL_DIR}…")
 model = AutoModelForImageClassification.from_pretrained(MODEL_DIR)
 processor = AutoImageProcessor.from_pretrained(MODEL_DIR)
 model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
+logger.info(f"Model loaded on device: {device}")
 
-# define the endpoint
-@app.route("/predict", methods=["POST"])
+@app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
+    
+    if request.method == "OPTIONS":
+        return jsonify({"status": "ok"}), 200
+
+    # Ensure file is present
     if "file" not in request.files:
+        logger.warning("No file part in request.files")
         return jsonify({"error": "no file uploaded"}), 400
 
-    img_bytes = request.files["file"].read()
-    image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+    file = request.files["file"]
+    if file.filename == "":
+        logger.warning("Empty filename in uploaded file")
+        return jsonify({"error": "no file uploaded"}), 400
 
-    # preprocess
-    inputs = processor(images=image, return_tensors="pt").to(device)
+    # Read and validate image bytes
+    try:
+        img_bytes = file.read()
+        logger.info(f"Received file: {file.filename}, size: {len(img_bytes)} bytes, content-type: {file.content_type}")
+        image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
+    except UnidentifiedImageError:
+        logger.error("PIL cannot identify image file", exc_info=True)
+        return jsonify({"error": "cannot identify image file"}), 400
+    except Exception as e:
+        logger.exception("Unexpected error loading image")
+        return jsonify({"error": f"error loading image: {e}"}), 500
 
-    #inference
-    with torch.no_grad():
-        outputs = model(**inputs)
-        logits = outputs.logits
-        idx = logits.argmax(-1).item()
+    # Preprocess
+    try:
+        inputs = processor(images=image, return_tensors="pt").to(device)
+    except Exception as e:
+        logger.exception("Error during preprocessing")
+        return jsonify({"error": f"preprocessing failed: {e}"}), 500
 
-    # map idx to human label
-    label = model.config.id2label[idx]
-    return jsonify({"predicted_label": label})
+    # Inference
+    try:
+        with torch.no_grad():
+            outputs = model(**inputs)
+            logits = outputs.logits
+            idx = logits.argmax(-1).item()
+        label = model.config.id2label[idx]
+    except Exception as e:
+        logger.exception("Error during model inference")
+        return jsonify({"error": f"inference failed: {e}"}), 500
 
-# run the api
+    logger.info(f"Predicted label: {label}")
+    return jsonify({"predicted_label": label}), 200
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

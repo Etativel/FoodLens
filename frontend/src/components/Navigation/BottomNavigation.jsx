@@ -17,21 +17,34 @@ function BottomNavigation() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isCameraReady, setIsCameraReady] = useState(false);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
 
-  // Initialize camera when isCameraOpen changes
   useEffect(() => {
     if (!isCameraOpen || capturedImage) return;
 
+    // reset camera ready state when opening camera
+    setIsCameraReady(false);
     const ac = new AbortController();
 
     navigator.mediaDevices
       .getUserMedia({ video: true, signal: ac.signal })
       .then((stream) => {
         videoRef.current.srcObject = stream;
+
+        // event listener to know when video is actually playing
+        videoRef.current.onloadedmetadata = () => {
+          videoRef.current.play();
+        };
+
+        // set camera ready once video is playing
+        videoRef.current.onplaying = () => {
+          setIsCameraReady(true);
+          console.log("Camera is ready and playing");
+        };
       })
       .catch((err) => {
         if (err.name !== "AbortError") {
@@ -41,9 +54,10 @@ function BottomNavigation() {
       });
 
     return () => {
-      // stop request & cleanup any tracks that made it through
+      // stop request & cleanup any tracks
       ac.abort();
       stopCameraStream();
+      setIsCameraReady(false);
     };
   }, [isCameraOpen, capturedImage]);
 
@@ -59,20 +73,16 @@ function BottomNavigation() {
   };
 
   const openCamera = () => {
-    // first stop any existing stream
     stopCameraStream();
 
-    // set camera open state first
     setIsCameraOpen(true);
     setCapturedImage(null);
 
-    // initialize camera in useEffect instead of here
     console.log("Camera view opened");
   };
 
   async function predictImage(imageDataUrl) {
     try {
-      // Convert base64 to Blob
       const res = await fetch(imageDataUrl);
       const blob = await res.blob();
 
@@ -91,12 +101,10 @@ function BottomNavigation() {
 
       const data = await response.json();
 
-      // Navigate first, then clean up camera state
       navigate("/results", {
         state: { image: capturedImage, prediction: data },
       });
 
-      // Only clean up after navigation is triggered
       setIsProcessing(false);
       console.log("Prediction result:", data);
     } catch (error) {
@@ -140,14 +148,16 @@ function BottomNavigation() {
     stopCameraStream();
     setIsCameraOpen(false);
     setCapturedImage(null);
+    setIsCameraReady(false);
   };
 
   const handleSaveImage = async () => {
-    // Set processing flag first to show loading state
     setIsProcessing(true);
 
     try {
-      await predictImage(capturedImage);
+      setTimeout(async () => {
+        await predictImage(capturedImage);
+      }, 5000);
     } catch (error) {
       console.log(error);
       setIsProcessing(false);
@@ -167,8 +177,19 @@ function BottomNavigation() {
     <>
       {isProcessing ? (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col items-center justify-center">
-          <div className="text-white text-xl">Processing...</div>
-          <div className="mt-4 w-16 h-16 border-t-4 border-blue-500 border-solid rounded-full animate-spin"></div>
+          <div className="relative max-h-[80vh] w-auto">
+            <img src={capturedImage} alt="" className="block max-h-full" />
+
+            {/* scanning overlay */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="scan-line" />
+            </div>
+          </div>
+
+          <div className="text-white text-sm mt-3 font-semibold">
+            Processing...
+          </div>
+          <div className="mt-4 w-5 h-5 border-t-2 border-blue-500 rounded-full animate-spin" />
         </div>
       ) : (
         <>
@@ -235,14 +256,21 @@ function BottomNavigation() {
                       </p>
                     </div>
                   </span>
-                  <div className="flex gap-12 mt-4 absolute bottom-0 mb-4">
+                  <div
+                    className="flex gap-12 mt-4 absolute bottom-0 mb-4"
+                    style={{
+                      opacity: isCameraReady ? 1 : 0.1,
+                    }}
+                  >
                     <button
+                      disabled={!isCameraReady}
                       onClick={openFileUpload}
                       className="bg-transparent text-white py-2 px-6 rounded-full"
                     >
                       <GalleryIcon />
                     </button>
                     <button
+                      disabled={!isCameraReady}
                       onClick={takePicture}
                       className="bg-white outline-3 outline-solid outline-offset-4 text-white size-14 py-3 px-3 rounded-full"
                     ></button>

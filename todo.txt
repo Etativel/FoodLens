@@ -1,0 +1,7 @@
+refactor bottom nav
+
+fetch data from data base, not exist ?, fetch from openai then store it to database
+
+fetch data from openai
+
+separate results component

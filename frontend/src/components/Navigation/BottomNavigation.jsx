@@ -178,7 +178,11 @@ function BottomNavigation() {
       {isProcessing ? (
         <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col items-center justify-center">
           <div className="relative max-h-[80vh] w-auto">
-            <img src={capturedImage} alt="" className="block max-h-full" />
+            <img
+              src={capturedImage}
+              alt=""
+              className="block max-h-full w-full"
+            />
 
             {/* scanning overlay */}
             <div className="absolute inset-0 overflow-hidden">

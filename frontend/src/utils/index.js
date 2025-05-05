@@ -1,3 +1,4 @@
 import formatText from "./predictionTextFormatter";
+import percentage from "./percentage";
 
-export { formatText };
+export { formatText, percentage };

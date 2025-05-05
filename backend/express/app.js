@@ -25,8 +25,10 @@ app.use(cookieParser());
 // app.use(passport.session());
 
 const openaiRouter = require("../express/router/OpenAiRouter");
+const foodRouter = require("../express/router/FoodRouter");
 
 app.use("/openai", openaiRouter);
+app.use("/food-api", foodRouter);
 
 app.get("/", (req, res) => {
   res.status(200).send({ status: "ok" });

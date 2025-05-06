@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controller/FoodController");
 
+router.get("/food/getall", controller.getAllRecipeName);
 router.get("/food/:predicted_name", controller.getFoodByPredictedName);
 
 router.patch("/food/:id", controller.updateFood);

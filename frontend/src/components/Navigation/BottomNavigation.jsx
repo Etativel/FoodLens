@@ -155,9 +155,7 @@ function BottomNavigation() {
     setIsProcessing(true);
 
     try {
-      setTimeout(async () => {
-        await predictImage(capturedImage);
-      }, 5000);
+      await predictImage(capturedImage);
     } catch (error) {
       console.log(error);
       setIsProcessing(false);

@@ -1,4 +1,5 @@
 import formatText from "./predictionTextFormatter";
 import percentage from "./percentage";
+import toSnakeCase from "./toSnakeCase";
 
-export { formatText, percentage };
+export { toSnakeCase, formatText, percentage };

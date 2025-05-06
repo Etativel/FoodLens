@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import { Tag } from "lucide-react";
+import { Tag, ChevronDown, ChevronUp } from "lucide-react";
 import { formatText, toSnakeCase } from "../../utils";
 import {
   DietaryBadges,
@@ -82,6 +82,8 @@ export default function Results() {
   const [food, setFood] = useState(null);
   const { image, prediction } = state || {};
   const fetchGuard = useRef(false);
+  // const [isOpen, setIsOpen] = useState(false);
+  // const [selected, setSelected] = useState("Default");
 
   const isPremium = false;
 
@@ -205,6 +207,15 @@ export default function Results() {
     }
   }
 
+  // const toggleDropdown = () => {
+  //   setIsOpen(!isOpen);
+  // };
+
+  // const selectOption = (option) => {
+  //   setSelected(option);
+  //   setIsOpen(false);
+  // };
+
   if (!image || !prediction) {
     return <Navigate to="/" replace />;
   }
@@ -224,15 +235,58 @@ export default function Results() {
           ></div>
           <div className="px-3 py-3">
             <div>
-              {food ? (
-                <p className="text-lg font-semibold text-white">
-                  {isPremium
-                    ? food.name
-                    : formatText(prediction.predicted_label)}
-                </p>
-              ) : (
-                <p className="py-2 h-10 mt-4 w-full bg-neutral-700 rounded animate-pulse"></p>
-              )}
+              <div className="flex justify-between">
+                {food ? (
+                  <p className="text-lg font-semibold text-white">
+                    {isPremium
+                      ? food.name
+                      : formatText(prediction.predicted_label)}
+                  </p>
+                ) : (
+                  <p className="py-2 h-10 mt-4 w-full bg-neutral-700 rounded animate-pulse"></p>
+                )}
+
+                {/* {food ? (
+                  <div className="relative w-48">
+                    <button
+                      onClick={toggleDropdown}
+                      className="flex items-center justify-between ml-auto px-2 py-2 text-sm font-sm text-white bg-neutral-700 border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-1 "
+                    >
+                      <span>Prediction: {selected}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 ml-2 transition-transform ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+
+                    {isOpen && (
+                      <div className="absolute z-10 w-full mt-1 bg-neutral-700 rounded-md shadow-lg">
+                        <ul className="py-1 overflow-auto text-sm text-white max-h-60">
+                          <li
+                            className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
+                              selected === "Default" ? "" : ""
+                            }`}
+                            onClick={() => selectOption("Default")}
+                          >
+                            Default
+                          </li>
+                          <li
+                            className={`px-4 py-2 cursor-pointer hover:bg-gray-100 ${
+                              selected === "Vision" ? "" : ""
+                            }`}
+                            onClick={() => selectOption("Vision")}
+                          >
+                            Vision
+                          </li>
+                        </ul>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  ""
+                )} */}
+              </div>
 
               {food ? (
                 <p className="py-2 text-sm text-neutral-300">{food.summary}</p>

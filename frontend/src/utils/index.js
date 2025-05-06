@@ -1,5 +1,6 @@
 import formatText from "./predictionTextFormatter";
 import percentage from "./percentage";
 import toSnakeCase from "./toSnakeCase";
+import normalizeNutrient from "./nutrition";
 
-export { toSnakeCase, formatText, percentage };
+export { normalizeNutrient, toSnakeCase, formatText, percentage };

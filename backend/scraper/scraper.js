@@ -2,13 +2,12 @@ import { Actor } from "apify";
 import { PuppeteerCrawler } from "crawlee";
 import { load } from "cheerio";
 import fs from "fs";
-import path from "path";
 
 await Actor.main(async () => {
   const input = await Actor.getInput();
   console.log("Input:", input);
 
-  // Set default max items if not provided
+  // set default max items if not provided
   const maxItems = input?.maxItems || 50;
 
   let recipeUrls = [
@@ -23,7 +22,7 @@ await Actor.main(async () => {
     "https://www.allrecipes.com/recipe/281780/spicy-meatless-spaghetti-sauce/",
   ];
 
-  // Try to load the recipe URLs from previous crawl result
+  // try to load the recipe URLs from previous crawl result
   try {
     const datasetPath = "./storage/datasets/default/000000001.json";
     if (fs.existsSync(datasetPath)) {
@@ -74,16 +73,16 @@ await Actor.main(async () => {
     async requestHandler({ request, page }) {
       console.log(`Processing: ${request.url}`);
 
-      // Wait for the main content to be loaded
+      // sait for the main content to be loaded
       await page.waitForSelector("h1.article-heading", {
         timeout: 10000,
       });
 
-      // Get the page HTML
+      // get the page HTML
       const content = await page.content();
       const $ = load(content);
 
-      // Extract recipe information
+      // extract recipe information
       const recipe = {
         url: request.url,
         name: $("h1.article-heading").text().trim(),
@@ -111,7 +110,6 @@ await Actor.main(async () => {
 
   await crawler.run();
 
-  // Save all recipe data
   const dataset = await Actor.openDataset();
   await dataset.pushData(recipes);
 
@@ -119,18 +117,14 @@ await Actor.main(async () => {
 });
 
 function extractThumbnail($) {
-  // Try to get the main image
   const imageEl = $(".primary-image__image");
 
   if (imageEl.length > 0) {
-    // Try to get the src attribute
     const src = imageEl.attr("src");
     if (src) return src;
 
-    // If no src, try to get from srcset
     const srcset = imageEl.attr("srcset");
     if (srcset) {
-      // Extract the first URL from srcset
       const matches = srcset.match(/([^\s]+)/);
       if (matches && matches[1]) return matches[1];
     }
@@ -141,7 +135,6 @@ function extractThumbnail($) {
 
 function extractRatingCount($) {
   const text = $(".mm-recipes-review-bar__rating-count").text().trim();
-  // Extract number from format like "(2)"
   const matches = text.match(/\((\d+)\)/);
   return matches ? parseInt(matches[1]) : 0;
 }
@@ -179,7 +172,6 @@ function extractServings($) {
       .find(".mm-recipes-details__value")
       .text()
       .trim();
-    // Extract number from text
     const matches = servingsText.match(/(\d+)/);
     return matches ? parseInt(matches[1]) : null;
   }
@@ -210,7 +202,6 @@ function extractDirections($) {
 function extractNutrition($) {
   const nutrition = {};
 
-  // Extract basic nutrition facts from summary
   $(".mm-recipes-nutrition-facts-summary__table-row").each((i, el) => {
     const value = $(el)
       .find(".mm-recipes-nutrition-facts-summary__table-cell:first-child")
@@ -227,7 +218,6 @@ function extractNutrition($) {
     }
   });
 
-  // Extract detailed nutrition facts
   $(".mm-recipes-nutrition-facts-label__table-body tr").each((i, el) => {
     const cells = $(el).find("td");
     if (cells.length >= 1) {
@@ -238,7 +228,6 @@ function extractNutrition($) {
         .toLowerCase();
       let value = $(cells[0]).text().replace(label, "").trim();
 
-      // Clean up the label
       label = label.replace(/\s+/g, "_");
       if (label.endsWith("_")) {
         label = label.slice(0, -1);

@@ -101,6 +101,7 @@ export default function Results() {
 
       fetchOldModel(label);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [prediction, image, isPremium]);
 
   async function fetchOldModel(label) {

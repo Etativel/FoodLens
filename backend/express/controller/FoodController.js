@@ -209,6 +209,168 @@ async function getAllRecipeName(req, res) {
 // }
 
 // POST  /food-api/create
+// async function saveFood(req, res) {
+//   const { recipe, imageUrl, scanMode } = req.body;
+//   // const userId = req.user.id;
+//   const placeholderUserId = "00000000-0000-0000-0000-000000000000";
+//   const requiredFields = [
+//     "name",
+//     "predicted_name",
+//     "summary",
+//     "nutritionSnapshot",
+//     "nutritionItems",
+//     "ingredients",
+//     "instructions",
+//     "variations",
+//   ];
+
+//   const missingFields = requiredFields.filter((f) => !recipe[f]);
+//   if (missingFields.length > 0) {
+//     return res
+//       .status(400)
+//       .json({ message: "Missing required fields", missingFields });
+//   }
+
+//   try {
+//     const existingRecipe = await prisma.recipe.findUnique({
+//       where: { predicted_name: recipe.predicted_name },
+//       select: { id: true },
+//     });
+
+//     const upserted = await prisma.recipe.upsert({
+//       where: { predicted_name: recipe.predicted_name },
+//       create: {
+//         name: recipe.name,
+//         predicted_name: recipe.predicted_name,
+//         summary: recipe.summary,
+//         thumbnailUrls: recipe.thumbnailUrls || [],
+//         culturalContext: recipe.culturalContext || null,
+//         funFacts: recipe.funFacts || [],
+//         tips: recipe.tips,
+//         badgeKeys: recipe.badgeKeys || [],
+//         nutritionSnapshot: {
+//           create: { ...recipe.nutritionSnapshot },
+//         },
+//         nutritionItems: {
+//           create: recipe.nutritionItems.map((i) => ({
+//             name: i.name,
+//             value: i.value,
+//             unit: i.unit,
+//           })),
+//         },
+//         ingredients: {
+//           create: recipe.ingredients.flatMap((grp) =>
+//             grp.items.map((item) => ({
+//               groupName: grp.group,
+//               items: { create: { item } },
+//             }))
+//           ),
+//         },
+//         instructions: {
+//           create: recipe.instructions.map((ins) => ({
+//             stepNumber: ins.step,
+//             description: ins.description,
+//             duration: ins.duration || null,
+//           })),
+//         },
+//         variations: {
+//           create: recipe.variations.map((v) => ({
+//             name: v.name,
+//             add: v.add || null,
+//             swap: v.swap || null,
+//           })),
+//         },
+//       },
+//       update: {
+//         name: recipe.name,
+//         summary: recipe.summary,
+//         thumbnailUrls: recipe.thumbnailUrls || [],
+//         culturalContext: recipe.culturalContext || null,
+//         funFacts: recipe.funFacts || [],
+//         tips: recipe.tips,
+//         badgeKeys: recipe.badgeKeys || [],
+//         nutritionSnapshot: {
+//           upsert: {
+//             create: { ...recipe.nutritionSnapshot },
+//             update: { ...recipe.nutritionSnapshot },
+//           },
+//         },
+//         nutritionItems: {
+//           deleteMany: {},
+//           create: recipe.nutritionItems.map((i) => ({
+//             name: i.name,
+//             value: i.value,
+//             unit: i.unit,
+//           })),
+//         },
+//         ingredients: {
+//           deleteMany: {},
+//           create: recipe.ingredients.flatMap((grp) =>
+//             grp.items.map((item) => ({
+//               groupName: grp.group,
+//               items: { create: { item } },
+//             }))
+//           ),
+//         },
+//         instructions: {
+//           deleteMany: {},
+//           create: recipe.instructions.map((ins) => ({
+//             stepNumber: ins.step,
+//             description: ins.description,
+//             duration: ins.duration || null,
+//           })),
+//         },
+//         variations: {
+//           deleteMany: {},
+//           create: recipe.variations.map((v) => ({
+//             name: v.name,
+//             add: v.add || null,
+//             swap: v.swap || null,
+//           })),
+//         },
+//       },
+//       select: { id: true },
+//     });
+
+//     await prisma.scan.create({
+//       data: {
+//         userId: placeholderUserId,
+//         imageUrl,
+//         scanMode,
+//         recipeId: upserted.id,
+//       },
+//     });
+
+//     const full = await prisma.recipe.findUnique({
+//       where: { id: upserted.id },
+//       include: {
+//         nutritionSnapshot: true,
+//         nutritionItems: true,
+//         ingredients: { include: { items: true } },
+//         instructions: true,
+//         variations: true,
+//         scans: true,
+//       },
+//     });
+
+//     res.status(existingRecipe ? 200 : 201).json({
+//       message: existingRecipe ? "Recipe updated" : "Recipe created",
+//       recipe: full,
+//     });
+//   } catch (error) {
+//     console.error("Error saving recipe + scan:", error);
+//     if (error.code === "P2002") {
+//       return res.status(409).json({
+//         message: "Duplicate predicted_name",
+//         field: error.meta?.target,
+//       });
+//     }
+//     res
+//       .status(500)
+//       .json({ message: "Internal server error", error: error.message });
+//   }
+// }
+
 async function saveFood(req, res) {
   const { recipe, imageUrl, scanMode } = req.body;
   // const userId = req.user.id;
@@ -237,6 +399,30 @@ async function saveFood(req, res) {
       select: { id: true },
     });
 
+    if (existingRecipe) {
+      await prisma.$transaction([
+        prisma.ingredientItem.deleteMany({
+          where: {
+            ingredientGroup: {
+              recipeId: existingRecipe.id,
+            },
+          },
+        }),
+        prisma.ingredient.deleteMany({
+          where: { recipeId: existingRecipe.id },
+        }),
+        prisma.nutritionItem.deleteMany({
+          where: { recipeId: existingRecipe.id },
+        }),
+        prisma.instruction.deleteMany({
+          where: { recipeId: existingRecipe.id },
+        }),
+        prisma.variation.deleteMany({
+          where: { recipeId: existingRecipe.id },
+        }),
+      ]);
+    }
+
     const upserted = await prisma.recipe.upsert({
       where: { predicted_name: recipe.predicted_name },
       create: {
@@ -259,12 +445,12 @@ async function saveFood(req, res) {
           })),
         },
         ingredients: {
-          create: recipe.ingredients.flatMap((grp) =>
-            grp.items.map((item) => ({
-              groupName: grp.group,
-              items: { create: { item } },
-            }))
-          ),
+          create: recipe.ingredients.map((grp) => ({
+            groupName: grp.group,
+            items: {
+              create: grp.items.map((item) => ({ item })),
+            },
+          })),
         },
         instructions: {
           create: recipe.instructions.map((ins) => ({
@@ -295,8 +481,8 @@ async function saveFood(req, res) {
             update: { ...recipe.nutritionSnapshot },
           },
         },
+
         nutritionItems: {
-          deleteMany: {},
           create: recipe.nutritionItems.map((i) => ({
             name: i.name,
             value: i.value,
@@ -304,16 +490,14 @@ async function saveFood(req, res) {
           })),
         },
         ingredients: {
-          deleteMany: {},
-          create: recipe.ingredients.flatMap((grp) =>
-            grp.items.map((item) => ({
-              groupName: grp.group,
-              items: { create: { item } },
-            }))
-          ),
+          create: recipe.ingredients.map((grp) => ({
+            groupName: grp.group,
+            items: {
+              create: grp.items.map((item) => ({ item })),
+            },
+          })),
         },
         instructions: {
-          deleteMany: {},
           create: recipe.instructions.map((ins) => ({
             stepNumber: ins.step,
             description: ins.description,
@@ -321,7 +505,6 @@ async function saveFood(req, res) {
           })),
         },
         variations: {
-          deleteMany: {},
           create: recipe.variations.map((v) => ({
             name: v.name,
             add: v.add || null,

@@ -1,4 +1,6 @@
 require("dotenv").config({ path: "../.env" });
+
+// require("dotenv").config({ path: "../.env" });
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const passport = require("passport");
@@ -32,7 +34,7 @@ passport.use(
             return cb(null, false, { message: "Username not registered." });
           }
         }
-        const match = await bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(password, user.passwordHash);
         if (!match) {
           return cb(null, false, { message: "Incorrect password" });
         }
@@ -78,7 +80,7 @@ passport.use(
               "Access Denied: Your account does not have administrative privileges. Please contact support if you believe this is an error.",
           });
         }
-        const match = await bcrypt.compare(password, user.password);
+        const match = await bcrypt.compare(password, user.passwordHash);
         if (!match) {
           return cb(null, false, { message: "Incorrect password" });
         }

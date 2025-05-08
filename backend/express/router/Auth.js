@@ -1,0 +1,84 @@
+require("dotenv").config({ path: "../.env" });
+const express = require("express");
+const router = express.Router();
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+
+// Authentication middleware to verify JWT from httpOnly cookie
+function authenticateToken(req, res, next) {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({
+      message: "Unauthorized: No token provided",
+      token: token,
+      user: {
+        id: null,
+      },
+    });
+  }
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ message: "Forbidden: Invalid token" });
+    }
+    req.user = decoded;
+    next();
+  });
+}
+
+router.post("/login", (req, res, next) => {
+  console.log("» [LOGIN] req.body:", req.body);
+  passport.authenticate("user-local", { session: false }, (err, user, info) => {
+    if (err) {
+      console.error("» [LOGIN] Strategy Error:", err);
+      return res.status(500).json({
+        message: "Internal authentication error",
+        error: err.message,
+      });
+    }
+
+    // no user or bad password
+    if (!user) {
+      console.warn("» [LOGIN] No user authenticated. info =", info);
+      return res.status(401).json({
+        message: info?.message || "Invalid credentials",
+        info,
+      });
+    }
+
+    // 3) Success
+    console.log("» [LOGIN] Authenticated user:", user.id);
+    req.login(user, { session: false }, (err) => {
+      if (err) {
+        res.send(err);
+      }
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "7d",
+      });
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        // maxAge: 30000,
+      });
+      return res.json({ user });
+    });
+  })(req, res);
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    path: "/",
+  });
+  res.json({ message: "Logged out successfully" });
+});
+
+router.get("/profile", authenticateToken, (req, res) => {
+  res.json({ user: req.user });
+});
+
+module.exports = { router, authenticateToken };

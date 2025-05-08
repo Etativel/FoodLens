@@ -4,7 +4,7 @@ const passport = require("passport");
 // require("./services/passportAdmin");
 // require("./services/passport");
 
-// require("./services/passportConfig");
+require("./services/passportConfig");
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");

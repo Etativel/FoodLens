@@ -26,7 +26,7 @@ function authenticateToken(req, res, next) {
 }
 
 router.post("/login", (req, res, next) => {
-  console.log("» [LOGIN] req.body:", req.body);
+  //   console.log("» [LOGIN] req.body:", req.body);
   passport.authenticate("user-local", { session: false }, (err, user, info) => {
     if (err) {
       console.error("» [LOGIN] Strategy Error:", err);
@@ -37,13 +37,13 @@ router.post("/login", (req, res, next) => {
     }
 
     // no user or bad password
-    if (!user) {
-      console.warn("» [LOGIN] No user authenticated. info =", info);
-      return res.status(401).json({
-        message: info?.message || "Invalid credentials",
-        info,
-      });
-    }
+    // if (!user) {
+    //   console.warn("» [LOGIN] No user authenticated. info =", info);
+    //   return res.status(401).json({
+    //     message: info?.message || "Invalid credentials",
+    //     info,
+    //   });
+    // }
 
     // 3) Success
     console.log("» [LOGIN] Authenticated user:", user.id);

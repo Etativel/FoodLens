@@ -34,7 +34,8 @@ passport.use(
             return cb(null, false, { message: "Username not registered." });
           }
         }
-        const match = await bcrypt.compare(password, user.passwordHash);
+
+        const match = await bcrypt.compare(password, user.passwordHash); //Make sure the field match you database (e.g. password stored as passwordHas in the database)
         if (!match) {
           return cb(null, false, { message: "Incorrect password" });
         }

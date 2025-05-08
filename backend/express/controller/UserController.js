@@ -23,6 +23,37 @@ async function createUser(req, res) {
   }
 }
 
+// GET
+
+// Get user information for the front end app, make sure not to include sensitive information
+async function getUserForApp(req, res) {
+  const { userId } = req.body;
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+
+      select: {
+        name: true,
+        isPremium: true,
+        scanCreditsRemaining: true,
+        weightGoal: true,
+        calorieLimit: true,
+        createdAt: true,
+        scans: true,
+        dailyIntakeLogs: true,
+        assistantLogs: true,
+      },
+    });
+    return res.status(200).json({ user });
+  } catch (err) {
+    console.log("Internal server error", err);
+    return res.status(500).json({ message: err });
+  }
+}
+
 module.exports = {
   createUser,
+  getUserForApp,
 };

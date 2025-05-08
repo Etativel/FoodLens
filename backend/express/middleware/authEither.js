@@ -1,7 +1,4 @@
-const { authenticateToken: authenticateUser } = require("../routes/auth.js");
-const {
-  authenticateToken: authenticateAdmin,
-} = require("../routes/adminAuth.js");
+const { authenticateToken: authenticateUser } = require("../router/Auth.js");
 
 module.exports = function authenticateEither(req, res, next) {
   if (req.cookies.token) {

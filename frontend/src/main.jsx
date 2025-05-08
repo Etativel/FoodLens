@@ -10,12 +10,12 @@ import More from "./pages/More/More.jsx";
 import Calories from "./pages/Calories/Calories.jsx";
 import Result from "./pages/Result/Result.jsx";
 import Layout from "./Layout.jsx";
-import Processing from "./components/Processing/Processing.jsx";
+// import Processing from "./components/Processing/Processing.jsx";
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/onboarding",
     element: <Onboarding />,
   },
   { path: "/results", element: <Result /> },

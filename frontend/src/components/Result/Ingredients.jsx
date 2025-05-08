@@ -13,7 +13,7 @@ export default function Ingredients({ food }) {
           food.ingredients.map((group, groupIndex) => (
             <div key={groupIndex} className="mb-3">
               <p className="text-md font-sm font-semibold text-white mb-1 pl-1">
-                {group.groupName}
+                {group.groupName || group.group}
               </p>
               <ul className="space-y-2 pl-3">
                 {group.items.map((item, itemIndex) => (

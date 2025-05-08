@@ -1,5 +1,5 @@
+import { normalizeNutrient } from "../../utils";
 import {
-  Tag,
   Hamburger,
   Flame,
   Beef,
@@ -8,6 +8,31 @@ import {
   Apple,
   HeartPulse,
 } from "lucide-react";
+
+export function NutritionIcon({ name }) {
+  const key = normalizeNutrient(name);
+
+  switch (key) {
+    case "calories":
+      // matches both "calories" and "Calories"
+      return <Flame size={16} className="text-orange-500" />;
+    case "protein":
+      return <Beef size={16} className="text-red-500" />;
+    case "fat":
+      return <Cookie size={16} className="text-yellow-500" />;
+    case "carbs":
+      return <Wheat size={16} className="text-amber-600" />;
+    case "fiber":
+      // you wanted Wheat for fiber?
+      return <Wheat size={16} className="text-green-600" />;
+    case "sugar":
+      return <Apple size={16} className="text-pink-500" />;
+    case "sodium":
+      return <Hamburger size={16} className="text-blue-400" />;
+    default:
+      return null;
+  }
+}
 
 export default function NutritionFacts({
   food,
@@ -39,18 +64,7 @@ export default function NutritionFacts({
                   key={index}
                   className="flex items-center flex-col p-2 rounded-lg"
                 >
-                  {item.name === "calories" && (
-                    <Flame size={16} className="text-orange-500" />
-                  )}
-                  {item.name === "protein" && (
-                    <Beef size={16} className="text-red-500" />
-                  )}
-                  {item.name === "fat" && (
-                    <Cookie size={16} className="text-yellow-500" />
-                  )}
-                  {item.name === "carbs" && (
-                    <Wheat size={16} className="text-amber-600" />
-                  )}
+                  <NutritionIcon name={item.name} />
 
                   <span className="font-bold text-white text-lg mt-1">
                     {item.value}
@@ -77,15 +91,7 @@ export default function NutritionFacts({
                 key={index}
                 className="flex items-center flex-col p-2 rounded-lg max-w-[520px] w-full"
               >
-                {item.name === "fiber" && (
-                  <Wheat size={16} className="text-green-600" />
-                )}
-                {item.name === "sugar" && (
-                  <Apple size={16} className="text-pink-500" />
-                )}
-                {item.name === "sodium" && (
-                  <Hamburger size={16} className="text-blue-400" />
-                )}
+                <NutritionIcon name={item.name} />
                 <span className="font-bold text-white text-lg mt-1">
                   {item.value}
                   {item.unit}

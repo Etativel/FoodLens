@@ -217,7 +217,7 @@ export default function Results() {
   // };
 
   if (!image || !prediction) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/home" replace />;
   }
 
   return (

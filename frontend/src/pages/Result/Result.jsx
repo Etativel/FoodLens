@@ -108,7 +108,10 @@ export default function Results() {
 
   async function fetchOldModel(label) {
     try {
-      const res = await fetch(`http://localhost:3000/food-api/food/${label}`);
+      const res = await fetch(`http://localhost:3000/food-api/food/${label}`, {
+        method: "GET",
+        credentials: "include",
+      });
       if (res.ok) {
         const json = await res.json();
         setFood(json.data);
@@ -127,6 +130,7 @@ export default function Results() {
       const resp = await fetch("http://localhost:3000/openai/food", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ input: label }),
       });
       const { recipe } = await resp.json();
@@ -172,6 +176,7 @@ export default function Results() {
       form.append("image", blob, "photo.jpg");
       const resp = await fetch("http://localhost:3000/openai/food-vision", {
         method: "POST",
+        credentials: "include",
         body: form,
       });
       if (!resp.ok) throw new Error(`Vision API ${resp.status}`);
@@ -198,6 +203,7 @@ export default function Results() {
       const recResp = await fetch("http://localhost:3000/food-api/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ recipe: recipeData, imageUrl: image, scanMode }),
       });
       if (!recResp.ok) throw new Error("Recipe save failed");

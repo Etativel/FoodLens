@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Navigate } from "react-router-dom";
+
 import OnboardingPage from "../../components/Onboarding/OnboardingPages";
 
 import pageOne from "../../assets/svg/page-1.svg";
@@ -30,6 +32,34 @@ const pages = [
 
 function Onboarding() {
   const [currentPage, setCurrentPage] = useState(1);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    fetch("http://localhost:3000/auth/profile", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Not authenticated");
+      })
+      .then(() => {
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/home" />;
+  }
 
   const handleNext = () => {
     if (currentPage < pages.length) {

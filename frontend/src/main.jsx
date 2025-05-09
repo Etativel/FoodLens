@@ -12,8 +12,18 @@ import Result from "./pages/Result/Result.jsx";
 import Layout from "./Layout.jsx";
 // import Processing from "./components/Processing/Processing.jsx";
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
+import SignIn from "./pages/Auth/SingIn.jsx";
+import Signup from "./pages/Auth/SignUp.jsx";
 
 const router = createBrowserRouter([
+  {
+    path: "/sign-in",
+    element: <SignIn />,
+  },
+  {
+    path: "/sign-up",
+    element: <Signup />,
+  },
   {
     path: "/onboarding",
     element: <Onboarding />,

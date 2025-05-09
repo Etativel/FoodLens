@@ -32,7 +32,7 @@ function Layout() {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="sign-up" />;
+    return <Navigate to="sign-in" />;
   }
   return (
     <UserProvider>

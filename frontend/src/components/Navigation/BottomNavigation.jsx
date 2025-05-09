@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { FaBowlFood } from "react-icons/fa6";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import "./BottomNavigation.css";
 import {
   CameraIcon,
@@ -11,9 +11,11 @@ import {
   CheckIcon,
 } from "../../assets/icons";
 import XIcon from "../../assets/icons/XIcon";
+import UserContext from "../../contexts/createContext/UserContext";
 
 function BottomNavigation() {
   const currentPage = location.pathname.split("/").pop();
+  const { profile } = useContext(UserContext);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -22,6 +24,8 @@ function BottomNavigation() {
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+
+  console.log(profile);
 
   useEffect(() => {
     if (!isCameraOpen || capturedImage) return;

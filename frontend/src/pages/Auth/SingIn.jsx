@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import googleIcon from "../../assets/svg/google.svg";
 
@@ -6,17 +7,106 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isValidating, setIsValidating] = useState(false);
+  const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  useEffect(() => {
+    fetch("http://localhost:3000/auth/profile", {
+      credentials: "include",
+    })
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Not authenticated");
+      })
+      .then(() => {
+        setIsAuthenticated(true);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
 
-  const handleSubmit = (e) => {
+  if (isLoading) {
+    return <div>Loading</div>;
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/home" />;
+  }
+
+  async function validateUserLogin(credential, password) {
+    const errors = {};
+
+    if (!credential) {
+      errors.credentialError = "Email or username is required.";
+    } else {
+      const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+      if (credential.includes("@") && !emailRegex.test(credential)) {
+        errors.credentialError = "Invalid email address.";
+      }
+    }
+
+    if (!password) {
+      errors.passwordError = "Password is required.";
+    } else if (password.length < 6) {
+      errors.passwordError = "Password must be at least 6 characters.";
+    }
+    return errors;
+  }
+
+  const handleSubmit = async (e) => {
+    setErrors({});
     e.preventDefault();
-    setIsLoading(true);
+    setIsValidating(true);
+    const loginErrors = validateUserLogin(email, password);
+    if (Object.keys(loginErrors).length > 0) {
+      setIsValidating(false);
+      setErrors(loginErrors);
 
-    setTimeout(() => {
-      console.log("Login credentials:", { email, password, rememberMe });
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          credential: email,
+          password,
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        const message = errorData.message || "Login error";
+        // console.log(message);
+        if (message.toLowerCase().includes("not registered")) {
+          setErrors({ emailError: message });
+        } else if (message.toLowerCase().includes("incorrect password")) {
+          setErrors({ passwordError: message });
+        } else if (
+          message.toLowerCase().includes("your account has been suspended")
+        ) {
+          setErrors({ suspendedError: message });
+        } else {
+          setErrors({ loginError: message });
+        }
+        setIsValidating(false);
+        return;
+      }
       setIsLoading(false);
-    }, 1500);
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -26,6 +116,7 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
           <p className="text-gray-400 text-sm">
             Sign in to continue your food journey
+            {errors.passwordError}
           </p>
         </div>
 
@@ -52,6 +143,12 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {errors.emailError && (
+              <div className="flex gap-2">
+                <span className="error-exclamation"></span>
+                <p className="font-sm text-red-400">{errors.emailError}</p>
+              </div>
+            )}
           </div>
 
           {/* Password Input */}
@@ -63,9 +160,9 @@ export default function Login() {
               >
                 Password
               </label>
-              <a href="#" className="text-sm text-blue-400 hover:text-blue-300">
+              {/* <a href="#" className="text-sm text-blue-400 hover:text-blue-300">
                 Forgot password?
-              </a>
+              </a> */}
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -98,10 +195,16 @@ export default function Login() {
                 )}
               </button>
             </div>
+            {errors.passwordError && (
+              <div className="flex gap-2">
+                <span className="error-exclamation"></span>
+                <p className="font-sm text-red-400">{errors.passwordError}</p>
+              </div>
+            )}
           </div>
 
           {/* Remember Me Checkbox */}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <input
               id="remember-me"
               name="remember-me"
@@ -116,14 +219,14 @@ export default function Login() {
             >
               Remember me
             </label>
-          </div>
+          </div> */}
 
           {/* Login Button */}
           <button
             type="submit"
-            disabled={isLoading}
-            className={`w-full py-3 px-4 rounded-md text-white font-medium transition duration-300 ease-in-out ${
-              isLoading
+            disabled={isLoading || isValidating}
+            className={`w-full py-3 px-4 rounded-md text-white font-medium transition duration-300 ease-in-out mt-2  ${
+              isLoading || isValidating
                 ? "bg-blue-600 cursor-not-allowed"
                 : "bg-blue-500 hover:bg-blue-600 hover:shadow-lg"
             }`}

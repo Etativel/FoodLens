@@ -1,12 +1,50 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
 
+import { useState } from "react";
+
+function NutrientTrackerComponent() {
+  const [nutrients] = useState([
+    { name: "Protein", current: 0, target: 80, color: "bg-blue-500" },
+    { name: "Carbs", current: 0, target: 200, color: "bg-green-500" },
+    { name: "Fat", current: 0, target: 65, color: "bg-yellow-500" },
+  ]);
+
+  return (
+    <div className="mt-4">
+      <div className="flex flex-row justify-between gap-4">
+        {nutrients.map((nutrient, index) => {
+          const percentage = (nutrient.current / nutrient.target) * 100;
+          return (
+            <div key={index} className="flex-1">
+              <div className="mb-1 py-1">
+                <span className="text-sm font-medium text-neutral-400">
+                  {nutrient.name}
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+                <div
+                  className={`${nutrient.color} h-2.5 rounded-full`}
+                  style={{ width: `${Math.min(percentage, 100)}%` }}
+                ></div>
+              </div>
+              <div className="flex py-1">
+                <span className="text-sm text-neutral-400">
+                  {nutrient.current}/{nutrient.target} g
+                </span>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function Home() {
   return (
     <div className="flex flex-col  h-screen">
       <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-20 justify-end ">
-        {/* <div className="h-40 w-40 transform -translate-y-20 translate-x-6 bg-blue-200 opacity-40 absolute right-0 top-0 rounded-full"></div>
-        <div className="h-25 w-25 transform translate-y-5 translate-x-15 bg-blue-200 opacity-40 absolute right-0 top-0 rounded-full"></div> */}
         <div className="bg-neutral-800 z-10 mb-auto flex justify-between">
           <div>Location</div>
           <div>Lang</div>
@@ -18,6 +56,71 @@ function Home() {
 
       <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col  pb-20">
+          {/* Date */}
+          <div className="text-white text-lg font-sm mt-10 mx-3">
+            <p>Today, May 09</p>
+          </div>
+          <div className="mt-1 mx-3 bg-neutral-800 py-4 px-4 rounded-sm flex flex-col">
+            {/* Circular Progress */}
+            <div className="flex w-full justify-between items-center">
+              {/* End Circular Progress */}
+              <div className="flex flex-col">
+                <div className="flex flex-col text-neutral-400">
+                  <span>icon. Calorie goal</span>
+                  <span>1600 kcal</span>
+                </div>
+                <div className="flex flex-col text-neutral-400  ">
+                  <span>icon. Food intake</span>
+                  <span>0 kcal</span>
+                </div>
+              </div>
+              <div class="relative size-35">
+                <svg
+                  class="size-full -rotate-90"
+                  viewBox="0 0 36 36"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Background Circle */}
+                  <circle
+                    cx="18"
+                    cy="18"
+                    r="16"
+                    fill="none"
+                    class="stroke-current opacity-[20%] text-gray-200"
+                    stroke-width="2"
+                  ></circle>
+                  {/* Progress Circle */}
+                  <circle
+                    cx="18"
+                    cy="18"
+                    r="16"
+                    fill="none"
+                    class="stroke-current text-blue-500"
+                    stroke-width="2"
+                    stroke-dasharray="111"
+                    stroke-dashoffset="65"
+                    stroke-linecap="round"
+                  ></circle>
+                </svg>
+
+                {/* Percentage Text */}
+                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                  <span class="text-center text-md block text-white">
+                    Remaining
+                  </span>
+                  <span class="text-center text-lg font-semibold text-blue-500 block">
+                    1600
+                  </span>
+                  <span class="text-center text-md text-white block">Kcal</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <NutrientTrackerComponent />
+            </div>
+          </div>
+
           <div className="flex justify-evenly mt-15 mb-10">
             <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg

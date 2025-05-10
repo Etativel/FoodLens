@@ -26,27 +26,13 @@ function authenticateToken(req, res, next) {
 }
 
 router.post("/login", (req, res, next) => {
-  //   console.log("» [LOGIN] req.body:", req.body);
   passport.authenticate("user-local", { session: false }, (err, user, info) => {
-    if (err) {
-      console.error("» [LOGIN] Strategy Error:", err);
-      return res.status(500).json({
-        message: "Internal authentication error",
-        error: err.message,
+    if (err || !user) {
+      return res.status(400).json({
+        message: info && info.message ? info.message : "Bad request",
+        user: user,
       });
     }
-
-    // no user or bad password
-    // if (!user) {
-    //   console.warn("» [LOGIN] No user authenticated. info =", info);
-    //   return res.status(401).json({
-    //     message: info?.message || "Invalid credentials",
-    //     info,
-    //   });
-    // }
-
-    // 3) Success
-    console.log("» [LOGIN] Authenticated user:", user.id);
     req.login(user, { session: false }, (err) => {
       if (err) {
         res.send(err);

@@ -252,8 +252,11 @@ async function saveFood(req, res) {
 }
 
 async function createScan(req, res) {
+  console.log("Body", req.body);
   const { userId, scanMode, recipeId } = req.body;
+
   const imageUrl = req.file.path;
+
   try {
     await prisma.scan.create({
       data: {

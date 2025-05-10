@@ -1,13 +1,13 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
-
+import { Flame, Soup } from "lucide-react";
 import { useState } from "react";
 
 function NutrientTrackerComponent() {
   const [nutrients] = useState([
-    { name: "Protein", current: 0, target: 80, color: "bg-blue-500" },
-    { name: "Carbs", current: 0, target: 200, color: "bg-green-500" },
-    { name: "Fat", current: 0, target: 65, color: "bg-yellow-500" },
+    { name: "Protein", current: 40, target: 80, color: "bg-blue-500" },
+    { name: "Carbs", current: 70, target: 200, color: "bg-green-500" },
+    { name: "Fat", current: 90, target: 65, color: "bg-yellow-500" },
   ]);
 
   return (
@@ -18,7 +18,7 @@ function NutrientTrackerComponent() {
           return (
             <div key={index} className="flex-1">
               <div className="mb-1 py-1">
-                <span className="text-sm font-medium text-neutral-400">
+                <span className="text-sm font-medium text-white">
                   {nutrient.name}
                 </span>
               </div>
@@ -29,8 +29,11 @@ function NutrientTrackerComponent() {
                 ></div>
               </div>
               <div className="flex py-1">
-                <span className="text-sm text-neutral-400">
-                  {nutrient.current}/{nutrient.target} g
+                <span className="text-sm text-white">
+                  {nutrient.current}
+                  <span className="text-white opacity-[70%]">/</span>
+                  {nutrient.target}{" "}
+                  <span className="text-white opacity-[70%]">g</span>
                 </span>
               </div>
             </div>
@@ -43,7 +46,7 @@ function NutrientTrackerComponent() {
 
 function Home() {
   return (
-    <div className="flex flex-col  h-screen">
+    <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
       <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-20 justify-end ">
         <div className="bg-neutral-800 z-10 mb-auto flex justify-between">
           <div>Location</div>
@@ -64,14 +67,22 @@ function Home() {
             {/* Circular Progress */}
             <div className="flex w-full justify-between items-center">
               {/* End Circular Progress */}
-              <div className="flex flex-col">
-                <div className="flex flex-col text-neutral-400">
-                  <span>icon. Calorie goal</span>
-                  <span>1600 kcal</span>
+              <div className="flex flex-col gap-5">
+                <div className="flex flex-col text-white">
+                  <span className="flex">
+                    <Flame className="text-red-400 mr-2" /> Calorie goal
+                  </span>
+                  <span className="py-1 text-blue-300 font-semibold">
+                    1600 kcal
+                  </span>
                 </div>
-                <div className="flex flex-col text-neutral-400  ">
-                  <span>icon. Food intake</span>
-                  <span>0 kcal</span>
+                <div className="flex flex-col text-white  ">
+                  <span className="flex">
+                    <Soup className="text-green-300 mr-2" /> Food intake
+                  </span>
+                  <span className="text-blue-300 font-semibold py-1">
+                    0 kcal
+                  </span>
                 </div>
               </div>
               <div class="relative size-35">
@@ -105,13 +116,15 @@ function Home() {
 
                 {/* Percentage Text */}
                 <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                  <span class="text-center text-md block text-white">
+                  <span class="text-center text-md block text-gray-400">
                     Remaining
                   </span>
                   <span class="text-center text-lg font-semibold text-blue-500 block">
                     1600
                   </span>
-                  <span class="text-center text-md text-white block">Kcal</span>
+                  <span class="text-center text-md text-gray-400 block">
+                    Kcal
+                  </span>
                 </div>
               </div>
             </div>
@@ -121,7 +134,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="flex justify-evenly mt-15 mb-10">
+          <div className="flex justify-evenly mt-10 mb-10">
             <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

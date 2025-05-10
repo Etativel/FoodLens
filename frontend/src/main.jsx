@@ -2,11 +2,12 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import React, { Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import UserProvider from "./contexts/UserProvider";
 
 import "./index.css";
 import Home from "./pages/Home/Home.jsx";
 import MyFood from "./pages/MyFood/MyFood.jsx";
-import More from "./pages/More/More.jsx";
+import Settings from "./pages/Settings/Settings.jsx";
 import Calories from "./pages/Calories/Calories.jsx";
 import Result from "./pages/Result/Result.jsx";
 import Layout from "./Layout.jsx";
@@ -35,7 +36,7 @@ const router = createBrowserRouter([
       { path: "/home", element: <Home /> },
       { path: "/calories", element: <Calories /> },
       { path: "/my-food", element: <MyFood /> },
-      { path: "/more", element: <More /> },
+      { path: "/settings", element: <Settings /> },
     ],
   },
 ]);
@@ -43,7 +44,9 @@ const router = createBrowserRouter([
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <Suspense fallback="">
-      <RouterProvider router={router} />
+      <UserProvider>
+        <RouterProvider router={router} />
+      </UserProvider>
     </Suspense>
   </StrictMode>
 );

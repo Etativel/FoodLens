@@ -35,6 +35,7 @@ async function getUserForApp(req, res) {
       },
 
       select: {
+        id: true,
         name: true,
         isPremium: true,
         scanCreditsRemaining: true,

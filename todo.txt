@@ -4,4 +4,4 @@ fetch data from data base, not exist ?, fetch from openai then store it to datab
 
 fetch data from openai
 
-separate results component
+the vision middle should check the database first after getting the dishname before continuing to the image vision model

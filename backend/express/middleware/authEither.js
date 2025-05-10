@@ -4,6 +4,7 @@ module.exports = function authenticateEither(req, res, next) {
   if (req.cookies.token) {
     return authenticateUser(req, res, next);
   }
+  
   if (req.cookies.admintoken) {
     return authenticateAdmin(req, res, next);
   }

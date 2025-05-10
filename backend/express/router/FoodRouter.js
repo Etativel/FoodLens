@@ -1,12 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controller/FoodController");
+const authenticateEither = require("../middleware/authEither");
 
 router.get("/food/getall", controller.getAllRecipeName);
-router.get("/food/:predicted_name", controller.getFoodByPredictedName);
+router.get(
+  "/food/:predicted_name",
+  authenticateEither,
+  controller.getFoodByPredictedName
+);
 
-router.patch("/food/:id", controller.updateFood);
+router.patch("/food/:id", authenticateEither, controller.updateFood);
 
-router.post("/create", controller.saveFood);
+router.post("/create/scan", authenticateEither, controller.createScan);
+router.post("/create", authenticateEither, controller.saveFood);
 
 module.exports = router;

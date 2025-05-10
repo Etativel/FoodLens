@@ -68,313 +68,10 @@ async function getAllRecipeName(req, res) {
 }
 
 // POST
-// async function saveFood(req, res) {
-//   const { recipe } = req.body;
-
-//   // validate required fields
-//   const requiredFields = [
-//     "name",
-//     "predicted_name",
-//     "summary",
-//     "nutritionSnapshot",
-//     "nutritionItems",
-//     "ingredients",
-//     "instructions",
-//     "variations",
-//   ];
-
-//   const missingFields = requiredFields.filter((field) => !recipe[field]);
-
-//   if (missingFields.length > 0) {
-//     return res.status(400).json({
-//       message: "Missing required fields",
-//       missingFields,
-//     });
-//   }
-
-//   try {
-//     // check if recipe with predicted_name already exists to avoid duplication
-//     const existingRecipe = await prisma.recipe.findUnique({
-//       where: { predicted_name: recipe.predicted_name },
-//     });
-
-//     if (existingRecipe) {
-//       return res.status(409).json({
-//         message: "Recipe with this predicted_name already exists",
-//         recipeId: existingRecipe.id,
-//       });
-//     }
-
-//     // create recipe with all related data
-//     const newFood = await prisma.recipe.create({
-//       data: {
-//         name: recipe.name,
-//         predicted_name: recipe.predicted_name,
-//         summary: recipe.summary,
-//         thumbnailUrls: recipe.thumbnailUrls || [],
-//         culturalContext: recipe.culturalContext || null,
-//         funFacts: recipe.funFacts || [],
-//         tips: recipe.tips,
-//         badgeKeys: recipe.badgeKeys || [],
-
-//         // create nutrition snapshot
-//         nutritionSnapshot: {
-//           create: {
-//             calories: recipe.nutritionSnapshot.calories,
-//             protein: recipe.nutritionSnapshot.protein,
-//             fat: recipe.nutritionSnapshot.fat,
-//             carbs: recipe.nutritionSnapshot.carbs,
-//             fiber: recipe.nutritionSnapshot.fiber,
-//             sugar: recipe.nutritionSnapshot.sugar,
-//             sodium: recipe.nutritionSnapshot.sodium,
-//           },
-//         },
-
-//         // create nutrition items
-//         nutritionItems: {
-//           create: recipe.nutritionItems.map((item) => ({
-//             name: item.name,
-//             value: item.value,
-//             unit: item.unit,
-//           })),
-//         },
-
-//         // create ingredient groups and their items
-//         ingredients: {
-//           create: recipe.ingredients.map((ing) => ({
-//             groupName: ing.group,
-//             items: {
-//               create: ing.items.map((text) => ({
-//                 item: text,
-//               })),
-//             },
-//           })),
-//         },
-
-//         // create instructions
-//         instructions: {
-//           create: recipe.instructions.map((instruction) => ({
-//             stepNumber: instruction.step,
-//             description: instruction.description,
-//             duration: instruction.duration || null,
-//           })),
-//         },
-
-//         // create variations
-//         variations: {
-//           create: recipe.variations.map((variation) => ({
-//             name: variation.name,
-//             add: variation.add || null,
-//             swap: variation.swap || null,
-//           })),
-//         },
-//       },
-//       // include related data in response
-//       include: {
-//         nutritionSnapshot: true,
-//         nutritionItems: true,
-//         ingredients: {
-//           include: {
-//             items: true,
-//           },
-//         },
-//         instructions: true,
-//         variations: true,
-//       },
-//     });
-
-//     return res.status(201).json({
-//       message: "Recipe created successfully",
-//       recipe: newFood,
-//     });
-//   } catch (error) {
-//     console.error("Error creating recipe:", error);
-
-//     // unique constraint violations
-//     if (error.code === "P2002") {
-//       return res.status(409).json({
-//         message: "A recipe with this information already exists",
-//         field: error.meta?.target?.[0] || "unknown field",
-//       });
-//     }
-
-//     return res.status(500).json({
-//       message: "Failed to create recipe",
-//       error:
-//         process.env.NODE_ENV === "production"
-//           ? "Internal server error"
-//           : error.message,
-//     });
-//   }
-// }
-
-// POST  /food-api/create
-// async function saveFood(req, res) {
-//   const { recipe, imageUrl, scanMode } = req.body;
-//   // const userId = req.user.id;
-//   const placeholderUserId = "00000000-0000-0000-0000-000000000000";
-//   const requiredFields = [
-//     "name",
-//     "predicted_name",
-//     "summary",
-//     "nutritionSnapshot",
-//     "nutritionItems",
-//     "ingredients",
-//     "instructions",
-//     "variations",
-//   ];
-
-//   const missingFields = requiredFields.filter((f) => !recipe[f]);
-//   if (missingFields.length > 0) {
-//     return res
-//       .status(400)
-//       .json({ message: "Missing required fields", missingFields });
-//   }
-
-//   try {
-//     const existingRecipe = await prisma.recipe.findUnique({
-//       where: { predicted_name: recipe.predicted_name },
-//       select: { id: true },
-//     });
-
-//     const upserted = await prisma.recipe.upsert({
-//       where: { predicted_name: recipe.predicted_name },
-//       create: {
-//         name: recipe.name,
-//         predicted_name: recipe.predicted_name,
-//         summary: recipe.summary,
-//         thumbnailUrls: recipe.thumbnailUrls || [],
-//         culturalContext: recipe.culturalContext || null,
-//         funFacts: recipe.funFacts || [],
-//         tips: recipe.tips,
-//         badgeKeys: recipe.badgeKeys || [],
-//         nutritionSnapshot: {
-//           create: { ...recipe.nutritionSnapshot },
-//         },
-//         nutritionItems: {
-//           create: recipe.nutritionItems.map((i) => ({
-//             name: i.name,
-//             value: i.value,
-//             unit: i.unit,
-//           })),
-//         },
-//         ingredients: {
-//           create: recipe.ingredients.flatMap((grp) =>
-//             grp.items.map((item) => ({
-//               groupName: grp.group,
-//               items: { create: { item } },
-//             }))
-//           ),
-//         },
-//         instructions: {
-//           create: recipe.instructions.map((ins) => ({
-//             stepNumber: ins.step,
-//             description: ins.description,
-//             duration: ins.duration || null,
-//           })),
-//         },
-//         variations: {
-//           create: recipe.variations.map((v) => ({
-//             name: v.name,
-//             add: v.add || null,
-//             swap: v.swap || null,
-//           })),
-//         },
-//       },
-//       update: {
-//         name: recipe.name,
-//         summary: recipe.summary,
-//         thumbnailUrls: recipe.thumbnailUrls || [],
-//         culturalContext: recipe.culturalContext || null,
-//         funFacts: recipe.funFacts || [],
-//         tips: recipe.tips,
-//         badgeKeys: recipe.badgeKeys || [],
-//         nutritionSnapshot: {
-//           upsert: {
-//             create: { ...recipe.nutritionSnapshot },
-//             update: { ...recipe.nutritionSnapshot },
-//           },
-//         },
-//         nutritionItems: {
-//           deleteMany: {},
-//           create: recipe.nutritionItems.map((i) => ({
-//             name: i.name,
-//             value: i.value,
-//             unit: i.unit,
-//           })),
-//         },
-//         ingredients: {
-//           deleteMany: {},
-//           create: recipe.ingredients.flatMap((grp) =>
-//             grp.items.map((item) => ({
-//               groupName: grp.group,
-//               items: { create: { item } },
-//             }))
-//           ),
-//         },
-//         instructions: {
-//           deleteMany: {},
-//           create: recipe.instructions.map((ins) => ({
-//             stepNumber: ins.step,
-//             description: ins.description,
-//             duration: ins.duration || null,
-//           })),
-//         },
-//         variations: {
-//           deleteMany: {},
-//           create: recipe.variations.map((v) => ({
-//             name: v.name,
-//             add: v.add || null,
-//             swap: v.swap || null,
-//           })),
-//         },
-//       },
-//       select: { id: true },
-//     });
-
-//     await prisma.scan.create({
-//       data: {
-//         userId: placeholderUserId,
-//         imageUrl,
-//         scanMode,
-//         recipeId: upserted.id,
-//       },
-//     });
-
-//     const full = await prisma.recipe.findUnique({
-//       where: { id: upserted.id },
-//       include: {
-//         nutritionSnapshot: true,
-//         nutritionItems: true,
-//         ingredients: { include: { items: true } },
-//         instructions: true,
-//         variations: true,
-//         scans: true,
-//       },
-//     });
-
-//     res.status(existingRecipe ? 200 : 201).json({
-//       message: existingRecipe ? "Recipe updated" : "Recipe created",
-//       recipe: full,
-//     });
-//   } catch (error) {
-//     console.error("Error saving recipe + scan:", error);
-//     if (error.code === "P2002") {
-//       return res.status(409).json({
-//         message: "Duplicate predicted_name",
-//         field: error.meta?.target,
-//       });
-//     }
-//     res
-//       .status(500)
-//       .json({ message: "Internal server error", error: error.message });
-//   }
-// }
-
 async function saveFood(req, res) {
   const { recipe, imageUrl, scanMode } = req.body;
-  // const userId = req.user.id;
-  const placeholderUserId = "00000000-0000-0000-0000-000000000000";
+  const userId = req.user.id;
+
   const requiredFields = [
     "name",
     "predicted_name",
@@ -517,7 +214,7 @@ async function saveFood(req, res) {
 
     await prisma.scan.create({
       data: {
-        userId: placeholderUserId,
+        userId: userId,
         imageUrl,
         scanMode,
         recipeId: upserted.id,
@@ -551,6 +248,25 @@ async function saveFood(req, res) {
     res
       .status(500)
       .json({ message: "Internal server error", error: error.message });
+  }
+}
+
+async function createScan(req, res) {
+  const { userId, scanMode, recipeId } = req.body;
+  const imageUrl = req.file.path;
+  try {
+    await prisma.scan.create({
+      data: {
+        userId,
+        imageUrl,
+        scanMode,
+        recipeId,
+      },
+    });
+    return res.status(200).json({ message: "Food scan saved" });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res.status(500).json({ message: "Failed to create new food scan" });
   }
 }
 
@@ -604,4 +320,5 @@ module.exports = {
   getFoodByPredictedName,
   updateFood,
   getAllRecipeName,
+  createScan,
 };

@@ -3,7 +3,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import { Tag } from "lucide-react";
 import { formatText, toSnakeCase, compressImage } from "../../utils";
 import UserContext from "../../contexts/createContext/UserContext";
-import IsAuthorize from "../../utils/isAuthorize";
+
 import {
   DietaryBadges,
   NutritionFacts,
@@ -15,64 +15,6 @@ import {
   CulturalContext,
   FunFacts,
 } from "../../components/Result";
-
-const badgeLookup = {
-  "Low-Carb": {
-    name: "Low-Carb",
-    color: "bg-emerald-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "High-Protein": {
-    name: "High-Protein",
-    color: "bg-blue-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "Gluten-Free": {
-    name: "Gluten-Free",
-    color: "bg-purple-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  Vegan: {
-    name: "Vegan",
-    color: "bg-green-600",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  Vegetarian: {
-    name: "Vegetarian",
-    color: "bg-lime-600",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "Dairy-Free": {
-    name: "Dairy-Free",
-    color: "bg-yellow-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "Low-Calorie": {
-    name: "Low-Calorie",
-    color: "bg-red-400",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "Keto-Friendly": {
-    name: "Keto-Friendly",
-    color: "bg-pink-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  Paleo: {
-    name: "Paleo",
-    color: "bg-orange-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "Heart-Healthy": {
-    name: "Heart-Healthy",
-    color: "bg-rose-600",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-  "Low-Sodium": {
-    name: "Low-Sodium",
-    color: "bg-sky-500",
-    icon: <Tag size={14} className="opacity-80" />,
-  },
-};
 
 export default function Results() {
   const { state } = useLocation();
@@ -86,10 +28,11 @@ export default function Results() {
   const fetchGuard = useRef(false);
   const { profile } = useContext(UserContext);
   const [intakeStatus, setIntakeStatus] = useState("question");
-  // Store user's response (Yes/No)
   const [userResponse, setUserResponse] = useState("");
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
+
+  console.log(profile);
 
   const isPremium = false;
 
@@ -210,21 +153,23 @@ export default function Results() {
       const form = new FormData();
       form.append("image", blob, "photo.jpg");
       form.append("scanMode", isPremium ? "vision" : "default");
-      form.append("userId", profile?.id);
+      form.append("userId", profile.user.id);
       form.append("recipeId", food.id);
-      const response = await fetch("http://localhost:3000/food/create/scan", {
-        method: "POST",
-        credentials: "include",
-        body: form,
-      });
+      const response = await fetch(
+        "http://localhost:3000/food-api/create/scan",
+        {
+          method: "POST",
+          credentials: "include",
+          body: form,
+        }
+      );
       if (!response.ok) {
         console.log("Error, ", response.statusText);
-        return;
       }
-      return;
+      const data = await response.json();
+      console.log(data);
     } catch (err) {
       console.log("Failed to create new scan, ", err);
-      return;
     }
   }
 
@@ -295,7 +240,7 @@ export default function Results() {
             <div className="bg-neutral-800 flex flex-col px-3 pt-3 pb-3 transition-all duration-300 ease-in-out">
               {intakeStatus === "question" ? (
                 <>
-                  <div className="block text-lg font-semibold text-white">
+                  <div className="text-lg font-semibold text-white">
                     Help us track your daily intake
                   </div>
                   <div className="flex justify-between items-center">
@@ -311,7 +256,7 @@ export default function Results() {
                       </button>
                       <button
                         onClick={() => handleIntakeResponse("No")}
-                        className="w-10 bg-red-500 rounded-sm font-semibold text-white mx-2 hover:bg-red-600 transition-colors"
+                        className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
                       >
                         No
                       </button>
@@ -396,7 +341,7 @@ export default function Results() {
             </div>
 
             {/* Dietary Badges */}
-            <DietaryBadges food={food} badgeLookup={badgeLookup} />
+            <DietaryBadges food={food} />
             <NutritionFacts
               food={food}
               setShowNutritionDetails={setShowNutritionDetails}

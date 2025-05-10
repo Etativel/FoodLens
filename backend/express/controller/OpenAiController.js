@@ -265,6 +265,9 @@ const VisionStructure = z.object({
 
 async function promptFoodInformation(req, res) {
   const { input } = req.body;
+  console.log("this is file, ", req.file);
+  const imageUrl = req.file.path;
+  console.log(imageUrl);
   try {
     const response = await openai.responses.parse({
       model: "gpt-4o-2024-08-06",
@@ -300,7 +303,7 @@ Make sure the output exactly matches the “recipe” Zod schema.
     const recipe = response.output_parsed;
     console.log(recipe);
 
-    return res.status(200).json({ recipe });
+    return res.status(200).json({ recipe, imageUrl });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: error });

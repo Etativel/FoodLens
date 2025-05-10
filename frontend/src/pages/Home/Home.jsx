@@ -1,15 +1,32 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
 import { Flame, Soup } from "lucide-react";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import UserContext from "../../contexts/createContext/UserContext";
 
-function NutrientTrackerComponent() {
-  const [nutrients] = useState([
-    { name: "Protein", current: 40, target: 80, color: "bg-blue-500" },
-    { name: "Carbs", current: 70, target: 200, color: "bg-green-500" },
-    { name: "Fat", current: 90, target: 65, color: "bg-yellow-500" },
-  ]);
+function NutrientTrackerComponent({ totals }) {
+  const normalize = (key) => totals?.[key]?.current ?? 0;
 
+  const nutrients = [
+    {
+      name: "Protein",
+      current: normalize("protein") || 0,
+      target: 80,
+      color: "bg-blue-500",
+    },
+    {
+      name: "Carbs",
+      current: normalize("carbs") || 0,
+      target: 200,
+      color: "bg-green-500",
+    },
+    {
+      name: "Fat",
+      current: normalize("fat") || 0,
+      target: 90,
+      color: "bg-yellow-500",
+    },
+  ];
   return (
     <div className="mt-4">
       <div className="flex flex-row justify-between gap-4">
@@ -43,8 +60,90 @@ function NutrientTrackerComponent() {
     </div>
   );
 }
-
 function Home() {
+  const { profile } = useContext(UserContext);
+  const [totals, setTotals] = useState({
+    protein: { current: 0, unit: "g" },
+    carbs: { current: 0, unit: "g" },
+    fat: { current: 0, unit: "g" },
+    calories: { current: 0, unit: "kcal" },
+    fiber: { current: 0, unit: "g" },
+    sodium: { current: 0, unit: "mg" },
+    sugar: { current: 0, unit: "g" },
+  });
+  const calorieGoal = 1600;
+
+  useEffect(() => {
+    const scans = profile?.user?.scans || [];
+    const baseTotals = {
+      protein: { current: 0, unit: "g" },
+      carbs: { current: 0, unit: "g" },
+      fat: { current: 0, unit: "g" },
+      calories: { current: 0, unit: "kcal" },
+      fiber: { current: 0, unit: "g" },
+      sodium: { current: 0, unit: "mg" },
+      sugar: { current: 0, unit: "g" },
+    };
+
+    if (!scans.length) {
+      setTotals(baseTotals);
+      return;
+    }
+
+    const now = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+      now.getDate()
+    )}`;
+
+    const todayScans = scans.filter(
+      ({ scannedAt }) => scannedAt.slice(0, 10) === todayStr
+    );
+
+    const normalize = (name) => {
+      const lower = name.toLowerCase();
+      if (lower === "carbohydrates") return "carbs";
+      return lower;
+    };
+
+    const rawTotals = todayScans.reduce(
+      (acc, scan) => {
+        scan.recipe.nutritionItems.forEach(({ name, value, unit }) => {
+          const key = normalize(name);
+
+          if (!acc[key]) {
+            acc[key] = {
+              name: key,
+              current: 0,
+              unit,
+              color: "",
+            };
+          }
+
+          acc[key].current += value;
+        });
+
+        return acc;
+      },
+      { ...baseTotals }
+    );
+
+    setTotals(rawTotals);
+  }, [profile]);
+
+  const caloriesConsumed = totals.calories?.current || 0;
+  const caloriesRemaining = Math.max(0, calorieGoal - caloriesConsumed);
+  const caloriePercentage = Math.min(
+    100,
+    (caloriesConsumed / calorieGoal) * 100
+  );
+
+  const circleRadius = 16;
+  const circumference = 2 * Math.PI * circleRadius;
+  const dashOffset = circumference - (caloriePercentage / 100) * circumference;
+
+  console.log(totals);
+
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
       <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-20 justify-end ">
@@ -63,76 +162,84 @@ function Home() {
           <div className="text-white text-lg font-sm mt-10 mx-3">
             <p>Today, May 09</p>
           </div>
-          <div className="mt-1 mx-3 bg-neutral-800 py-4 px-4 rounded-sm flex flex-col">
-            {/* Circular Progress */}
-            <div className="flex w-full justify-between items-center">
-              {/* End Circular Progress */}
-              <div className="flex flex-col gap-5">
-                <div className="flex flex-col text-white">
-                  <span className="flex">
-                    <Flame className="text-red-400 mr-2" /> Calorie goal
-                  </span>
-                  <span className="py-1 text-blue-300 font-semibold">
-                    1600 kcal
-                  </span>
+
+          {/* Circular Progress */}
+          {totals ? (
+            <>
+              <div className="mt-1 mx-3 bg-neutral-800 py-4 px-4 rounded-sm flex flex-col">
+                <div className="flex w-full justify-between items-center">
+                  {/* End Circular Progress */}
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col text-white">
+                      <span className="flex">
+                        <Flame className="text-red-400 mr-2" /> Calorie goal
+                      </span>
+                      <span className="py-1 text-blue-300 font-semibold">
+                        {calorieGoal} kcal
+                      </span>
+                    </div>
+                    <div className="flex flex-col text-white  ">
+                      <span className="flex">
+                        <Soup className="text-green-300 mr-2" /> Food intake
+                      </span>
+                      <span className="text-blue-300 font-semibold py-1">
+                        {caloriesConsumed} kcal
+                      </span>
+                    </div>
+                  </div>
+                  <div className="relative size-35">
+                    <svg
+                      className="size-full -rotate-90"
+                      viewBox="0 0 36 36"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      {/* Background Circle */}
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-current opacity-[20%] text-gray-200"
+                        strokeWidth="2"
+                      ></circle>
+                      {/* Progress Circle */}
+                      <circle
+                        cx="18"
+                        cy="18"
+                        r="16"
+                        fill="none"
+                        className="stroke-current text-blue-500"
+                        strokeWidth="2"
+                        strokeDasharray={circumference}
+                        strokeDashoffset={dashOffset}
+                        strokeLinecap="round"
+                      ></circle>
+                    </svg>
+
+                    {/* Percentage Text */}
+                    <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
+                      <span className="text-center text-md block text-gray-400">
+                        Remaining
+                      </span>
+                      <span className="text-center text-lg font-semibold text-blue-500 block">
+                        {caloriesRemaining}
+                      </span>
+                      <span className="text-center text-md text-gray-400 block">
+                        Kcal
+                      </span>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-col text-white  ">
-                  <span className="flex">
-                    <Soup className="text-green-300 mr-2" /> Food intake
-                  </span>
-                  <span className="text-blue-300 font-semibold py-1">
-                    0 kcal
-                  </span>
+                <div>
+                  <NutrientTrackerComponent totals={totals} />
                 </div>
               </div>
-              <div class="relative size-35">
-                <svg
-                  class="size-full -rotate-90"
-                  viewBox="0 0 36 36"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  {/* Background Circle */}
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="16"
-                    fill="none"
-                    class="stroke-current opacity-[20%] text-gray-200"
-                    stroke-width="2"
-                  ></circle>
-                  {/* Progress Circle */}
-                  <circle
-                    cx="18"
-                    cy="18"
-                    r="16"
-                    fill="none"
-                    class="stroke-current text-blue-500"
-                    stroke-width="2"
-                    stroke-dasharray="111"
-                    stroke-dashoffset="65"
-                    stroke-linecap="round"
-                  ></circle>
-                </svg>
-
-                {/* Percentage Text */}
-                <div class="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                  <span class="text-center text-md block text-gray-400">
-                    Remaining
-                  </span>
-                  <span class="text-center text-lg font-semibold text-blue-500 block">
-                    1600
-                  </span>
-                  <span class="text-center text-md text-gray-400 block">
-                    Kcal
-                  </span>
-                </div>
-              </div>
+            </>
+          ) : (
+            <div className="flex">
+              <div className="h-60 w-full mt-1 mx-3  rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
             </div>
-
-            <div>
-              <NutrientTrackerComponent />
-            </div>
-          </div>
+          )}
 
           <div className="flex justify-evenly mt-10 mb-10">
             <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
@@ -165,7 +272,6 @@ function Home() {
                   clipRule="evenodd"
                 />
               </svg>
-
               <p className="font-semibold text-md">Calories</p>
             </div>
             <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">

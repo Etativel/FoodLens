@@ -212,14 +212,28 @@ export default function Results() {
   }
   const animationStyles = `
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(-10px); }
+      from { opacity: 0; transform: translateY(-1px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+        @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-100%); }
+      to { opacity: 1; transform: translateX(0); }
+    }
     .animate-fadeIn {
       animation: fadeIn 0.5s ease-out forwards;
     }
+         .animate-slideIn {
+      animation: slideIn 0.5s ease-out forwards;
+    }
   `;
+
+  const getAnimationClass = () => {
+    if (intakeStatus === "question") {
+      return "animate-slideIn";
+    } else {
+      return "animate-fadeIn";
+    }
+  };
 
   return (
     <>
@@ -237,7 +251,9 @@ export default function Results() {
           ></div>
           {/* Intake Log */}
           {food && intakeStatus !== "hidden" && (
-            <div className="bg-neutral-800 flex flex-col px-3 pt-3 pb-3 transition-all duration-300 ease-in-out">
+            <div
+              className={`bg-neutral-800 flex flex-col px-3 pt-3 pb-3 transition-all duration-300 ease-in-out ${getAnimationClass()}`}
+            >
               {intakeStatus === "question" ? (
                 <>
                   <div className="text-lg font-semibold text-white">

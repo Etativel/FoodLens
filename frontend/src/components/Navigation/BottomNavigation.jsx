@@ -1,17 +1,18 @@
 import { useNavigate } from "react-router-dom";
 import { FaBowlFood } from "react-icons/fa6";
 import { useState, useRef, useEffect, useContext } from "react";
-import "./BottomNavigation.css";
+import UserContext from "../../contexts/createContext/UserContext";
+
 import {
   CameraIcon,
   HomeIcon,
   CalculatorIcon,
-  SquareIcon,
   GalleryIcon,
   CheckIcon,
+  GearIcon,
+  XIcon,
 } from "../../assets/icons";
-import XIcon from "../../assets/icons/XIcon";
-import UserContext from "../../contexts/createContext/UserContext";
+import "./BottomNavigation.css";
 
 function BottomNavigation() {
   const currentPage = location.pathname.split("/").pop();
@@ -178,7 +179,7 @@ function BottomNavigation() {
   return (
     <>
       {isProcessing ? (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col items-center justify-center">
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-90 flex flex-col items-center justify-center lg:max-w-[500px] md:max-w-[500px]">
           <div className="relative max-h-[80vh] w-auto">
             <img
               src={capturedImage}
@@ -200,7 +201,7 @@ function BottomNavigation() {
       ) : (
         <>
           {isCameraOpen ? (
-            <div className="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50">
+            <div className="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50 lg:max-w-[500px] md:max-w-[500px]">
               {/* hidden canvas for capturing images */}
               <canvas ref={canvasRef} className="hidden"></canvas>
 
@@ -293,7 +294,7 @@ function BottomNavigation() {
               )}
             </div>
           ) : (
-            <div className="fixed-bottom-nav">
+            <div className="fixed-bottom-nav lg:max-w-[500px] md:max-w-[500px]">
               <div className="flex  shadow h-20 justify-center gap-5 z-50 pt-2 absolute bottom-0 bg-neutral-800 w-full">
                 <div>
                   <button
@@ -362,19 +363,19 @@ function BottomNavigation() {
                 </div>
                 <div>
                   <button
-                    onClick={() => redirection("more")}
+                    onClick={() => redirection("settings")}
                     className="p-2 w-13 pt-4 flex flex-col items-center"
                   >
-                    <SquareIcon currentPage={currentPage} />
+                    <GearIcon currentPage={currentPage} />
 
                     <p
                       className={`text-sm font-semibold ${
-                        currentPage === "more"
+                        currentPage === "settings"
                           ? "text-[#2b7fff]"
                           : "text-[#8e8e8e]"
                       }`}
                     >
-                      More
+                      Settings
                     </p>
                   </button>
                 </div>

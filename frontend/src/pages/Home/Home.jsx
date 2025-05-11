@@ -60,6 +60,7 @@ function NutrientTrackerComponent({ totals }) {
     </div>
   );
 }
+
 function Home() {
   const { profile } = useContext(UserContext);
   const [totals, setTotals] = useState({
@@ -72,6 +73,8 @@ function Home() {
     sugar: { current: 0, unit: "g" },
   });
   const calorieGoal = 1600;
+
+  console.log(totals);
 
   useEffect(() => {
     const scans = profile?.user?.scans || [];
@@ -142,16 +145,20 @@ function Home() {
   const circumference = 2 * Math.PI * circleRadius;
   const dashOffset = circumference - (caloriePercentage / 100) * circumference;
 
-  console.log(totals);
+  const sodiumPercentage = Math.min((totals.sodium.current / 3000) * 100);
+
+  const fiberPercentage = Math.min((totals.fiber.current / 40) * 100);
+  const sugarPercentage = Math.min((totals.sugar.current / 60) * 100);
 
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
-      <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-20 justify-end ">
-        <div className="bg-neutral-800 z-10 mb-auto flex justify-between">
+      <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end ">
+        {/* <div className="bg-neutral-800 z-10 mb-auto flex justify-between">
           <div>Location</div>
           <div>Lang</div>
-        </div>
-        <div className="transform translate-y-1/2 ">
+        </div> */}
+        <div className="transform translate-y-1/2">
+          {/* translate-y-1/2*/}
           <SearchBar />
         </div>
       </div>
@@ -233,6 +240,50 @@ function Home() {
                 <div>
                   <NutrientTrackerComponent totals={totals} />
                 </div>
+                <div className="mt-5">
+                  <div class="mb-1 mt-2 flex justify-between text-white">
+                    <span className="text-sm font-semibold">Sodium</span>
+                    <span className="text-sm">
+                      {totals?.sodium.current}
+                      <span className="text-white opacity-[70%]">/</span>3000
+                      <span className="text-white opacity-[70%]"> mg</span>
+                    </span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                    <div
+                      class="bg-red-500 h-2.5 rounded-full "
+                      style={{ width: sodiumPercentage + "%" }}
+                    ></div>
+                  </div>
+                  <div class="mb-1 mt-2 text-white flex justify-between">
+                    <span className="text-sm font-semibold">Fiber</span>
+                    <span className="text-sm">
+                      {totals?.fiber.current}
+                      <span className="text-white opacity-[70%]">/</span>40
+                      <span className="text-white opacity-[70%]"> g</span>
+                    </span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                    <div
+                      class="bg-orange-500 h-2.5 rounded-full"
+                      style={{ width: fiberPercentage + "%" }}
+                    ></div>
+                  </div>
+                  <div class="mb-1 mt-2 text-white flex justify-between">
+                    <span className="text-sm font-semibold">Sugar</span>
+                    <span className="text-sm">
+                      {totals?.sugar.current}
+                      <span className="text-white opacity-[70%]">/</span>60
+                      <span className="text-white opacity-[70%]"> g</span>
+                    </span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
+                    <div
+                      class="bg-purple-500 h-2.5 rounded-full "
+                      style={{ width: sugarPercentage + "%" }}
+                    ></div>
+                  </div>
+                </div>
               </div>
             </>
           ) : (
@@ -288,7 +339,9 @@ function Home() {
               <p className="font-semibold text-md">Recipes</p>
             </div>
           </div>
-          <div className=" mx-3 flex flex-col mt-2 ">
+
+          {/* Trending Recipes */}
+          {/* <div className=" mx-3 flex flex-col mt-2 ">
             <span className="text-lg font-semibold text-white">
               Trending Recipes
             </span>
@@ -340,9 +393,10 @@ function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className=" mx-3 flex flex-col mt-7">
+          {/* Local Foods */}
+          {/* <div className=" mx-3 flex flex-col mt-7">
             <span className="text-lg font-semibold text-white">
               Your Local Food
             </span>
@@ -394,9 +448,10 @@ function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
 
-          <div className="px-3 pt-3 flex flex-col mt-7 bg-neutral-800  ">
+          {/* Topics */}
+          {/* <div className="px-3 pt-3 flex flex-col mt-7 bg-neutral-800  ">
             <span className="text-lg font-semibold text-white">Topics</span>
             <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
               <div className="inline-block mx-1">
@@ -446,7 +501,8 @@ function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </div> */}
+
           <div className="h-40 flex justify-center items-center bg-neutral-800 text-white flex-col border-t border-neutral-600">
             <img className="size-15" src={foodLensIcon} alt="" />
             <p className="text-[#8e8e8e] font-semibold">

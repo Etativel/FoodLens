@@ -74,18 +74,18 @@ const COLORS = [
   "bg-sky-500",
 ];
 
-// Helper to pick a random color
-const getRandomColor = () => COLORS[Math.floor(Math.random() * COLORS.length)];
-
 export default function DietaryBadges({ food }) {
   return (
     <div className="mb-6 mt-3">
       <div className="flex flex-wrap gap-2">
         {food
-          ? food.badgeKeys.map((key) => {
-              // Check lookup for predefined badge
+          ? food.badgeKeys.map((key, index) => {
+              // lookup for predefined badge
               const badge = badgeLookup[key];
-              const colorClass = badge ? badge.color : getRandomColor();
+              // use predefined or by index
+              const colorClass = badge
+                ? badge.color
+                : COLORS[index % COLORS.length];
               const icon = badge ? (
                 badge.icon
               ) : (

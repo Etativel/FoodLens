@@ -1,68 +1,11 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
-import { Flame, Soup } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
-import UserContext from "../../contexts/createContext/UserContext";
-
-function NutrientTrackerComponent({ totals }) {
-  const normalize = (key) => totals?.[key]?.current ?? 0;
-
-  const nutrients = [
-    {
-      name: "Protein",
-      current: normalize("protein") || 0,
-      target: 80,
-      color: "bg-blue-500",
-    },
-    {
-      name: "Carbs",
-      current: normalize("carbs") || 0,
-      target: 200,
-      color: "bg-green-500",
-    },
-    {
-      name: "Fat",
-      current: normalize("fat") || 0,
-      target: 90,
-      color: "bg-yellow-500",
-    },
-  ];
-  return (
-    <div className="mt-4">
-      <div className="flex flex-row justify-between gap-4">
-        {nutrients.map((nutrient, index) => {
-          const percentage = (nutrient.current / nutrient.target) * 100;
-          return (
-            <div key={index} className="flex-1">
-              <div className="mb-1 py-1">
-                <span className="text-sm font-medium text-white">
-                  {nutrient.name}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
-                <div
-                  className={`${nutrient.color} h-2.5 rounded-full`}
-                  style={{ width: `${Math.min(percentage, 100)}%` }}
-                ></div>
-              </div>
-              <div className="flex py-1">
-                <span className="text-sm text-white">
-                  {nutrient.current}
-                  <span className="text-white opacity-[70%]">/</span>
-                  {nutrient.target}{" "}
-                  <span className="text-white opacity-[70%]">g</span>
-                </span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
+import { useEffect, useState } from "react";
+import { UseDailyTotals } from "../../utils";
+import { NutrientInfoGraph } from "../../shared";
 
 function Home() {
-  const { profile } = useContext(UserContext);
+  const { dailyTotals } = UseDailyTotals();
   const [totals, setTotals] = useState({
     protein: { current: 0, unit: "g" },
     carbs: { current: 0, unit: "g" },
@@ -72,222 +15,38 @@ function Home() {
     sodium: { current: 0, unit: "mg" },
     sugar: { current: 0, unit: "g" },
   });
-  const calorieGoal = 1600;
 
-  console.log(totals);
+  const now = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  const currentDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
+    now.getDate()
+  )}`;
+
+  console.log(currentDate);
+  console.log(dailyTotals[0]?.date);
 
   useEffect(() => {
-    const scans = profile?.user?.scans || [];
-    const baseTotals = {
-      protein: { current: 0, unit: "g" },
-      carbs: { current: 0, unit: "g" },
-      fat: { current: 0, unit: "g" },
-      calories: { current: 0, unit: "kcal" },
-      fiber: { current: 0, unit: "g" },
-      sodium: { current: 0, unit: "mg" },
-      sugar: { current: 0, unit: "g" },
-    };
-
-    if (!scans.length) {
-      setTotals(baseTotals);
-      return;
+    if (dailyTotals?.length > 0 && dailyTotals[0].date === currentDate) {
+      setTotals(dailyTotals[0].totals);
     }
-
-    const now = new Date();
-    const pad = (n) => String(n).padStart(2, "0");
-    const todayStr = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
-      now.getDate()
-    )}`;
-
-    const todayScans = scans.filter(
-      ({ scannedAt }) => scannedAt.slice(0, 10) === todayStr
-    );
-
-    const normalize = (name) => {
-      const lower = name.toLowerCase();
-      if (lower === "carbohydrates") return "carbs";
-      return lower;
-    };
-
-    const rawTotals = todayScans.reduce(
-      (acc, scan) => {
-        scan.recipe.nutritionItems.forEach(({ name, value, unit }) => {
-          const key = normalize(name);
-
-          if (!acc[key]) {
-            acc[key] = {
-              name: key,
-              current: 0,
-              unit,
-              color: "",
-            };
-          }
-
-          acc[key].current += value;
-        });
-
-        return acc;
-      },
-      { ...baseTotals }
-    );
-
-    setTotals(rawTotals);
-  }, [profile]);
-
-  const caloriesConsumed = totals.calories?.current || 0;
-  const caloriesRemaining = Math.max(0, calorieGoal - caloriesConsumed);
-  const caloriePercentage = Math.min(
-    100,
-    (caloriesConsumed / calorieGoal) * 100
-  );
-
-  const circleRadius = 16;
-  const circumference = 2 * Math.PI * circleRadius;
-  const dashOffset = circumference - (caloriePercentage / 100) * circumference;
-
-  const sodiumPercentage = Math.min((totals.sodium.current / 3000) * 100);
-
-  const fiberPercentage = Math.min((totals.fiber.current / 40) * 100);
-  const sugarPercentage = Math.min((totals.sugar.current / 60) * 100);
+  }, [dailyTotals, currentDate]);
 
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
       <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end ">
-        {/* <div className="bg-neutral-800 z-10 mb-auto flex justify-between">
-          <div>Location</div>
-          <div>Lang</div>
-        </div> */}
         <div className="transform translate-y-1/2">
-          {/* translate-y-1/2*/}
           <SearchBar />
         </div>
       </div>
 
       <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col  pb-20">
-          {/* Date */}
-          <div className="text-white text-lg font-sm mt-10 mx-3">
-            <p>Today, May 09</p>
-          </div>
-
-          {/* Circular Progress */}
           {totals ? (
-            <>
-              <div className="mt-1 mx-3 bg-neutral-800 py-4 px-4 rounded-sm flex flex-col">
-                <div className="flex w-full justify-between items-center">
-                  {/* End Circular Progress */}
-                  <div className="flex flex-col gap-5">
-                    <div className="flex flex-col text-white">
-                      <span className="flex">
-                        <Flame className="text-red-400 mr-2" /> Calorie goal
-                      </span>
-                      <span className="py-1 text-blue-300 font-semibold">
-                        {calorieGoal} kcal
-                      </span>
-                    </div>
-                    <div className="flex flex-col text-white  ">
-                      <span className="flex">
-                        <Soup className="text-green-300 mr-2" /> Food intake
-                      </span>
-                      <span className="text-blue-300 font-semibold py-1">
-                        {caloriesConsumed} kcal
-                      </span>
-                    </div>
-                  </div>
-                  <div className="relative size-35">
-                    <svg
-                      className="size-full -rotate-90"
-                      viewBox="0 0 36 36"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      {/* Background Circle */}
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        className="stroke-current opacity-[20%] text-gray-200"
-                        strokeWidth="2"
-                      ></circle>
-                      {/* Progress Circle */}
-                      <circle
-                        cx="18"
-                        cy="18"
-                        r="16"
-                        fill="none"
-                        className="stroke-current text-blue-500"
-                        strokeWidth="2"
-                        strokeDasharray={circumference}
-                        strokeDashoffset={dashOffset}
-                        strokeLinecap="round"
-                      ></circle>
-                    </svg>
-
-                    {/* Percentage Text */}
-                    <div className="absolute top-1/2 start-1/2 transform -translate-y-1/2 -translate-x-1/2">
-                      <span className="text-center text-md block text-gray-400">
-                        Remaining
-                      </span>
-                      <span className="text-center text-lg font-semibold text-blue-500 block">
-                        {caloriesRemaining}
-                      </span>
-                      <span className="text-center text-md text-gray-400 block">
-                        Kcal
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <NutrientTrackerComponent totals={totals} />
-                </div>
-                <div className="mt-5">
-                  <div class="mb-1 mt-2 flex justify-between text-white">
-                    <span className="text-sm font-semibold">Sodium</span>
-                    <span className="text-sm">
-                      {totals?.sodium.current}
-                      <span className="text-white opacity-[70%]">/</span>3000
-                      <span className="text-white opacity-[70%]"> mg</span>
-                    </span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-                    <div
-                      class="bg-red-500 h-2.5 rounded-full "
-                      style={{ width: sodiumPercentage + "%" }}
-                    ></div>
-                  </div>
-                  <div class="mb-1 mt-2 text-white flex justify-between">
-                    <span className="text-sm font-semibold">Fiber</span>
-                    <span className="text-sm">
-                      {totals?.fiber.current}
-                      <span className="text-white opacity-[70%]">/</span>40
-                      <span className="text-white opacity-[70%]"> g</span>
-                    </span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-                    <div
-                      class="bg-orange-500 h-2.5 rounded-full"
-                      style={{ width: fiberPercentage + "%" }}
-                    ></div>
-                  </div>
-                  <div class="mb-1 mt-2 text-white flex justify-between">
-                    <span className="text-sm font-semibold">Sugar</span>
-                    <span className="text-sm">
-                      {totals?.sugar.current}
-                      <span className="text-white opacity-[70%]">/</span>60
-                      <span className="text-white opacity-[70%]"> g</span>
-                    </span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4 dark:bg-gray-700">
-                    <div
-                      class="bg-purple-500 h-2.5 rounded-full "
-                      style={{ width: sugarPercentage + "%" }}
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            </>
+            // <div className="mt-1">
+            <NutrientInfoGraph totals={totals} date={currentDate} />
           ) : (
-            <div className="flex">
+            // </div>
+            <div className="flex mt-10">
               <div className="h-60 w-full mt-1 mx-3  rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
             </div>
           )}
@@ -340,173 +99,10 @@ function Home() {
             </div>
           </div>
 
-          {/* Trending Recipes */}
-          {/* <div className=" mx-3 flex flex-col mt-2 ">
-            <span className="text-lg font-semibold text-white">
-              Trending Recipes
-            </span>
-            <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none ">
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/RMuYXLYcV_DKnGuYwc1x0jLrYTo=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/256306-mexican-hash-4x3-ea7194e395e34ada9378707e4b793da1.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* Local Foods */}
-          {/* <div className=" mx-3 flex flex-col mt-7">
-            <span className="text-lg font-semibold text-white">
-              Your Local Food
-            </span>
-            <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          {/* Topics */}
-          {/* <div className="px-3 pt-3 flex flex-col mt-7 bg-neutral-800  ">
-            <span className="text-lg font-semibold text-white">Topics</span>
-            <div className="overflow-x-auto whitespace-nowrap mt-2 mb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/FmMHiogj-CWhU1lY4iXTyWeVmEQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699652-strawberry-banana-blended-baked-oats-4x3-58bc4afb95364c8da217c3bec2d57b4a.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-
-              <div className="inline-block mx-1 border-t border-t-solid border-t-1px">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-              <div className="inline-block mx-1">
-                <div className="bg-transparent rounded-sm h-40 w-50 flex flex-col justify-end overflow-hidden">
-                  <div className="h-full w-full">
-                    <img
-                      src="https://www.allrecipes.com/thmb/SbPEC3DrpMgxVWzVw2yf1-aEOjU=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/11699665-meat-lovers-cheddar-biscuit-sandwich-4x3-6f9dd7c9e0194501ab8ff8a346eb0d30.jpg"
-                      alt="Fried rice"
-                      className="h-full w-full object-cover rounded-t-sm"
-                    />
-                  </div>
-
-                  <div className="bg-neutral-800 text-white pl-2 font-semibold py-1 rounded-b-sm">
-                    Fried rice
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> */}
-
-          <div className="h-40 flex justify-center items-center bg-neutral-800 text-white flex-col border-t border-neutral-600">
+          <div className="h-30 flex justify-center items-center bg-neutral-800 text-white flex-col border-t border-neutral-600">
             <img className="size-15" src={foodLensIcon} alt="" />
             <p className="text-[#8e8e8e] font-semibold">
-              The Nutritionist in Your Pocket
+              See What’s in Your Food
             </p>
           </div>
         </div>

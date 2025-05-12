@@ -1,4 +1,7 @@
-function SearchBar() {
+function SearchBar({ filter, setFilter, name = "Search for foods" }) {
+  function onChange(e) {
+    setFilter(e.target.value);
+  }
   return (
     <form className="max-w-md mx-auto w-full px-3">
       <label
@@ -28,8 +31,10 @@ function SearchBar() {
         <input
           type="search"
           id="default-search"
+          value={filter}
+          onChange={(e) => onChange(e)}
           className="block w-full p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-950 dark:border-blue-400 shadow-blue-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-          placeholder="Search for foods"
+          placeholder={name}
           required
         />
         {/* <button

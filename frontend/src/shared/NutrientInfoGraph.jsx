@@ -6,10 +6,25 @@ const additionalNutrients = [
     key: "sodium",
     max: 3000,
     unit: "mg",
-    color: "bg-gray-300",
+    color: "bg-red-500",
+    accentColor: "bg-red-600",
   },
-  { label: "Fiber", key: "fiber", max: 40, unit: "g", color: "bg-green-300" },
-  { label: "Sugar", key: "sugar", max: 60, unit: "g", color: "bg-pink-300" },
+  {
+    label: "Fiber",
+    key: "fiber",
+    max: 40,
+    unit: "g",
+    color: "bg-purple-500",
+    accentColor: "bg-purple-600",
+  },
+  {
+    label: "Sugar",
+    key: "sugar",
+    max: 60,
+    unit: "g",
+    color: "bg-orange-500",
+    accentColor: "bg-orange-600",
+  },
 ];
 
 function AdditionalNutrient({ totals, label, keyName, max, unit, color }) {
@@ -45,19 +60,22 @@ function NutrientTrackerComponent({ totals }) {
       name: "Protein",
       current: normalize("protein") || 0,
       target: 80,
-      color: "bg-blue-300",
+      color: "bg-blue-500",
+      accentColor: "bg-blue-600",
     },
     {
       name: "Carbs",
       current: normalize("carbs") || 0,
       target: 200,
-      color: "bg-green-300",
+      color: "bg-green-500",
+      accentColor: "bg-green-600",
     },
     {
       name: "Fat",
       current: normalize("fat") || 0,
       target: 90,
-      color: "bg-yellow-300",
+      color: "bg-yellow-500",
+      accentColor: "bg-yellow-600",
     },
   ];
   return (
@@ -72,7 +90,7 @@ function NutrientTrackerComponent({ totals }) {
                   {nutrient.name}
                 </span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2.5 mb-1">
+              <div className="w-full bg-gray-700 rounded-full h-2.5 mb-1">
                 <div
                   className={`${nutrient.color} h-2.5 rounded-full`}
                   style={{ width: `${Math.min(percentage, 100)}%` }}

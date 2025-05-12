@@ -6,7 +6,6 @@ export default function CalorieChart({ dailyTotals }) {
   const chartInstance = useRef(null);
   const [data, setData] = useState([]);
 
-  console.log(dailyTotals);
   useEffect(() => {
     if (dailyTotals?.length > 0) {
       setData(dailyTotals);
@@ -14,8 +13,6 @@ export default function CalorieChart({ dailyTotals }) {
   }, [dailyTotals]);
 
   useEffect(() => {
-    // Data from the provided JSON
-
     if (chartRef.current && !chartInstance.current && data.length > 0) {
       const ctx = chartRef.current.getContext("2d");
 
@@ -58,7 +55,7 @@ export default function CalorieChart({ dailyTotals }) {
                 color: "#ffffff",
               },
               grid: {
-                color: "#ffffff", // White horizontal grid lines
+                color: "#ffffff",
               },
             },
             x: {
@@ -71,7 +68,7 @@ export default function CalorieChart({ dailyTotals }) {
                 color: "#ffffff",
               },
               grid: {
-                color: "#ffffff", // White vertical grid lines
+                color: "#ffffff",
               },
             },
           },
@@ -84,7 +81,7 @@ export default function CalorieChart({ dailyTotals }) {
                 size: 16,
                 weight: "bold",
               },
-              color: "#ffffff", // Chart title color
+              color: "#ffffff",
             },
             tooltip: {
               backgroundColor: "rgba(0, 0, 0, 0.7)",
@@ -98,7 +95,7 @@ export default function CalorieChart({ dailyTotals }) {
             },
             legend: {
               labels: {
-                color: "#ffffff", // Legend text color
+                color: "#ffffff",
               },
             },
           },
@@ -106,7 +103,6 @@ export default function CalorieChart({ dailyTotals }) {
       });
     }
 
-    // Cleanup function to destroy chart instance
     return () => {
       if (chartInstance.current) {
         chartInstance.current.destroy();

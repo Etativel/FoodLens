@@ -2,7 +2,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import { UseDailyTotals } from "../../utils";
 import { ClipboardList } from "lucide-react";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
 function FoodCard({ food }) {
@@ -105,18 +105,39 @@ function FoodContent({ foods }) {
 
 export default function MyFood() {
   const { dailyTotals, history } = UseDailyTotals();
-  console.log(history);
+  const [filteredData, setFilteredData] = useState([]);
+  const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    const lower = filter.trim().toLowerCase();
+
+    if (!lower) {
+      setFilteredData(history);
+    }
+
+    const matches = history.filter((items) => {
+      const { name, summary, badgeKeys } = items.recipe;
+      if (
+        name.toLowerCase().includes(lower) ||
+        summary.toLowerCase().includes(lower)
+      ) {
+        return true;
+      }
+      return badgeKeys.some((b) => b.toLowerCase().includes(lower));
+    });
+    setFilteredData(matches);
+  }, [filter, history]);
 
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px] ">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
           <div className="transform translate-y-1/2">
-            <SearchBar />
+            <SearchBar filter={filter} setFilter={setFilter} />
           </div>
         </div>
         {dailyTotals.length >= 1 ? (
-          <FoodContent foods={history} />
+          <FoodContent foods={filteredData} />
         ) : (
           <div className="flex flex-col items-center justify-center text-white mt-50 mx-4 text-center">
             <ClipboardList size={48} className="text-gray-400 mb-4" />

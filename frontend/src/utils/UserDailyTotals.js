@@ -14,13 +14,30 @@ const NUTRIENTS = {
 export default function UseDailyTotals() {
   const { profile } = useContext(UserContext);
   const [dailyTotals, setDailyTotals] = useState([]);
+  const [history, setHistory] = useState([]);
 
-  console.log(dailyTotals);
-
-  console.log(profile?.user?.scans[0].recipe);
+  //   console.log(profile?.user?.scans[0].recipe);
 
   useEffect(() => {
     const scans = profile?.user?.scans || [];
+
+    const seen = new Set();
+    const uniqueScans = scans.filter((scan) => {
+      if (seen.has(scan.recipeId)) {
+        seen.add(scan.recipeId);
+        return true;
+      } else {
+        seen.add(scan.recipeId);
+        return true;
+      }
+    });
+
+    const sortedScans = uniqueScans.sort(
+      (a, b) => new Date(b.scannedAt) - new Date(a.scannedAt)
+    );
+
+    setHistory(sortedScans);
+
     if (!scans.length) {
       setDailyTotals([]);
       return;
@@ -69,5 +86,5 @@ export default function UseDailyTotals() {
     );
     setDailyTotals(list);
   }, [profile]);
-  return { dailyTotals, profile };
+  return { dailyTotals, profile, history };
 }

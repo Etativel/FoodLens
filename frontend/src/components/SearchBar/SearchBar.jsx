@@ -1,9 +1,13 @@
-function SearchBar({ filter, setFilter, name = "Search for foods" }) {
+function SearchBar({ filter, onSubmit, setFilter, name = "Search for foods" }) {
   function onChange(e) {
     setFilter(e.target.value);
   }
+  function handleSubmit(e) {
+    e.preventDefault();
+    onSubmit?.();
+  }
   return (
-    <form className="max-w-md mx-auto w-full px-3">
+    <form className="max-w-md mx-auto w-full px-3" onSubmit={handleSubmit}>
       <label
         htmlFor="default-search"
         className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"

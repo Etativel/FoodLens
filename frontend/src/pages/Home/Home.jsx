@@ -3,8 +3,11 @@ import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
 import { useEffect, useState } from "react";
 import { UseDailyTotals } from "../../utils";
 import { NutrientInfoGraph } from "../../shared";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const navigate = useNavigate();
+  const [search, setSearch] = useState("");
   const { dailyTotals } = UseDailyTotals();
   const [totals, setTotals] = useState({
     protein: { current: 0, unit: "g" },
@@ -22,25 +25,34 @@ function Home() {
     now.getDate()
   )}`;
 
-  console.log(currentDate);
-  console.log(dailyTotals[0]?.date);
-
   useEffect(() => {
     if (dailyTotals?.length > 0 && dailyTotals[0].date === currentDate) {
       setTotals(dailyTotals[0].totals);
     }
   }, [dailyTotals, currentDate]);
 
+  function redirectRecipePage() {
+    navigate("/recipe");
+  }
+
+  function onSubmit() {
+    navigate(`/recipe?query=${encodeURIComponent(search)}`);
+  }
+
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
       <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end ">
         <div className="transform translate-y-1/2">
-          <SearchBar />
+          <SearchBar
+            filter={search}
+            setFilter={setSearch}
+            onSubmit={onSubmit}
+          />
         </div>
       </div>
 
       <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
-        <div className="flex flex-col  pb-20">
+        <div className="flex flex-col pb-20 mt-5">
           {totals ? (
             // <div className="mt-1">
             <NutrientInfoGraph totals={totals} date={currentDate} />
@@ -52,7 +64,7 @@ function Home() {
           )}
 
           <div className="flex justify-evenly mt-10 mb-10">
-            <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
+            {/* <button className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -68,8 +80,8 @@ function Home() {
               </svg>
 
               <p className="font-semibold text-md text-natural-400">Scan</p>
-            </div>
-            <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
+            </button> */}
+            {/* <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -83,8 +95,11 @@ function Home() {
                 />
               </svg>
               <p className="font-semibold text-md">Calories</p>
-            </div>
-            <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
+            </div> */}
+            <div
+              onClick={redirectRecipePage}
+              className="flex flex-col justify-center items-center h-30 w-full mx-3 py-4 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"

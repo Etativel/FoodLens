@@ -10,7 +10,9 @@ import MyFood from "./pages/MyFood/MyFood.jsx";
 import Settings from "./pages/Settings/Settings.jsx";
 import Calories from "./pages/Calories/Calories.jsx";
 import Result from "./pages/Result/Result.jsx";
+import Recipe from "./pages/Recipe/Recipe.jsx";
 import Layout from "./Layout.jsx";
+import RecipeDetails from "./components/Recipe/RecipeDetails.jsx";
 // import Processing from "./components/Processing/Processing.jsx";
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 import SignIn from "./pages/Auth/SingIn.jsx";
@@ -30,6 +32,7 @@ const router = createBrowserRouter([
     element: <Onboarding />,
   },
   { path: "/results", element: <Result /> },
+  { path: "/recipe/:recipeId", element: <RecipeDetails /> },
   {
     element: <Layout />,
     children: [
@@ -37,6 +40,7 @@ const router = createBrowserRouter([
       { path: "/calories", element: <Calories /> },
       { path: "/my-food", element: <MyFood /> },
       { path: "/settings", element: <Settings /> },
+      { path: "/recipe", element: <Recipe /> },
     ],
   },
 ]);

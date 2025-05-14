@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef, useContext } from "react";
-import { Tag } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { formatText, toSnakeCase, compressImage } from "../../utils";
 import UserContext from "../../contexts/createContext/UserContext";
 
@@ -29,10 +29,9 @@ export default function Results() {
   const { profile } = useContext(UserContext);
   const [intakeStatus, setIntakeStatus] = useState("question");
   const [userResponse, setUserResponse] = useState("");
+  const [isFetchingScan, setIsFetchingScan] = useState(false);
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
-
-  console.log(profile);
 
   const isPremium = false;
 
@@ -147,6 +146,7 @@ export default function Results() {
 
   async function saveNewScan() {
     try {
+      setIsFetchingScan(true);
       const compressed = await compressImage(image);
       // upload
       const blob = await (await fetch(compressed)).blob();
@@ -164,11 +164,14 @@ export default function Results() {
         }
       );
       if (!response.ok) {
+        setIsFetchingScan(false);
         console.log("Error, ", response.statusText);
       }
       const data = await response.json();
       console.log(data);
+      setIsFetchingScan(false);
     } catch (err) {
+      setIsFetchingScan(false);
       console.log("Failed to create new scan, ", err);
     }
   }
@@ -279,6 +282,13 @@ export default function Results() {
                     </div>
                   </div>
                 </>
+              ) : isFetchingScan ? (
+                <div className="animate-fadeIn flex flex-col items-center py-2">
+                  <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
+                  <span className="text-md text-white font-medium">
+                    Saving your response...
+                  </span>
+                </div>
               ) : (
                 <div className="animate-fadeIn flex flex-col items-center py-2">
                   <div className="text-lg font-semibold text-white mb-1">

@@ -15,8 +15,17 @@ model User {
   isPremium               Boolean   @default(false)
   scanCreditsRemaining    Int       @default(5)
   weightGoal              Float?
-  calorieLimit            Int?
-  createdAt               DateTime  @default(now())
+  height                  Float?
+  weight                  Float?
+  informationFilled       Boolean    @default(false)
+  calorieLimit            Int?       @default(1600)
+  sodiumLimit             Int?       @default(3000)
+  proteinLimit            Int?       @default(80)
+  fatLimit                Int?       @default(90)
+  carbohydrateLimit       Int?       @default(200)
+  fiberLimit              Int?       @default(40)
+  sugarLimit              Int?       @default(60)
+  createdAt               DateTime   @default(now())
   scans                   Scan[]
   dailyIntakeLogs         DailyIntakeLog[]
   assistantLogs           PersonalAssistantLog[]

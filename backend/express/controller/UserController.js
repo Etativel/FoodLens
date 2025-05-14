@@ -42,7 +42,16 @@ async function getUserForApp(req, res) {
         weightGoal: true,
         calorieLimit: true,
         createdAt: true,
-        scans: true,
+        scans: {
+          include: {
+            recipe: {
+              include: {
+                nutritionSnapshot: true,
+                nutritionItems: true,
+              },
+            },
+          },
+        },
         dailyIntakeLogs: true,
         assistantLogs: true,
       },

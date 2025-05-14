@@ -10,6 +10,7 @@ router.get(
   authenticateEither,
   controller.getFoodByPredictedName
 );
+router.get("/recipe", authenticateEither, controller.findRecipe);
 
 router.patch("/food/:id", authenticateEither, controller.updateFood);
 

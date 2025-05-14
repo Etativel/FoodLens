@@ -318,10 +318,26 @@ async function updateFood(req, res) {
   }
 }
 
+async function findRecipe(req, res) {
+  const { name } = req.query;
+
+  try {
+    const recipe = await fetch(
+      `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`
+    );
+
+    return res.status(200).json({ recipe });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res.status(500).json({ message: err });
+  }
+}
+
 module.exports = {
   saveFood,
   getFoodByPredictedName,
   updateFood,
   getAllRecipeName,
   createScan,
+  findRecipe,
 };

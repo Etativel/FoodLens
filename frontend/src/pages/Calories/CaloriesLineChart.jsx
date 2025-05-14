@@ -8,7 +8,10 @@ export default function CalorieChart({ dailyTotals }) {
 
   useEffect(() => {
     if (dailyTotals?.length > 0) {
-      setData(dailyTotals);
+      const sorted = [...dailyTotals].sort(
+        (a, b) => new Date(a.date) - new Date(b.date)
+      );
+      setData(sorted);
     }
   }, [dailyTotals]);
 

@@ -133,7 +133,11 @@ export default function MyFood() {
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
           <div className="transform translate-y-1/2">
-            <SearchBar filter={filter} setFilter={setFilter} />
+            <SearchBar
+              filter={filter}
+              setFilter={setFilter}
+              name={"Search for history"}
+            />
           </div>
         </div>
         {dailyTotals.length >= 1 ? (

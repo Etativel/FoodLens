@@ -7,6 +7,8 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 const NUTRIENTS = {
   protein: "g",
   carbs: "g",
@@ -43,7 +45,7 @@ export default function UseDailyTotals() {
         ...scan,
         formattedScannedAt: dayjs
           .utc(scan.scannedAt)
-          .tz("Asia/Jakarta")
+          .tz(userTimeZone)
           .format("MMM DD, YYYY, HH:mm"),
       }))
       .sort((a, b) => new Date(b.scannedAt) - new Date(a.scannedAt));
@@ -63,7 +65,7 @@ export default function UseDailyTotals() {
     const groups = scans.reduce((acc, scan) => {
       const dateKey = dayjs
         .utc(scan.scannedAt)
-        .tz("Asia/Jakarta")
+        .tz(userTimeZone)
         .format("YYYY-MM-DD");
 
       if (!acc[dateKey]) {

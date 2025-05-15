@@ -1,5 +1,11 @@
 import UserContext from "../contexts/createContext/UserContext";
 import { useState, useContext, useEffect } from "react";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const NUTRIENTS = {
   protein: "g",
@@ -32,9 +38,15 @@ export default function UseDailyTotals() {
       }
     });
 
-    const sortedScans = uniqueScans.sort(
-      (a, b) => new Date(b.scannedAt) - new Date(a.scannedAt)
-    );
+    const sortedScans = uniqueScans
+      .map((scan) => ({
+        ...scan,
+        formattedScannedAt: dayjs
+          .utc(scan.scannedAt)
+          .tz("Asia/Jakarta")
+          .format("MMM DD, YYYY, HH:mm"),
+      }))
+      .sort((a, b) => new Date(b.scannedAt) - new Date(a.scannedAt));
 
     setHistory(sortedScans);
 
@@ -49,7 +61,11 @@ export default function UseDailyTotals() {
     };
 
     const groups = scans.reduce((acc, scan) => {
-      const dateKey = scan.scannedAt.slice(0, 10);
+      const dateKey = dayjs
+        .utc(scan.scannedAt)
+        .tz("Asia/Jakarta")
+        .format("YYYY-MM-DD");
+
       if (!acc[dateKey]) {
         acc[dateKey] = {
           date: dateKey,

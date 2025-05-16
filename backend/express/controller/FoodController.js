@@ -254,7 +254,7 @@ async function saveFood(req, res) {
       select: { id: true },
     });
 
-    await prisma.scan.create({
+    const createdScan = await prisma.scan.create({
       data: {
         userId: userId,
         imageUrl,
@@ -278,6 +278,7 @@ async function saveFood(req, res) {
     res.status(existingRecipe ? 200 : 201).json({
       message: existingRecipe ? "Recipe updated" : "Recipe created",
       recipe: full,
+      scan: createdScan,
     });
   } catch (error) {
     console.error("Error saving recipe + scan:", error);

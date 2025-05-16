@@ -1,0 +1,8 @@
+Total lines of code: 7533
+.ts code = 0
+.html code = 38
+.css code = 86
+.tsx code = 0
+.jsx code = 5022
+.js code = 2167
+.py code = 220

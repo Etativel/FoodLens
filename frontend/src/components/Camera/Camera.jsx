@@ -142,12 +142,14 @@ export default function Camera({
           />
           <div className="flex gap-4 mt-4">
             <button
+              aria-label="close camera"
               onClick={closeCamera}
               className="bg-red-500 text-white py-2 px-6 rounded-full"
             >
               Cancel
             </button>
             <button
+              aria-label="use photo"
               onClick={handleSaveImage}
               className="bg-green-500 text-white py-2 px-6 rounded-full"
             >
@@ -159,6 +161,7 @@ export default function Camera({
         // show camera view
         <div className="w-full h-full flex flex-col items-center justify-center">
           <button
+            aria-label="close camera"
             onClick={closeCamera}
             className=" absolute top-0 right-0 bg-transparent text-white py-2 px-2 mr-2 mt-2 rounded-full"
           >
@@ -188,12 +191,14 @@ export default function Camera({
           </span>
           <div className="flex gap-12 mt-4 absolute bottom-0 mb-4">
             <button
+              aria-label="upload photo"
               onClick={openFileUpload}
               className="bg-transparent text-white py-2 px-6 rounded-full"
             >
               <GaleryIcon />
             </button>
             <button
+              aria-label="take picture"
               onClick={takePicture}
               className="bg-white outline-3 outline-solid outline-offset-4 text-white size-14 py-3 px-3 rounded-full"
             ></button>

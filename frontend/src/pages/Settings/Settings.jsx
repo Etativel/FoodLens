@@ -18,7 +18,7 @@ import {
 function Settings() {
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
-      <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none px-5 py-6 mb-20">
+      <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none px-5 py-6 mb-15">
         <h1 className="text-3xl font-bold text-white mb-8">Settings</h1>
 
         {/* Account Section */}
@@ -29,7 +29,10 @@ function Settings() {
           </h2>
 
           <div className="rounded-lg overflow-hidden bg-neutral-800">
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="height setting"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Ruler size={18} className="mr-3 text-neutral-400" />
                 <span>Height</span>
@@ -39,7 +42,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="weight setting"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Weight size={18} className="mr-3 text-neutral-400" />
                 <span>Weight</span>
@@ -49,7 +55,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="log out"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <LogOut size={18} className="mr-3 text-neutral-400" />
                 <span>Log out</span>
@@ -67,7 +76,10 @@ function Settings() {
           </h2>
 
           <div className="rounded-lg overflow-hidden bg-neutral-800">
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="calorie target setting"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Pizza size={18} className="mr-3 text-neutral-400" />
                 <span>Calorie target</span>
@@ -77,7 +89,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="sodium"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Hamburger size={18} className="mr-3 text-neutral-400" />
                 <span>Sodium</span>
@@ -87,7 +102,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="protein"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Beef size={18} className="mr-3 text-neutral-400" />
                 <span>Protein</span>
@@ -97,7 +115,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="fat"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Droplet size={18} className="mr-3 text-neutral-400" />
                 <span>Fat</span>
@@ -107,7 +128,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="carbohydrate"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Wheat size={18} className="mr-3 text-neutral-400" />
                 <span>Carbohydrate</span>
@@ -117,7 +141,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="fiber"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Cookie size={18} className="mr-3 text-neutral-400" />
                 <span>Fiber</span>
@@ -127,7 +154,10 @@ function Settings() {
 
             <div className="w-full h-px bg-neutral-700" />
 
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="sugar"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Apple size={18} className="mr-3 text-neutral-400" />
                 <span>Sugar</span>
@@ -145,7 +175,10 @@ function Settings() {
           </h2>
 
           <div className="rounded-lg overflow-hidden bg-neutral-800">
-            <button className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition">
+            <button
+              aria-label="delete account"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
               <div className="flex items-center">
                 <Trash2 size={18} className="mr-3 text-red-500" />
                 <span className="text-red-500">Delete account</span>

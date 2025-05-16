@@ -34,7 +34,7 @@ function Layout() {
     return <Navigate to="sign-in" />;
   }
   return (
-    <div className="h-screen relative overflow-hidden">
+    <div className="h-screen relative overflow-hidden ">
       <Outlet className="content-wrapper" />
 
       <BottomNavigation />

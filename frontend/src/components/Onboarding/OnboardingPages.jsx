@@ -41,6 +41,7 @@ export default function OnboardingPage({
       </div>
 
       <button
+        aria-label="next button"
         className={`w-full max-w-xs py-3 rounded-md text-white font-semibold text-lg transition-all duration-300 ${
           isHovered ? "bg-blue-600 shadow-lg" : "bg-blue-500"
         }`}

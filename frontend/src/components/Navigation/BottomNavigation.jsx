@@ -217,6 +217,7 @@ function BottomNavigation() {
                   />
                   <div className="flex gap-4 absolute bottom-0 bg-transparent w-full justify-center p-4">
                     <button
+                      aria-label="close camera"
                       onClick={closeCamera}
                       className="bg-transparent text-[#cccccc] font-semibold py-2 px-6 rounded-full flex gap-1"
                     >
@@ -224,6 +225,7 @@ function BottomNavigation() {
                       Cancel
                     </button>
                     <button
+                      aria-label="use photo"
                       onClick={handleSaveImage}
                       className="bg-transparent text-[#cccccc] py-2 px-6 rounded-full flex gap-1"
                     >
@@ -236,6 +238,7 @@ function BottomNavigation() {
                 // show camera view
                 <div className="w-full h-full flex flex-col items-center justify-center">
                   <button
+                    aria-label="close camera"
                     onClick={closeCamera}
                     className=" absolute top-0 right-0 bg-transparent text-white py-2 px-2 mr-2 mt-2 rounded-full"
                   >
@@ -270,6 +273,7 @@ function BottomNavigation() {
                     }}
                   >
                     <button
+                      aria-label="upload photo"
                       disabled={!isCameraReady}
                       onClick={openFileUpload}
                       className="bg-transparent text-white py-2 px-6 rounded-full"
@@ -277,6 +281,7 @@ function BottomNavigation() {
                       <GalleryIcon />
                     </button>
                     <button
+                      aria-label="take photo"
                       disabled={!isCameraReady}
                       onClick={takePicture}
                       className="bg-white outline-3 outline-solid outline-offset-4 text-white size-14 py-3 px-3 rounded-full"
@@ -298,6 +303,7 @@ function BottomNavigation() {
               <div className="flex  shadow h-20 justify-center gap-5 z-50 pt-2 absolute bottom-0 bg-neutral-800 w-full">
                 <div>
                   <button
+                    aria-label="home button"
                     onClick={() => redirection("home")}
                     className="p-2 w-13 pt-4 flex flex-col items-center"
                   >
@@ -315,6 +321,7 @@ function BottomNavigation() {
                 </div>
                 <div>
                   <button
+                    aria-label="redirect to calories page"
                     onClick={() => redirection("calories")}
                     className="p-2 w-13 pt-4 flex flex-col items-center"
                   >
@@ -332,6 +339,7 @@ function BottomNavigation() {
                 </div>
                 <div>
                   <button
+                    aria-label="open camera"
                     onClick={openCamera}
                     className="p-4 border-0 rounded-full bg-blue-500"
                   >
@@ -340,6 +348,7 @@ function BottomNavigation() {
                 </div>
                 <div>
                   <button
+                    aria-label="redirect to scan history"
                     onClick={() => redirection("my-food")}
                     className="p-2 w-13 pt-4 flex flex-col items-center"
                   >
@@ -363,6 +372,7 @@ function BottomNavigation() {
                 </div>
                 <div>
                   <button
+                    aria-label="redirect to settings"
                     onClick={() => redirection("settings")}
                     className="p-2 w-13 pt-4 flex flex-col items-center"
                   >

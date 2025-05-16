@@ -130,7 +130,7 @@ export default function NutrientInfoGraph({ totals, date }) {
     <div className=" flex-1 bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
       <div className="flex flex-col ">
         {/* Date */}
-        <div className="text-white text-lg font-sm mt-10 mx-3">
+        <div className="text-white text-lg font-sm mt-5 mx-3">
           <div className="text-white text-lg font-sm   font-semibold">
             {new Date(date).toLocaleDateString(undefined, {
               month: "long",

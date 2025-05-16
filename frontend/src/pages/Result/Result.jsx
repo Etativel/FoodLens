@@ -30,8 +30,13 @@ export default function Results() {
   const [intakeStatus, setIntakeStatus] = useState("question");
   const [userResponse, setUserResponse] = useState("");
   const [isFetchingScan, setIsFetchingScan] = useState(false);
+  // const [foodOnSave, setFoodOnSave] = useState(null);
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
+
+  // console.log("food on save, ", foodOnSave);
+
+  console.log("this id food, ", food);
 
   const isPremium = false;
 
@@ -107,7 +112,7 @@ export default function Results() {
         name: formatText(label),
         predicted_name: label,
       };
-      setFood(enriched);
+      // setFood(enriched);
       await storeScanAndRecipe(enriched, "default", imageUrl);
     } catch (err) {
       console.error("OpenAI fallback failed", err);
@@ -130,7 +135,7 @@ export default function Results() {
 
       const { recipe, imageUrl } = await resp.json();
 
-      setFood(recipe);
+      // setFood(recipe);
 
       const formatPredictedName = toSnakeCase(recipe.predicted_label);
       const visionRecipe = {
@@ -186,7 +191,9 @@ export default function Results() {
         body: JSON.stringify({ recipe: recipeData, imageUrl: image, scanMode }),
       });
       if (!recResp.ok) throw new Error("Recipe save failed");
-      await recResp.json();
+      const data = await recResp.json();
+      console.log("data,", data);
+      setFood(data.recipe);
     } catch (err) {
       console.error("Store recipe/scan failed", err);
     }
@@ -268,12 +275,14 @@ export default function Results() {
                     </div>
                     <div>
                       <button
+                        aria-label="save intake"
                         onClick={() => handleIntakeResponse("Yes")}
                         className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
                       >
                         Yes
                       </button>
                       <button
+                        aria-label="do not save intake"
                         onClick={() => handleIntakeResponse("No")}
                         className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
                       >

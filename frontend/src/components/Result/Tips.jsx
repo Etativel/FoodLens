@@ -5,6 +5,7 @@ export default function Tips({ food, showTips, setShowTips }) {
     <div className="mb-6 mt-3">
       <div className="border-b border-gray-700 pb-2">
         <button
+          aria-label="show dropdown"
           onClick={() => setShowTips(!showTips)}
           className="flex items-center justify-between w-full py-3 font-medium text-gray-400 gap-3"
         >

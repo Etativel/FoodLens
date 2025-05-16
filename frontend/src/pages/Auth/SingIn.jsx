@@ -178,6 +178,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <button
+                aria-label="show password"
                 type="button"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
                 onClick={() => setShowPassword(!showPassword)}
@@ -223,6 +224,7 @@ export default function Login() {
 
           {/* Login Button */}
           <button
+            aria-label="submit"
             type="submit"
             disabled={isLoading || isValidating}
             className={`w-full py-3 px-4 rounded-md text-white font-medium transition duration-300 ease-in-out mt-2  ${
@@ -270,6 +272,7 @@ export default function Login() {
 
           <div className="mt-6 grid grid-cols-1 gap-3">
             <button
+              aria-label="google login"
               type="button"
               className="py-3 px-4 rounded-md border border-neutral-600 bg-neutral-700 text-gray-300 text-sm font-medium hover:bg-neutral-600 transition-all flex items-center justify-center"
             >

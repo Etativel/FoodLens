@@ -16,7 +16,10 @@ function FoodCard({ food }) {
           <span className="text-lg font-semibold truncate  pr-2 ">
             {food.name}
           </span>
-          <button onClick={() => setShowNutrient((prev) => !prev)}>
+          <button
+            aria-label="show dropdown"
+            onClick={() => setShowNutrient((prev) => !prev)}
+          >
             {showNutrient ? (
               <ChevronUp className="w-5 h-5 text-white" strokeWidth={2.5} />
             ) : (

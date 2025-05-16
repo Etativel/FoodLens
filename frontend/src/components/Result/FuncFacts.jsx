@@ -5,6 +5,7 @@ export default function FunFacts({ food, setShowFunFacts, showFunFacts }) {
     <div className="mb-6 mt-3">
       <div className="border-b border-gray-700">
         <button
+          aria-label="show dropdown"
           onClick={() => setShowFunFacts(!showFunFacts)}
           className="flex items-center justify-between w-full py-3 font-medium text-gray-400 gap-3"
         >

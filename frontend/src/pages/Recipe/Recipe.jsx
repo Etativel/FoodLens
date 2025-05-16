@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 function RecipeCard({ recipe }) {
   const navigate = useNavigate();
   function redirectRecipe(id) {
-    navigate(`/recipe/${id}`);
+    navigate(`/recipe/${id}`, { state: { recipe } });
   }
 
   return (
@@ -54,27 +54,30 @@ export default function Recipe() {
 
     if (queryValue) {
       setFilter(queryValue);
-      searchRecipe(queryValue);
+      fetchRecipe(queryValue);
     }
   }, [location.search]);
 
-  async function searchRecipe(query) {
+  async function fetchRecipe(query) {
     if (!query) return;
     try {
       setIsFetching(true);
-      // Protect this on router
       const response = await fetch(
-        `https://www.themealdb.com/api/json/v1/1/search.php?s=${query}`
+        `http://localhost:3000/recipe?search=${encodeURIComponent(query)}`,
+        {
+          method: "GET",
+          credentials: "include",
+        }
       );
       if (!response.ok) {
-        console.log("Failed to retrieve data,", response.statusText);
         setIsFetching(false);
+        console.log("Failed to retrieve recipe, ", response.statusText);
         return;
       }
       const data = await response.json();
-      setFilteredData(data.meals || []);
+      console.log("this is data", data);
+      setFilteredData(data.recipe.meals || []);
       setIsFetching(false);
-
       console.log(data);
     } catch (err) {
       setIsFetching(false);
@@ -87,7 +90,8 @@ export default function Recipe() {
       ? `/recipe?query=${encodeURIComponent(filter)}`
       : "/recipe";
     navigate(newUrl, { replace: true });
-    await searchRecipe(filter);
+    // await searchRecipe(filter);
+    await fetchRecipe(filter);
   };
 
   if (isFetching) {

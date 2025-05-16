@@ -30,13 +30,14 @@ export default function Results() {
   const [intakeStatus, setIntakeStatus] = useState("question");
   const [userResponse, setUserResponse] = useState("");
   const [isFetchingScan, setIsFetchingScan] = useState(false);
+  const [scanData, setScanData] = useState(null);
   // const [foodOnSave, setFoodOnSave] = useState(null);
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
 
   // console.log("food on save, ", foodOnSave);
 
-  console.log("this id food, ", food);
+  console.log("this food, ", food);
 
   const isPremium = false;
 
@@ -80,6 +81,7 @@ export default function Results() {
         console.log(json.data);
 
         setFood(json.data);
+        saveNewScan(json.data.id, "default");
       } else if (res.status === 404) {
         await fetchFromOpenAi(label, image);
       } else {
@@ -149,7 +151,7 @@ export default function Results() {
     }
   }
 
-  async function saveNewScan() {
+  async function saveNewScan(recipeId, scanMode) {
     try {
       setIsFetchingScan(true);
       const compressed = await compressImage(image);
@@ -157,9 +159,9 @@ export default function Results() {
       const blob = await (await fetch(compressed)).blob();
       const form = new FormData();
       form.append("image", blob, "photo.jpg");
-      form.append("scanMode", isPremium ? "vision" : "default");
+      form.append("scanMode", scanMode);
       form.append("userId", profile.user.id);
-      form.append("recipeId", food.id);
+      form.append("recipeId", recipeId);
       const response = await fetch(
         "http://localhost:3000/food-api/create/scan",
         {
@@ -173,7 +175,8 @@ export default function Results() {
         console.log("Error, ", response.statusText);
       }
       const data = await response.json();
-      console.log(data);
+      console.log("this is scan data, ", data.scan);
+      setScanData(data.scan);
       setIsFetchingScan(false);
     } catch (err) {
       setIsFetchingScan(false);
@@ -208,6 +211,28 @@ export default function Results() {
   //   setIsOpen(false);
   // };
 
+  async function saveIntake() {
+    try {
+      const response = await fetch(`http://localhost:3000/food-api/save-log`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: profile.user.id,
+          scanId: scanData.id,
+          notes: "",
+        }),
+      });
+      if (!response.ok) {
+        console.log("Failed to save log, ", response.statusText);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   if (!image || !prediction) {
     return <Navigate to="/home" replace />;
   }
@@ -217,7 +242,7 @@ export default function Results() {
     setIntakeStatus("thanks");
 
     if (answer === "Yes") {
-      saveNewScan();
+      saveIntake();
     }
   }
   const animationStyles = `
@@ -260,7 +285,7 @@ export default function Results() {
             }}
           ></div>
           {/* Intake Log */}
-          {food && intakeStatus !== "hidden" && (
+          {food && intakeStatus !== "hidden" && scanData && (
             <div
               className={`bg-neutral-800 flex flex-col px-3 pt-3 pb-3 transition-all duration-300 ease-in-out ${getAnimationClass()}`}
             >

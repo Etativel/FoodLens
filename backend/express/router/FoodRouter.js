@@ -22,6 +22,9 @@ router.post(
   authenticateEither,
   controller.createScan
 );
+
+router.post("/save-log", authenticateEither, controller.saveIntakeLog);
+
 router.post("/create", authenticateEither, controller.saveFood);
 
 module.exports = router;

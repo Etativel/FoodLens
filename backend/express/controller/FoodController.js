@@ -300,7 +300,7 @@ async function createScan(req, res) {
   const imageUrl = req.file.path;
 
   try {
-    await prisma.scan.create({
+    const data = await prisma.scan.create({
       data: {
         userId,
         imageUrl,
@@ -308,10 +308,27 @@ async function createScan(req, res) {
         recipeId,
       },
     });
-    return res.status(200).json({ message: "Food scan saved" });
+    return res.status(200).json({ message: "Food scan saved", scan: data });
   } catch (err) {
     console.log("Internal server error, ", err);
     return res.status(500).json({ message: "Failed to create new food scan" });
+  }
+}
+
+async function saveIntakeLog(req, res) {
+  const { userId, scanId, notes } = req.body;
+  try {
+    const data = await prisma.dailyIntakeLog.create({
+      data: {
+        userId,
+        scanId,
+        notes,
+      },
+    });
+    return res.status(200).json({ data });
+  } catch (err) {
+    console.log("Internal server error", err);
+    return res.status(500).json({ message: "Internal server error" });
   }
 }
 
@@ -383,4 +400,5 @@ module.exports = {
   createScan,
   findRecipe,
   getFoodById,
+  saveIntakeLog,
 };

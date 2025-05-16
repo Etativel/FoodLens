@@ -128,9 +128,9 @@ model DailyIntakeLog {
   userId     String
   scan       Scan     @relation(fields: [scanId], references: [id])
   scanId     String   @unique
-  date       DateTime
-  mealType   MealType
+  date       DateTime @default(now())
   notes      String?
+  // mealType   MealType
 }
 
 enum MealType {

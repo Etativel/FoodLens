@@ -282,9 +282,10 @@ export default function Results() {
         body: JSON.stringify({ recipe: recipeData, imageUrl: image, scanMode }),
       });
       if (!recResp.ok) throw new Error("Recipe save failed");
-      const data = await recResp.json();
-      console.log("data,", data);
-      setFood(data.recipe);
+      const { recipe, scan } = await recResp.json();
+
+      setFood(recipe);
+      setScanData(scan);
     } catch (err) {
       console.error("Store recipe/scan failed", err);
     }

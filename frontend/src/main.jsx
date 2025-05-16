@@ -13,6 +13,7 @@ import Result from "./pages/Result/Result.jsx";
 import Recipe from "./pages/Recipe/Recipe.jsx";
 import Layout from "./Layout.jsx";
 import RecipeDetails from "./components/Recipe/RecipeDetails.jsx";
+import ScanDetails from "./pages/ScanDetails/ScanDetails.jsx";
 // import Processing from "./components/Processing/Processing.jsx";
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 import SignIn from "./pages/Auth/SingIn.jsx";
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
   },
   { path: "/results", element: <Result /> },
   { path: "/recipe/:recipeId", element: <RecipeDetails /> },
+  { path: "/scan/:foodId", element: <ScanDetails /> },
   {
     element: <Layout />,
     children: [

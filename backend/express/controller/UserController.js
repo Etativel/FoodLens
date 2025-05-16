@@ -60,7 +60,28 @@ async function getUserForApp(req, res) {
             },
           },
         },
-        dailyIntakeLogs: true,
+        dailyIntakeLogs: {
+          include: {
+            scan: {
+              include: {
+                recipe: {
+                  include: {
+                    nutritionSnapshot: true,
+                    nutritionItems: true,
+                    ingredients: {
+                      include: {
+                        items: true,
+                      },
+                    },
+                    instructions: true,
+                    variations: true,
+                    scans: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         assistantLogs: true,
       },
     });

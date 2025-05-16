@@ -16,6 +16,75 @@ import {
   FunFacts,
 } from "../../components/Result";
 
+function IntakeNotification({
+  intakeStatus,
+  scanData,
+  food,
+  handleIntakeResponse,
+  getAnimationClass,
+  isFetchingScan,
+  userResponse,
+  px = "3",
+  pb = "3",
+}) {
+  return (
+    <>
+      {food && intakeStatus !== "hidden" && scanData && (
+        <div
+          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 ease-in-out ${getAnimationClass()}`}
+        >
+          {intakeStatus === "question" ? (
+            <>
+              <div className="text-lg font-semibold text-white">
+                Help us track your daily intake
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="text-md text-neutral-300">
+                  Did you eat this today?
+                </div>
+                <div>
+                  <button
+                    aria-label="save intake"
+                    onClick={() => handleIntakeResponse("Yes")}
+                    className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    aria-label="do not save intake"
+                    onClick={() => handleIntakeResponse("No")}
+                    className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : isFetchingScan ? (
+            <div className="animate-fadeIn flex flex-col items-center py-2">
+              <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
+              <span className="text-md text-white font-medium">
+                Saving your response...
+              </span>
+            </div>
+          ) : (
+            <div className="animate-fadeIn flex flex-col items-center py-2">
+              <div className="text-lg font-semibold text-white mb-1">
+                Thank you for your response!
+              </div>
+              <div className="text-md text-neutral-300">
+                {userResponse === "Yes"
+                  ? "We've logged this item to your daily intake."
+                  : "No problem, we won't add this to your tracking."}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function Results() {
   const { state } = useLocation();
   const [showNutritionDetails, setShowNutritionDetails] = useState(false);
@@ -44,6 +113,7 @@ export default function Results() {
   // const [selected, setSelected] = useState("Default");
 
   const isPremium = false;
+
   useEffect(() => {
     let idx = 0;
     const interval = setInterval(() => {
@@ -323,58 +393,15 @@ export default function Results() {
             </div>
           )}
           {/* Intake Log */}
-          {food && intakeStatus !== "hidden" && scanData && (
-            <div
-              className={`bg-neutral-800 flex flex-col px-3 pt-3 pb-3 transition-all duration-300 ease-in-out ${getAnimationClass()}`}
-            >
-              {intakeStatus === "question" ? (
-                <>
-                  <div className="text-lg font-semibold text-white">
-                    Help us track your daily intake
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div className="text-md text-neutral-300">
-                      Did you eat this today?
-                    </div>
-                    <div>
-                      <button
-                        aria-label="save intake"
-                        onClick={() => handleIntakeResponse("Yes")}
-                        className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
-                      >
-                        Yes
-                      </button>
-                      <button
-                        aria-label="do not save intake"
-                        onClick={() => handleIntakeResponse("No")}
-                        className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
-                      >
-                        No
-                      </button>
-                    </div>
-                  </div>
-                </>
-              ) : isFetchingScan ? (
-                <div className="animate-fadeIn flex flex-col items-center py-2">
-                  <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
-                  <span className="text-md text-white font-medium">
-                    Saving your response...
-                  </span>
-                </div>
-              ) : (
-                <div className="animate-fadeIn flex flex-col items-center py-2">
-                  <div className="text-lg font-semibold text-white mb-1">
-                    Thank you for your response!
-                  </div>
-                  <div className="text-md text-neutral-300">
-                    {userResponse === "Yes"
-                      ? "We've logged this item to your daily intake."
-                      : "No problem, we won't add this to your tracking."}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          <IntakeNotification
+            intakeStatus={intakeStatus}
+            scanData={scanData}
+            food={food}
+            handleIntakeResponse={handleIntakeResponse}
+            getAnimationClass={getAnimationClass}
+            isFetchingScan={isFetchingScan}
+            userResponse={userResponse}
+          />
 
           <div className="px-3 py-3">
             <div>
@@ -464,59 +491,17 @@ export default function Results() {
               setShowFunFacts={setShowFunFacts}
               showFunFacts={showFunFacts}
             />
-
-            {food && intakeStatus !== "hidden" && scanData && (
-              <div
-                className={`bg-neutral-800 flex flex-col px-0 pb-10 pt-3  transition-all duration-300 ease-in-out ${getAnimationClass()}`}
-              >
-                {intakeStatus === "question" ? (
-                  <>
-                    <div className="text-lg font-semibold text-white">
-                      Help us track your daily intake
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <div className="text-md text-neutral-300">
-                        Did you eat this today?
-                      </div>
-                      <div>
-                        <button
-                          aria-label="save intake"
-                          onClick={() => handleIntakeResponse("Yes")}
-                          className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
-                        >
-                          Yes
-                        </button>
-                        <button
-                          aria-label="do not save intake"
-                          onClick={() => handleIntakeResponse("No")}
-                          className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
-                        >
-                          No
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                ) : isFetchingScan ? (
-                  <div className="animate-fadeIn flex flex-col items-center py-2">
-                    <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
-                    <span className="text-md text-white font-medium">
-                      Saving your response...
-                    </span>
-                  </div>
-                ) : (
-                  <div className="animate-fadeIn flex flex-col items-center py-2">
-                    <div className="text-lg font-semibold text-white mb-1">
-                      Thank you for your response!
-                    </div>
-                    <div className="text-md text-neutral-300">
-                      {userResponse === "Yes"
-                        ? "We've logged this item to your daily intake."
-                        : "No problem, we won't add this to your tracking."}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+            <IntakeNotification
+              intakeStatus={intakeStatus}
+              scanData={scanData}
+              food={food}
+              handleIntakeResponse={handleIntakeResponse}
+              getAnimationClass={getAnimationClass}
+              isFetchingScan={isFetchingScan}
+              userResponse={userResponse}
+              pb="10"
+              px="0"
+            />
           </div>
         </div>
       )}

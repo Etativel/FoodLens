@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import UserContext from "./createContext/UserContext";
+import { variable } from "../shared";
 
 export default function UserProvider({ children }) {
   const [profile, setProfile] = useState(null);
@@ -8,7 +9,7 @@ export default function UserProvider({ children }) {
   async function getProfile(userId) {
     setIsLoading(true);
     try {
-      const response = await fetch("http://localhost:3000/user/getProfile", {
+      const response = await fetch(`${variable.API_URL}/user/getProfile`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -33,7 +34,7 @@ export default function UserProvider({ children }) {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch("http://localhost:3000/auth/profile", {
+        const response = await fetch(`${variable.API_URL}/auth/profile`, {
           credentials: "include",
         });
         const data = await response.json();

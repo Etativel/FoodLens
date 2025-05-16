@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
+import { variable } from "../../shared";
 
 export default function RecipeDetails() {
   const { recipeId } = useParams();
@@ -17,9 +18,7 @@ export default function RecipeDetails() {
         setIsFetching(true);
 
         const response = await fetch(
-          `http://localhost:3000/recipe/single?search=${encodeURIComponent(
-            recipeId
-          )}`,
+          `${variable}/recipe/single?search=${encodeURIComponent(recipeId)}`,
           {
             method: "GET",
             credentials: "include",

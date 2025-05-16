@@ -1,7 +1,6 @@
-import { useLocation, useParams, Navigate } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
-
+import { variable } from "../../shared";
 import {
   DietaryBadges,
   NutritionFacts,
@@ -31,13 +30,10 @@ export default function ScanDetails() {
   useEffect(() => {
     async function fetchFoodDetails() {
       try {
-        const response = await fetch(
-          `http://localhost:3000/food-api/${foodId}`,
-          {
-            method: "GET",
-            credentials: "include",
-          }
-        );
+        const response = await fetch(`${variable.API_URL}/food-api/${foodId}`, {
+          method: "GET",
+          credentials: "include",
+        });
         if (!response.ok) {
           console.log("Failed to retrieve food details, ", response.statusText);
         }

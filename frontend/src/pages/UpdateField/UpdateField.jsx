@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import { variable } from "../../shared";
 // src/config/settingsFields.js
 import {
   Ruler,
@@ -164,7 +164,7 @@ export default function UpdateField() {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000${cfg.endpoint}`, {
+      const res = await fetch(`${variable.API_URL}${cfg.endpoint}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

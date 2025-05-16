@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
-
+import { variable } from "../../shared";
 import OnboardingPage from "../../components/Onboarding/OnboardingPages";
 
 import pageOne from "../../assets/svg/page-1.svg";
@@ -35,7 +35,7 @@ function Onboarding() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    fetch("http://localhost:3000/auth/profile", {
+    fetch(`${variable.API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then((res) => {

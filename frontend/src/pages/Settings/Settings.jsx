@@ -15,13 +15,13 @@ import {
   Hamburger,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import { variable } from "../../shared";
 function Settings() {
   const navigate = useNavigate();
 
   async function handleLogout() {
     try {
-      const response = await fetch("http://localhost:3000/auth/logout", {
+      const response = await fetch(`${variable.API_URL}/auth/logout`, {
         method: "POST",
         credentials: "include",
       });

@@ -3,6 +3,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import { Loader2 } from "lucide-react";
 import { formatText, toSnakeCase, compressImage } from "../../utils";
 import UserContext from "../../contexts/createContext/UserContext";
+import { variable } from "../../shared";
 
 import {
   DietaryBadges,
@@ -162,7 +163,7 @@ export default function Results() {
 
   async function fetchOldModel(label) {
     try {
-      const res = await fetch(`http://localhost:3000/food-api/food/${label}`, {
+      const res = await fetch(`${variable.API_URL}/food-api/food/${label}`, {
         method: "GET",
         credentials: "include",
       });
@@ -192,7 +193,7 @@ export default function Results() {
       form.append("image", blob, "photo.jpg");
       form.append("input", label);
 
-      const resp = await fetch("http://localhost:3000/openai/food", {
+      const resp = await fetch(`${variable.API_URL}/openai/food`, {
         method: "POST",
         // headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -218,7 +219,7 @@ export default function Results() {
       const blob = await (await fetch(compressed)).blob();
       const form = new FormData();
       form.append("image", blob, "photo.jpg");
-      const resp = await fetch("http://localhost:3000/openai/food-vision", {
+      const resp = await fetch(`${variable.API_URL}/openai/food-vision`, {
         method: "POST",
         credentials: "include",
         body: form,
@@ -252,14 +253,11 @@ export default function Results() {
       form.append("scanMode", scanMode);
       form.append("userId", profile.user.id);
       form.append("recipeId", recipeId);
-      const response = await fetch(
-        "http://localhost:3000/food-api/create/scan",
-        {
-          method: "POST",
-          credentials: "include",
-          body: form,
-        }
-      );
+      const response = await fetch(`${variable.API_URL}/food-api/create/scan`, {
+        method: "POST",
+        credentials: "include",
+        body: form,
+      });
       if (!response.ok) {
         setIsFetchingScan(false);
         console.log("Error, ", response.statusText);
@@ -277,7 +275,7 @@ export default function Results() {
   async function storeScanAndRecipe(recipeData, scanMode, image = "") {
     try {
       // upsert recipe
-      const recResp = await fetch("http://localhost:3000/food-api/create", {
+      const recResp = await fetch(`${variable.API_URL}/food-api/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -303,7 +301,7 @@ export default function Results() {
 
   async function saveIntake() {
     try {
-      const response = await fetch(`http://localhost:3000/food-api/save-log`, {
+      const response = await fetch(`${variable.API_URL}/food-api/save-log`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

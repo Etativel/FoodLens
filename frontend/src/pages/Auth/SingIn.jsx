@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import googleIcon from "../../assets/svg/google.svg";
+import { variable } from "../../shared";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -14,7 +15,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   useEffect(() => {
-    fetch("http://localhost:3000/auth/profile", {
+    fetch(`${variable.API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then((res) => {
@@ -73,7 +74,7 @@ export default function Login() {
     }
 
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch(`${variable.API_URL}/auth/login`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -108,6 +109,44 @@ export default function Login() {
       console.log(err);
     }
   };
+
+  async function guestLogin() {
+    try {
+      const response = await fetch(`${variable.API_URL}/auth/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          credential: "guess@gmail.com",
+          password: "guessguess",
+        }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        const message = errorData.message || "Login error";
+        // console.log(message);
+        if (message.toLowerCase().includes("not registered")) {
+          setErrors({ emailError: message });
+        } else if (message.toLowerCase().includes("incorrect password")) {
+          setErrors({ passwordError: message });
+        } else if (
+          message.toLowerCase().includes("your account has been suspended")
+        ) {
+          setErrors({ suspendedError: message });
+        } else {
+          setErrors({ loginError: message });
+        }
+        setIsValidating(false);
+        return;
+      }
+      setIsLoading(false);
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-neutral-900 flex items-center justify-center p-4">
@@ -278,6 +317,28 @@ export default function Login() {
             >
               <img className="size-6 mx-2" src={googleIcon} alt="" />
               Google
+            </button>
+          </div>
+          <div className="mt-3 grid grid-cols-1 gap-3">
+            <button
+              onClick={guestLogin}
+              aria-label="google login"
+              type="button"
+              className="py-3 px-4 rounded-md border border-neutral-600 bg-neutral-700 text-gray-300 text-sm font-medium hover:bg-neutral-600 transition-all flex items-center justify-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="size-6 "
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+              Login as Guest
             </button>
           </div>
         </div>

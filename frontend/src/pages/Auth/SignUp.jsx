@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Eye, EyeOff, Lock, Mail, User, AlertCircle } from "lucide-react";
 import googleIcon from "../../assets/svg/google.svg";
 import { useNavigate, Navigate } from "react-router-dom";
+import { variable } from "../../shared";
 
 export default function Signup() {
   const [fullName, setFullName] = useState("");
@@ -15,7 +16,7 @@ export default function Signup() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
-    fetch("http://localhost:3000/auth/profile", {
+    fetch(`${variable.API_URL}/auth/profile`, {
       credentials: "include",
     })
       .then((res) => {
@@ -65,7 +66,7 @@ export default function Signup() {
 
     try {
       console.log("Creating user");
-      const response = await fetch("http://localhost:3000/user/create", {
+      const response = await fetch(`${variable.API_URL}/user/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +83,7 @@ export default function Signup() {
       } else {
         await response.json();
         try {
-          const response = await fetch("http://localhost:3000/auth/login", {
+          const response = await fetch(`${variable.API_URL}/auth/login`, {
             method: "POST",
             credentials: "include",
             headers: {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { Search } from "lucide-react";
+import { variable } from "../../shared";
 
 function RecipeCard({ recipe }) {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ export default function Recipe() {
     try {
       setIsFetching(true);
       const response = await fetch(
-        `http://localhost:3000/recipe?search=${encodeURIComponent(query)}`,
+        `${variable.API_URL}/recipe?search=${encodeURIComponent(query)}`,
         {
           method: "GET",
           credentials: "include",

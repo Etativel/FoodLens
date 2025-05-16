@@ -14,8 +14,33 @@ import {
   ChevronRight,
   Hamburger,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function Settings() {
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    try {
+      const response = await fetch("http://localhost:3000/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+      if (!response.ok) {
+        console.log("Failed to logout: ", response.statusText);
+      } else {
+        await response.json();
+        navigate("/sign-in");
+        console.log("Logout success");
+      }
+    } catch (error) {
+      console.log("Error loging out: ", error);
+    }
+  }
+
+  function redirectToUpdateField(field) {
+    navigate(`/settings/${field}`);
+  }
+
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none px-5 py-6 mb-15">
@@ -30,6 +55,7 @@ function Settings() {
 
           <div className="rounded-lg overflow-hidden bg-neutral-800">
             <button
+              onClick={() => redirectToUpdateField("height")}
               aria-label="height setting"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -43,6 +69,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("weight")}
               aria-label="weight setting"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -53,9 +80,22 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
+            <button
+              onClick={() => redirectToUpdateField("weightgoal")}
+              aria-label="weight goal setting"
+              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
+              <div className="flex items-center">
+                <Weight size={18} className="mr-3 text-neutral-400" />
+                <span>Weight Goal</span>
+              </div>
+              <ChevronRight size={18} className="text-neutral-500" />
+            </button>
+
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={handleLogout}
               aria-label="log out"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -72,17 +112,18 @@ function Settings() {
         <section className="mb-8">
           <h2 className="text-xl font-semibold text-white mb-3 flex items-center">
             <Pizza size={20} className="mr-2" />
-            Nutrition
+            Nutrition Target
           </h2>
 
           <div className="rounded-lg overflow-hidden bg-neutral-800">
             <button
+              onClick={() => redirectToUpdateField("calorietarget")}
               aria-label="calorie target setting"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Pizza size={18} className="mr-3 text-neutral-400" />
-                <span>Calorie target</span>
+                <span>Calories</span>
               </div>
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
@@ -90,6 +131,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("sodium")}
               aria-label="sodium"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -103,6 +145,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("protein")}
               aria-label="protein"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -116,6 +159,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("fat")}
               aria-label="fat"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -129,6 +173,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("carbohydrate")}
               aria-label="carbohydrate"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -142,6 +187,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("fiber")}
               aria-label="fiber"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
@@ -155,6 +201,7 @@ function Settings() {
             <div className="w-full h-px bg-neutral-700" />
 
             <button
+              onClick={() => redirectToUpdateField("sugar")}
               aria-label="sugar"
               className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >

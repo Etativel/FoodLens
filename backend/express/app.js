@@ -28,9 +28,11 @@ const openaiRouter = require("../express/router/OpenAiRouter");
 const foodRouter = require("../express/router/FoodRouter");
 const userRouter = require("../express/router/UserRouter");
 const userAuth = require("../express/router/Auth");
+const recipeRouter = require("../express/router/RecipeRouter");
 
 app.use("/openai", openaiRouter);
 app.use("/food-api", foodRouter);
+app.use("/recipe", recipeRouter);
 app.use("/user", userRouter);
 app.use("/auth", userAuth.router);
 

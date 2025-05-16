@@ -1,19 +1,29 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 
 export default function RecipeDetails() {
   const { recipeId } = useParams();
   const [recipe, setRecipe] = useState();
+  const { state } = useLocation();
   const [isFetching, setIsFetching] = useState(false);
 
-  console.log(recipe);
-
   useEffect(() => {
+    if (state?.recipe) {
+      setRecipe(state.recipe);
+      return;
+    }
     async function fetchDetails() {
       try {
         setIsFetching(true);
+
         const response = await fetch(
-          `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${recipeId}`
+          `http://localhost:3000/recipe/single?search=${encodeURIComponent(
+            recipeId
+          )}`,
+          {
+            method: "GET",
+            credentials: "include",
+          }
         );
 
         if (!response.ok) {
@@ -24,15 +34,16 @@ export default function RecipeDetails() {
 
         const data = await response.json();
 
-        setRecipe(data.meals[0]);
+        setRecipe(data.recipe.meals[0]);
         setIsFetching(false);
       } catch (err) {
         setIsFetching(false);
         console.log("Server error", err);
       }
     }
+
     fetchDetails();
-  }, [recipeId]);
+  }, [recipeId, state]);
 
   const getIngredients = (recipe) => {
     const ingredients = [];

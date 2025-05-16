@@ -27,10 +27,15 @@ export default function UseDailyTotals() {
   //   console.log(profile?.user?.scans[0].recipe);
 
   useEffect(() => {
-    const scans = profile?.user?.scans || [];
+    const scansForHistory = profile?.user?.scans || [];
+    const scans =
+      profile?.user?.dailyIntakeLogs.map((intake) => {
+        return intake.scan;
+      }) || [];
 
     const seen = new Set();
-    const uniqueScans = scans.filter((scan) => {
+
+    const uniqueScans = scansForHistory.filter((scan) => {
       if (seen.has(scan.recipeId)) {
         seen.add(scan.recipeId);
         return true;

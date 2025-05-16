@@ -31,15 +31,34 @@ export default function Results() {
   const [userResponse, setUserResponse] = useState("");
   const [isFetchingScan, setIsFetchingScan] = useState(false);
   const [scanData, setScanData] = useState(null);
+  const loadingMessages = [
+    "Identifying…",
+    "This may take a moment…",
+    "Mapping your food in detail…",
+    "Scanning food content…",
+  ];
+  const [currentMessage, setCurrentMessage] = useState(loadingMessages[0]);
+  const [isVisible, setIsVisible] = useState(true);
   // const [foodOnSave, setFoodOnSave] = useState(null);
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
 
-  // console.log("food on save, ", foodOnSave);
-
-  console.log("this food, ", food);
-
   const isPremium = false;
+  useEffect(() => {
+    let idx = 0;
+    const interval = setInterval(() => {
+      // fade-out
+      setIsVisible(false);
+
+      setTimeout(() => {
+        idx = (idx + 1) % loadingMessages.length;
+        setCurrentMessage(loadingMessages[idx]);
+        // fade-in
+        setIsVisible(true);
+      }, 1000); // match your `duration-1000`
+    }, 4000); // match your overall loop timing
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     // Guard double fetch on strict mode
@@ -273,6 +292,7 @@ export default function Results() {
   return (
     <>
       <style>{animationStyles}</style>
+
       {!image ? (
         <div className="w-screen h-screen bg-white">No data</div>
       ) : (
@@ -283,7 +303,24 @@ export default function Results() {
             style={{
               backgroundImage: `url(${image})`,
             }}
-          ></div>
+          >
+            {!food && (
+              <div className="absolute inset-0 overflow-hidden h-80">
+                <div className="scan-line" />
+              </div>
+            )}
+          </div>
+          {!food && (
+            <div
+              className={`
+     text-white flex justify-center font-semibold
+    transition-opacity duration-1000 pt-3 ease-in-out
+    ${isVisible ? "opacity-100" : "opacity-0"}
+  `}
+            >
+              {currentMessage}
+            </div>
+          )}
           {/* Intake Log */}
           {food && intakeStatus !== "hidden" && scanData && (
             <div
@@ -426,6 +463,59 @@ export default function Results() {
               setShowFunFacts={setShowFunFacts}
               showFunFacts={showFunFacts}
             />
+
+            {food && intakeStatus !== "hidden" && scanData && (
+              <div
+                className={`bg-neutral-800 flex flex-col px-0 pb-10 pt-3  transition-all duration-300 ease-in-out ${getAnimationClass()}`}
+              >
+                {intakeStatus === "question" ? (
+                  <>
+                    <div className="text-lg font-semibold text-white">
+                      Help us track your daily intake
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="text-md text-neutral-300">
+                        Did you eat this today?
+                      </div>
+                      <div>
+                        <button
+                          aria-label="save intake"
+                          onClick={() => handleIntakeResponse("Yes")}
+                          className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
+                        >
+                          Yes
+                        </button>
+                        <button
+                          aria-label="do not save intake"
+                          onClick={() => handleIntakeResponse("No")}
+                          className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
+                        >
+                          No
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                ) : isFetchingScan ? (
+                  <div className="animate-fadeIn flex flex-col items-center py-2">
+                    <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
+                    <span className="text-md text-white font-medium">
+                      Saving your response...
+                    </span>
+                  </div>
+                ) : (
+                  <div className="animate-fadeIn flex flex-col items-center py-2">
+                    <div className="text-lg font-semibold text-white mb-1">
+                      Thank you for your response!
+                    </div>
+                    <div className="text-md text-neutral-300">
+                      {userResponse === "Yes"
+                        ? "We've logged this item to your daily intake."
+                        : "No problem, we won't add this to your tracking."}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       )}

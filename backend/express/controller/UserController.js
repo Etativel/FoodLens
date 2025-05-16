@@ -48,6 +48,14 @@ async function getUserForApp(req, res) {
               include: {
                 nutritionSnapshot: true,
                 nutritionItems: true,
+                ingredients: {
+                  include: {
+                    items: true,
+                  },
+                },
+                instructions: true,
+                variations: true,
+                scans: true,
               },
             },
           },

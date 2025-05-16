@@ -55,8 +55,8 @@ export default function Results() {
         setCurrentMessage(loadingMessages[idx]);
         // fade-in
         setIsVisible(true);
-      }, 1000); // match your `duration-1000`
-    }, 4000); // match your overall loop timing
+      }, 1000);
+    }, 4000);
     return () => clearInterval(interval);
   }, []);
 

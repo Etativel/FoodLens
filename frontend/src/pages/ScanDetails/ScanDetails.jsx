@@ -1,7 +1,6 @@
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-import UserContext from "../../contexts/createContext/UserContext";
 
 import {
   DietaryBadges,

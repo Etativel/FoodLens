@@ -1,7 +1,6 @@
 import { NotepadText } from "lucide-react";
 
 export default function Ingredients({ food }) {
-  console.log("this is ingredients, ", food.ingredients);
   return (
     <div className="mb-6 mt-3">
       <p className="text-lg font-semibold text-white mb-2 flex items-center">
@@ -27,11 +26,14 @@ export default function Ingredients({ food }) {
                     // if entry is a string, render it directly; otherwise pull out entry.item
                     const text = typeof entry === "string" ? entry : entry.item;
 
-                    // use entry.id when available, else fall back to index
+                    // // use entry.id when available, else fall back to index
                     const key =
                       typeof entry === "object" && entry.id
                         ? entry.id
                         : itemIndex;
+
+                    // console.log(typeof entry);
+                    // console.log(key);
 
                     return (
                       <li key={key} className="flex items-center">

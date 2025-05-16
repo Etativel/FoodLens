@@ -15,7 +15,7 @@ import AppLayout from "./AppLayout.jsx";
 import RecipeDetails from "./components/Recipe/RecipeDetails.jsx";
 import ScanDetails from "./pages/ScanDetails/ScanDetails.jsx";
 import UpdateField from "./pages/UpdateField/UpdateField.jsx";
-// import Processing from "./components/Processing/Processing.jsx";
+
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 import SignIn from "./pages/Auth/SingIn.jsx";
 import Signup from "./pages/Auth/SignUp.jsx";
@@ -24,10 +24,10 @@ const router = createBrowserRouter([
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-up", element: <Signup /> },
   {
-    element: <AppLayout />, // provides context
+    element: <AppLayout />,
     children: [
       {
-        element: <BottomNavLayout />, // shows BottomNav
+        element: <BottomNavLayout />,
         children: [
           { path: "/home", element: <Home /> },
           { path: "/calories", element: <Calories /> },

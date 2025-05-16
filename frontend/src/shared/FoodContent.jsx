@@ -1,19 +1,27 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
-
-function FoodCard({ food }) {
+import { useNavigate } from "react-router-dom";
+function FoodCard({ food, redirectToDetails }) {
   const [showNutrient, setShowNutrient] = useState(false);
-
+  console.log(food);
   return (
     <div className="flex gap-4 items-start">
       <div
+        onClick={() =>
+          redirectToDetails(food.recipe.id, food.recipe, food.imageUrl)
+        }
         className="h-20 w-[150px] min-w-[100px] bg-cover bg-center rounded-lg mt-2"
         style={{ backgroundImage: `url(${food.imageUrl})` }}
       ></div>
 
       <div className="flex flex-col justify-center text-white max-w-xs overflow-hidden">
         <div className="flex justify-between">
-          <span className="text-lg font-semibold truncate  pr-2 ">
+          <span
+            onClick={() =>
+              redirectToDetails(food.id, food.recipe, food.imageUrl)
+            }
+            className="text-lg font-semibold truncate  pr-2 "
+          >
             {food.name}
           </span>
           <button
@@ -28,7 +36,12 @@ function FoodCard({ food }) {
           </button>
         </div>
 
-        <span className="text-sm text-gray-300">{food.summary}</span>
+        <span
+          onClick={() => redirectToDetails(food.id, food.recipe, food.imageUrl)}
+          className="text-sm text-gray-300"
+        >
+          {food.summary}
+        </span>
         <div className="flex flex-wrap gap-2 mt-1">
           {food.nutritionItems &&
             food.nutritionItems.map((item) => {
@@ -76,6 +89,14 @@ function FoodCard({ food }) {
 }
 
 export default function FoodContent({ foods }) {
+  const navigate = useNavigate();
+  function redirectToDetails(id, recipe, image) {
+    console.log(image);
+    console.log(recipe);
+    navigate(`/scan/${id}`, {
+      state: { recipe, image },
+    });
+  }
   return (
     <div className="flex mx-3 flex-col">
       <div className="text-white mb-2 text-lg font-semibold mt-4">
@@ -83,7 +104,11 @@ export default function FoodContent({ foods }) {
       </div>
       <div className="flex flex-col gap-2">
         {foods.map((food, idx) => (
-          <FoodCard key={idx} food={food} />
+          <FoodCard
+            key={idx}
+            food={food}
+            redirectToDetails={redirectToDetails}
+          />
         ))}
       </div>
     </div>

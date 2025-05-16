@@ -69,6 +69,8 @@ export default function CalorieChart({ dailyTotals }) {
               },
               ticks: {
                 color: "#ffffff",
+                maxRotation: 45,
+                minRotation: 45,
               },
               grid: {
                 color: "#ffffff",

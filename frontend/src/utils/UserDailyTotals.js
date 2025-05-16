@@ -86,10 +86,12 @@ export default function UseDailyTotals() {
         };
       }
       acc[dateKey].recipes.push({
+        id: scan.recipe.id,
         name: scan.recipe.name,
         imageUrl: scan.imageUrl,
         summary: scan.recipe.summary,
         nutritionItems: scan.recipe.nutritionItems,
+        ...scan,
       });
 
       scan.recipe.nutritionItems.forEach(({ name, value, unit }) => {

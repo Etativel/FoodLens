@@ -40,7 +40,15 @@ async function getUserForApp(req, res) {
         isPremium: true,
         scanCreditsRemaining: true,
         weightGoal: true,
+        weight: true,
+        height: true,
         calorieLimit: true,
+        sodiumLimit: true,
+        proteinLimit: true,
+        fatLimit: true,
+        carbohydrateLimit: true,
+        fiberLimit: true,
+        sugarLimit: true,
         createdAt: true,
         scans: {
           include: {

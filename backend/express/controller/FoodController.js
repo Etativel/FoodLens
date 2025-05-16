@@ -67,6 +67,48 @@ async function getAllRecipeName(req, res) {
   }
 }
 
+async function getFoodById(req, res) {
+  const { foodId } = req.params;
+  console.log(foodId);
+  try {
+    const data = await prisma.recipe.findUnique({
+      where: {
+        id: foodId,
+      },
+      include: {
+        nutritionSnapshot: true,
+        nutritionItems: true,
+        ingredients: {
+          include: {
+            items: true,
+          },
+        },
+        instructions: true,
+        variations: true,
+        scans: true,
+      },
+    });
+
+    if (!data) {
+      return res.status(404).json({ message: "Recipe not found" });
+    }
+    const ingredients = data.ingredients.map((group) => ({
+      group: group.groupName,
+      items: group.items.map((i) => i.item),
+    }));
+
+    return res.status(200).json({
+      data: {
+        ...data,
+        ingredients,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Internal server error", error });
+  }
+}
+
 // POST
 async function saveFood(req, res) {
   const { recipe, imageUrl, scanMode } = req.body;
@@ -340,4 +382,5 @@ module.exports = {
   getAllRecipeName,
   createScan,
   findRecipe,
+  getFoodById,
 };

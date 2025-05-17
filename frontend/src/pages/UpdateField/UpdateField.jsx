@@ -25,7 +25,7 @@ const settingsFields = {
     type: "number",
     min: 10,
     max: 550,
-    fieldName: "weightgoal",
+    fieldName: "weightGoal",
     endpoint: "/user/settings/weightgoal",
   },
   height: {
@@ -124,10 +124,9 @@ export default function UpdateField() {
   const { field } = useParams();
   const cfg = settingsFields[field];
   const { profile } = useContext(UserContext);
-  console.log(profile);
   const navigate = useNavigate();
-
   const [value, setValue] = useState("");
+  const [prevValue, setPrevValue] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -143,6 +142,7 @@ export default function UpdateField() {
     // Avoid setting value if the profile doesn't have it
     if (val !== undefined) {
       setValue(val);
+      setPrevValue(val);
     }
 
     setLoading(false);
@@ -163,12 +163,21 @@ export default function UpdateField() {
       return;
     }
 
+    if (value === prevValue) {
+      navigate("/settings");
+      return;
+    }
+
     try {
-      const res = await fetch(`${variable.API_URL}${cfg.endpoint}`, {
+      const res = await fetch(`${variable.API_URL}/user/update-user`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ value: Number(value) }),
+        body: JSON.stringify({
+          value: Number(value),
+          userId: profile.user.id,
+          fieldName: cfg.fieldName,
+        }),
       });
       if (!res.ok) throw new Error(res.statusText);
       navigate("/settings");

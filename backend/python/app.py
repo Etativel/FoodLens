@@ -50,10 +50,10 @@ if USE_HF_HUB:
 
     logger.info(f"Loading model from Hugging Face Hub: {MODEL_ID}")
     model = AutoModelForImageClassification.from_pretrained(
-        MODEL_ID, use_auth_token=token
+        MODEL_ID, token=token
     )
     processor = AutoImageProcessor.from_pretrained(
-        MODEL_ID, use_auth_token=token
+        MODEL_ID, token=token
     )
 else:
     logger.info(f"Loading model locally from: {LOCAL_MODEL_DIR}")

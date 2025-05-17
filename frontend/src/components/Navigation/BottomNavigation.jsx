@@ -94,9 +94,10 @@ function BottomNavigation() {
       const formData = new FormData();
       formData.append("file", blob, "image.jpg");
 
-      const response = await fetch("http://127.0.0.1:5000/predict", {
+      const response = await fetch("http://localhost:5000/predict", {
         method: "POST",
         body: formData,
+        credentials: "include",
       });
 
       if (!response.ok) {

@@ -6,4 +6,10 @@ router.post("/create", controller.createUser);
 
 router.post("/getProfile", authenticateEither, controller.getUserForApp);
 
+router.patch(
+  "/update-user",
+  authenticateEither,
+  controller.userInformationUpdate
+);
+
 module.exports = router;

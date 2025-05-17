@@ -23,6 +23,40 @@ async function createUser(req, res) {
   }
 }
 
+// PATCH
+async function userInformationUpdate(req, res) {
+  const { value, userId, fieldName } = req.body;
+  const allowedFields = [
+    "weightGoal",
+    "height",
+    "weight",
+    "calorieLimit",
+    "sodiumLimit",
+    "proteinLimit",
+    "fatLimit",
+    "carbohydrateLimit",
+    "fiberLimit",
+    "sugarLimit",
+  ];
+  if (!allowedFields.includes(fieldName)) {
+    return res.status(400).json({ message: "Invalid field name" });
+  }
+  try {
+    const updated = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        [fieldName]: value,
+      },
+    });
+    return res.status(200).json({ message: "Updated successfully", updated });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+}
+
 // GET
 
 // Get user information for the front end app, make sure not to include sensitive information
@@ -103,4 +137,5 @@ async function getUserForApp(req, res) {
 module.exports = {
   createUser,
   getUserForApp,
+  userInformationUpdate,
 };

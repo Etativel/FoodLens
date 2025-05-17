@@ -5,3 +5,4 @@ pillow
 flask-cors
 gunicorn>=20.1.0
 waitress>=2.1.0
+PyJWT

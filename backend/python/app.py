@@ -7,16 +7,21 @@ import io
 import logging
 import os
 
+from auth.authorization import verify_jwt
+
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("FoodLensAPI")
 
 app = Flask(__name__, static_folder="static")
+
 CORS(
     app,
     resources={r"/*": {"origins": [
         "http://localhost:5173",
         "http://127.0.0.1:5173"
-    ]}}
+    ]}},
+    supports_credentials=True 
 )
     
 @app.route('/favicon.ico')
@@ -66,7 +71,11 @@ logger.info(f"Model loaded on device: {device}")
 
 @app.route("/predict", methods=["POST", "OPTIONS"])
 def predict():
-    
+    # Authenticate user
+    is_valid, result = verify_jwt()
+    if not is_valid:
+        return jsonify({"error": "Unauthorized: " + result}), 401
+        
     if request.method == "OPTIONS":
         return jsonify({"status": "ok"}), 200
 

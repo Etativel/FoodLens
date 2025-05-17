@@ -5,7 +5,7 @@ from PIL import Image, UnidentifiedImageError
 import torch
 import io
 import logging
-
+import os
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("FoodLensAPI")
@@ -33,10 +33,33 @@ def home():
         }
     })
 
-MODEL_DIR = "../../model"
-logger.info(f"Loading model from {MODEL_DIR}…")
-model = AutoModelForImageClassification.from_pretrained(MODEL_DIR)
-processor = AutoImageProcessor.from_pretrained(MODEL_DIR)
+# MODEL_DIR = "../../model"
+# logger.info(f"Loading model from {MODEL_DIR}…")
+# model = AutoModelForImageClassification.from_pretrained(MODEL_DIR)
+# processor = AutoImageProcessor.from_pretrained(MODEL_DIR)
+
+
+USE_HF_HUB = os.getenv("USE_HF_HUB", "false").lower() == "true"
+MODEL_ID = "nateraw/food"
+LOCAL_MODEL_DIR = "../../model"
+
+if USE_HF_HUB:
+    token = os.getenv("HUGGINGFACE_AUTH_TOKEN")
+    if not token:
+        raise RuntimeError("HUGGINGFACE_AUTH_TOKEN must be set when USE_HF_HUB=true")
+
+    logger.info(f"Loading model from Hugging Face Hub: {MODEL_ID}")
+    model = AutoModelForImageClassification.from_pretrained(
+        MODEL_ID, use_auth_token=token
+    )
+    processor = AutoImageProcessor.from_pretrained(
+        MODEL_ID, use_auth_token=token
+    )
+else:
+    logger.info(f"Loading model locally from: {LOCAL_MODEL_DIR}")
+    model = AutoModelForImageClassification.from_pretrained(LOCAL_MODEL_DIR)
+    processor = AutoImageProcessor.from_pretrained(LOCAL_MODEL_DIR)
+
 model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)

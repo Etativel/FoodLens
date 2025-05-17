@@ -18,11 +18,15 @@ CORS(
         "http://127.0.0.1:5173"
     ]}}
 )
-
-
+    
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory(app.static_folder, 'favicon.ico')
+    try:
+        return send_from_directory(app.static_folder, 'favicon.ico')
+    except Exception as e:
+        logger.error(f"Favicon error: {e}")
+        return '', 204
+
 
 @app.route("/", methods=["GET"])
 def home():
@@ -32,11 +36,6 @@ def home():
             "POST /predict": "Upload an image file under form-field `file`"
         }
     })
-
-# MODEL_DIR = "../../model"
-# logger.info(f"Loading model from {MODEL_DIR}…")
-# model = AutoModelForImageClassification.from_pretrained(MODEL_DIR)
-# processor = AutoImageProcessor.from_pretrained(MODEL_DIR)
 
 
 USE_HF_HUB = os.getenv("USE_HF_HUB", "false").lower() == "true"

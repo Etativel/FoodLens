@@ -27,12 +27,13 @@ function IntakeNotification({
   userResponse,
   px = "3",
   pb = "3",
+  mb = "0",
 }) {
   return (
     <>
       {food && intakeStatus !== "hidden" && scanData && (
         <div
-          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 ease-in-out ${getAnimationClass()}`}
+          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 ease-in-out mb-${mb} ${getAnimationClass()}`}
         >
           {intakeStatus === "question" ? (
             <>
@@ -500,6 +501,7 @@ export default function Results() {
               userResponse={userResponse}
               pb="10"
               px="0"
+              mb="10"
             />
           </div>
         </div>

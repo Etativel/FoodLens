@@ -1,31 +1,6 @@
 import { Flame, Soup } from "lucide-react";
-
-const additionalNutrients = [
-  {
-    label: "Sodium",
-    key: "sodium",
-    max: 3000,
-    unit: "mg",
-    color: "bg-red-500",
-    accentColor: "bg-red-600",
-  },
-  {
-    label: "Fiber",
-    key: "fiber",
-    max: 40,
-    unit: "g",
-    color: "bg-purple-500",
-    accentColor: "bg-purple-600",
-  },
-  {
-    label: "Sugar",
-    key: "sugar",
-    max: 60,
-    unit: "g",
-    color: "bg-orange-500",
-    accentColor: "bg-orange-600",
-  },
-];
+import { useContext } from "react";
+import UserContext from "../contexts/createContext/UserContext";
 
 function AdditionalNutrient({ totals, label, keyName, max, unit, color }) {
   const current = totals?.[keyName]?.current || 0;
@@ -52,28 +27,33 @@ function AdditionalNutrient({ totals, label, keyName, max, unit, color }) {
   );
 }
 
-function NutrientTrackerComponent({ totals }) {
+function NutrientTrackerComponent({
+  totals,
+  proteinLimit,
+  carbohydrateLimit,
+  fatLimit,
+}) {
   const normalize = (key) => totals?.[key]?.current ?? 0;
 
   const nutrients = [
     {
       name: "Protein",
       current: normalize("protein") || 0,
-      target: 80,
+      target: proteinLimit,
       color: "bg-blue-500",
       accentColor: "bg-blue-600",
     },
     {
       name: "Carbs",
       current: normalize("carbs") || 0,
-      target: 200,
+      target: carbohydrateLimit,
       color: "bg-green-500",
       accentColor: "bg-green-600",
     },
     {
       name: "Fat",
       current: normalize("fat") || 0,
-      target: 90,
+      target: fatLimit,
       color: "bg-yellow-500",
       accentColor: "bg-yellow-600",
     },
@@ -113,7 +93,24 @@ function NutrientTrackerComponent({ totals }) {
 }
 
 export default function NutrientInfoGraph({ totals, date }) {
-  const calorieGoal = 1600;
+  const { profile } = useContext(UserContext);
+  if (!profile?.user) {
+    return (
+      <div className="flex">
+        <div className="h-60 w-full mt-1 mx-3 rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
+      </div>
+    );
+  }
+  const {
+    calorieLimit,
+    sodiumLimit,
+    fiberLimit,
+    sugarLimit,
+    carbohydrateLimit,
+    fatLimit,
+    proteinLimit,
+  } = profile.user;
+  const calorieGoal = calorieLimit;
 
   const caloriesConsumed = totals.calories?.current || 0;
   const caloriesRemaining = Math.max(0, calorieGoal - caloriesConsumed);
@@ -125,6 +122,33 @@ export default function NutrientInfoGraph({ totals, date }) {
   const circleRadius = 16;
   const circumference = 2 * Math.PI * circleRadius;
   const dashOffset = circumference - (caloriePercentage / 100) * circumference;
+
+  const additionalNutrients = [
+    {
+      label: "Sodium",
+      key: "sodium",
+      max: sodiumLimit,
+      unit: "mg",
+      color: "bg-red-500",
+      accentColor: "bg-red-600",
+    },
+    {
+      label: "Fiber",
+      key: "fiber",
+      max: fiberLimit,
+      unit: "g",
+      color: "bg-purple-500",
+      accentColor: "bg-purple-600",
+    },
+    {
+      label: "Sugar",
+      key: "sugar",
+      max: sugarLimit,
+      unit: "g",
+      color: "bg-orange-500",
+      accentColor: "bg-orange-600",
+    },
+  ];
 
   return (
     <div className=" flex-1 bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
@@ -208,7 +232,12 @@ export default function NutrientInfoGraph({ totals, date }) {
                 </div>
               </div>
               <div>
-                <NutrientTrackerComponent totals={totals} />
+                <NutrientTrackerComponent
+                  totals={totals}
+                  proteinLimit={proteinLimit}
+                  carbohydrateLimit={carbohydrateLimit}
+                  fatLimit={fatLimit}
+                />
               </div>
               <div className="mt-5">
                 {additionalNutrients.map((nutrient) => (

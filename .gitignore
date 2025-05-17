@@ -1,3 +1,4 @@
 model
 .venv
 test
+backend/python/.env

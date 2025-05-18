@@ -199,7 +199,7 @@ function Settings() {
         </section>
 
         {/* Access Section */}
-        <section className="mb-8">
+        {/* <section className="mb-8">
           <h2 className="text-xl font-semibold text-white mb-3 flex items-center">
             <ShieldAlert size={20} className="mr-2" />
             Access
@@ -217,7 +217,7 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
           </div>
-        </section>
+        </section> */}
       </div>
     </div>
   );

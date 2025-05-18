@@ -61,11 +61,12 @@ export default function Login() {
     setErrors({});
     e.preventDefault();
     setIsValidating(true);
+    setIsLoading(true);
     const loginErrors = validateUserLogin(email, password);
     if (Object.keys(loginErrors).length > 0) {
       setIsValidating(false);
       setErrors(loginErrors);
-
+      setIsLoading(false);
       return;
     }
 
@@ -85,6 +86,7 @@ export default function Login() {
         const errorData = await response.json();
         const message = errorData.message || "Login error";
         // console.log(message);
+
         if (message.toLowerCase().includes("not registered")) {
           setErrors({ emailError: message });
         } else if (message.toLowerCase().includes("incorrect password")) {
@@ -96,6 +98,7 @@ export default function Login() {
         } else {
           setErrors({ loginError: message });
         }
+        setIsLoading(false);
         setIsValidating(false);
         return;
       }
@@ -108,6 +111,7 @@ export default function Login() {
 
   async function guestLogin() {
     try {
+      setIsLoading(true);
       const response = await fetch(`${variable.API_URL}/auth/login`, {
         method: "POST",
         credentials: "include",
@@ -135,6 +139,7 @@ export default function Login() {
           setErrors({ loginError: message });
         }
         setIsValidating(false);
+        setIsLoading(false);
         return;
       }
       setIsLoading(false);

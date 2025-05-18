@@ -57,7 +57,7 @@ function Settings() {
             <button
               onClick={() => redirectToUpdateField("height")}
               aria-label="height setting"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Ruler size={18} className="mr-3 text-neutral-400" />
@@ -66,12 +66,10 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
-            <div className="w-full h-px bg-neutral-700" />
-
             <button
               onClick={() => redirectToUpdateField("weight")}
               aria-label="weight setting"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Weight size={18} className="mr-3 text-neutral-400" />
@@ -83,7 +81,7 @@ function Settings() {
             <button
               onClick={() => redirectToUpdateField("weightgoal")}
               aria-label="weight goal setting"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Weight size={18} className="mr-3 text-neutral-400" />
@@ -91,8 +89,6 @@ function Settings() {
               </div>
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
-
-            <div className="w-full h-px bg-neutral-700" />
 
             <button
               onClick={handleLogout}
@@ -119,7 +115,7 @@ function Settings() {
             <button
               onClick={() => redirectToUpdateField("calorietarget")}
               aria-label="calorie target setting"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Pizza size={18} className="mr-3 text-neutral-400" />
@@ -128,12 +124,10 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
-            <div className="w-full h-px bg-neutral-700" />
-
             <button
               onClick={() => redirectToUpdateField("sodium")}
               aria-label="sodium"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Hamburger size={18} className="mr-3 text-neutral-400" />
@@ -142,12 +136,10 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
-            <div className="w-full h-px bg-neutral-700" />
-
             <button
               onClick={() => redirectToUpdateField("protein")}
               aria-label="protein"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Beef size={18} className="mr-3 text-neutral-400" />
@@ -156,12 +148,10 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
-            <div className="w-full h-px bg-neutral-700" />
-
             <button
               onClick={() => redirectToUpdateField("fat")}
               aria-label="fat"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Droplet size={18} className="mr-3 text-neutral-400" />
@@ -170,12 +160,10 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
-            <div className="w-full h-px bg-neutral-700" />
-
             <button
               onClick={() => redirectToUpdateField("carbohydrate")}
               aria-label="carbohydrate"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Wheat size={18} className="mr-3 text-neutral-400" />
@@ -184,12 +172,10 @@ function Settings() {
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
 
-            <div className="w-full h-px bg-neutral-700" />
-
             <button
               onClick={() => redirectToUpdateField("fiber")}
               aria-label="fiber"
-              className="w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
             >
               <div className="flex items-center">
                 <Cookie size={18} className="mr-3 text-neutral-400" />
@@ -197,8 +183,6 @@ function Settings() {
               </div>
               <ChevronRight size={18} className="text-neutral-500" />
             </button>
-
-            <div className="w-full h-px bg-neutral-700" />
 
             <button
               onClick={() => redirectToUpdateField("sugar")}

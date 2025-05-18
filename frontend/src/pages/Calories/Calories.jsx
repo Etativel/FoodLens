@@ -10,8 +10,6 @@ export default function Calories() {
   const { dailyTotals, loading } = UseDailyTotals();
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  console.log(dailyTotals);
-  console.log(loading);
   function onSubmit() {
     navigate(`/recipe?query=${encodeURIComponent(search)}`);
   }

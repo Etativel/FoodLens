@@ -28,6 +28,9 @@ export default function UseDailyTotals() {
   //   console.log(profile?.user?.scans[0].recipe);
 
   useEffect(() => {
+    if (!profile || !profile.user) {
+      return;
+    }
     const scansForHistory = profile?.user?.scans || [];
     const scans =
       profile?.user?.dailyIntakeLogs.map((intake) => {

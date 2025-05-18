@@ -51,7 +51,7 @@ export default function NutritionFacts({
           <button
             aria-label="show dropdown"
             onClick={() => setShowNutritionDetails(!showNutritionDetails)}
-            className="text-sm text-neutral-300 hover:text-blue-800 font-medium"
+            className="text-sm text-neutral-300  font-medium"
           >
             {showNutritionDetails ? "Show Less" : "Show Details"}
           </button>

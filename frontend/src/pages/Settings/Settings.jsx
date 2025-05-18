@@ -62,7 +62,7 @@ function Settings() {
             <button
               onClick={() => upgradeUser()}
               aria-label="height setting"
-              className="border-b-1 border-b-neutral-700border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+              className="border-b-1 border-b-neutral-700border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4  transition"
             >
               <div className="flex items-center">
                 <Crown size={18} className="mr-3 text-yellow-500" />

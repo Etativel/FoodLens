@@ -24,6 +24,8 @@ function BottomNavigation() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [facingMode, setFacingMode] = useState("environment");
+
   const navigate = useNavigate();
 
   console.log(profile);
@@ -36,7 +38,7 @@ function BottomNavigation() {
     const ac = new AbortController();
 
     navigator.mediaDevices
-      .getUserMedia({ video: true, signal: ac.signal })
+      .getUserMedia({ video: { facingMode }, signal: ac.signal })
       .then((stream) => {
         videoRef.current.srcObject = stream;
 
@@ -64,7 +66,7 @@ function BottomNavigation() {
       stopCameraStream();
       setIsCameraReady(false);
     };
-  }, [isCameraOpen, capturedImage]);
+  }, [isCameraOpen, capturedImage, facingMode]);
 
   const stopCameraStream = () => {
     if (videoRef.current && videoRef.current.srcObject) {
@@ -290,7 +292,31 @@ function BottomNavigation() {
                       onClick={takePicture}
                       className="bg-white outline-3 outline-solid outline-offset-4 text-white size-14 py-3 px-3 rounded-full"
                     ></button>
-                    <div className="size-15"></div>
+                    <button
+                      aria-label="change camera"
+                      disabled={!isCameraReady}
+                      onClick={() => {
+                        setFacingMode((prev) =>
+                          prev === "user" ? "environment" : "user"
+                        );
+                      }}
+                      className="bg-transparent text-white py-2 px-6 rounded-full"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="#cccccc"
+                        className="size-7"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+                        />
+                      </svg>
+                    </button>
                     <input
                       type="file"
                       ref={fileInputRef}

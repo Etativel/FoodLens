@@ -9,6 +9,7 @@ import {
   Wheat,
   Cookie,
   Apple,
+  Crown,
   ShieldAlert,
   Trash2,
   ChevronRight,
@@ -41,6 +42,10 @@ function Settings() {
     navigate(`/settings/${field}`);
   }
 
+  function upgradeUser() {
+    alert("Upcoming feature");
+  }
+
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none px-5 py-6 mb-15">
@@ -54,6 +59,17 @@ function Settings() {
           </h2>
 
           <div className="rounded-lg overflow-hidden bg-neutral-800">
+            <button
+              onClick={() => upgradeUser()}
+              aria-label="height setting"
+              className="border-b-1 border-b-neutral-700border-b-1 border-b-neutral-700 w-full flex items-center justify-between text-white p-4 hover:bg-neutral-700 transition"
+            >
+              <div className="flex items-center">
+                <Crown size={18} className="mr-3 text-yellow-500" />
+                <span>Upgrade to Premium</span>
+              </div>
+              <ChevronRight size={18} className="text-neutral-500" />
+            </button>
             <button
               onClick={() => redirectToUpdateField("height")}
               aria-label="height setting"

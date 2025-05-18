@@ -12,7 +12,7 @@ app.use(
     origin: [
       "http://localhost:5174",
       "http://localhost:5173",
-      "http://192.168.56.1:5173",
+      "https://foodlens.up.railway.app",
     ],
     credentials: true,
     allowedHeaders: "Content-Type,Authorization",

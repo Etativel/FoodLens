@@ -20,9 +20,12 @@ import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 import SignIn from "./pages/Auth/SingIn.jsx";
 import Signup from "./pages/Auth/SignUp.jsx";
 
+import Redirection from "./Redirection.jsx";
+
 const router = createBrowserRouter([
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-up", element: <Signup /> },
+  { path: "/", element: <Redirection /> },
   {
     element: <AppLayout />,
     children: [

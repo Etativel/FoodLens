@@ -1,4 +1,4 @@
-import DonutChart from "../chart/DonutChart";
+import DonutChart from "../Chart/DonutChart";
 
 export default function NutritionChart({ food }) {
   const chartData =

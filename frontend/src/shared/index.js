@@ -1,5 +1,6 @@
 import NutrientInfoGraph from "./NutrientInfoGraph";
 import FoodContent from "./FoodContent";
 import variable from "./variable";
+import Loader from "./Loader";
 
-export { NutrientInfoGraph, FoodContent, variable };
+export { Loader, NutrientInfoGraph, FoodContent, variable };

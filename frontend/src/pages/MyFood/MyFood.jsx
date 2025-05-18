@@ -1,7 +1,7 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { UseDailyTotals } from "../../utils";
 import { ClipboardList } from "lucide-react";
-
+import { Loader } from "../../shared";
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -129,7 +129,7 @@ function FoodContent({ foods }) {
 }
 
 export default function MyFood() {
-  const { dailyTotals, history } = UseDailyTotals();
+  const { dailyTotals, history, loadingHistory } = UseDailyTotals();
   const [filteredData, setFilteredData] = useState([]);
   const [filter, setFilter] = useState("");
 
@@ -153,6 +153,22 @@ export default function MyFood() {
     setFilteredData(matches);
   }, [filter, history]);
 
+  if (loadingHistory) {
+    return <Loader />;
+  }
+
+  if (!loadingHistory && history.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center text-white mt-50 mx-4 text-center">
+        <ClipboardList size={48} className="text-gray-400 mb-4" />
+        <h2 className="text-xl font-semibold mb-2">My Foods </h2>
+        <p className="text-gray-400 mb-6">
+          This page keeps track of all foods you've scanned for easy reference.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px] ">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
@@ -165,18 +181,7 @@ export default function MyFood() {
             />
           </div>
         </div>
-        {dailyTotals.length >= 1 ? (
-          <FoodContent foods={filteredData} />
-        ) : (
-          <div className="flex flex-col items-center justify-center text-white mt-50 mx-4 text-center">
-            <ClipboardList size={48} className="text-gray-400 mb-4" />
-            <h2 className="text-xl font-semibold mb-2">My Foods </h2>
-            <p className="text-gray-400 mb-6">
-              This page keeps track of all foods you've scanned for easy
-              reference.
-            </p>
-          </div>
-        )}
+        {dailyTotals.length >= 1 && <FoodContent foods={filteredData} />}
       </div>
     </div>
   );

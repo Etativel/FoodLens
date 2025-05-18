@@ -1,6 +1,6 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import { UseDailyTotals } from "../../utils";
-import { NutrientInfoGraph, FoodContent } from "../../shared";
+import { NutrientInfoGraph, FoodContent, Loader } from "../../shared";
 import { ScanIcon, Loader2 } from "lucide-react";
 import CalorieChart from "./CaloriesLineChart";
 import { useNavigate } from "react-router-dom";
@@ -18,11 +18,7 @@ export default function Calories() {
 
   // spinner while loading daily totals
   if (loading) {
-    return (
-      <div className="flex flex-col h-screen items-center justify-center flex-1">
-        <Loader2 size={48} className="text-gray-400 animate-spin" />
-      </div>
-    );
+    return <Loader />;
   }
 
   // if no entries after loading

@@ -23,7 +23,8 @@ export default function UseDailyTotals() {
   const { profile } = useContext(UserContext);
   const [dailyTotals, setDailyTotals] = useState([]);
   const [history, setHistory] = useState([]);
-
+  const [loading, setLoading] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   //   console.log(profile?.user?.scans[0].recipe);
 
   useEffect(() => {
@@ -56,9 +57,10 @@ export default function UseDailyTotals() {
       .sort((a, b) => new Date(b.scannedAt) - new Date(a.scannedAt));
 
     setHistory(sortedScans);
-
+    setLoadingHistory(false);
     if (!scans.length) {
       setDailyTotals([]);
+      setLoading(false);
       return;
     }
     const normalize = (name) => {
@@ -110,6 +112,7 @@ export default function UseDailyTotals() {
       a.date > b.date ? -1 : 1
     );
     setDailyTotals(list);
+    setLoading(false);
   }, [profile]);
-  return { dailyTotals, profile, history };
+  return { dailyTotals, profile, history, loading, loadingHistory };
 }

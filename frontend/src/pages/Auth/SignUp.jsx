@@ -34,10 +34,6 @@ export default function Signup() {
       });
   }, []);
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
-
   if (isAuthenticated) {
     return <Navigate to="/home" />;
   }
@@ -99,8 +95,9 @@ export default function Signup() {
             console.log(response.statusText);
             return;
           }
+          await response.json();
           setIsLoading(false);
-          navigate("/home");
+          navigate("/onboarding");
         } catch (err) {
           console.log(err);
         }

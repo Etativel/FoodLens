@@ -33,10 +33,6 @@ export default function Login() {
       });
   }, []);
 
-  if (isLoading) {
-    return <div>Loading</div>;
-  }
-
   if (isAuthenticated) {
     return <Navigate to="/home" />;
   }
@@ -119,8 +115,8 @@ export default function Login() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          credential: "guess@gmail.com",
-          password: "guessguess",
+          credential: "guest@gmail.com",
+          password: "guestguest",
         }),
       });
       if (!response.ok) {

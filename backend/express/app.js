@@ -5,6 +5,8 @@ require("./services/passportConfig");
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const { createProxyMiddleware } = require("http-proxy-middleware");
+
 app.use(
   cors({
     origin: [
@@ -23,6 +25,22 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());
 // app.use(passport.session());
+
+// PROXY: /model to Flask service
+app.use(
+  "/model",
+  createProxyMiddleware({
+    target: "https://foodlens-model-production.up.railway.app",
+    changeOrigin: true,
+    pathRewrite: { "^/model": "" },
+    onProxyReq(proxyReq, req) {
+      // forward cookies so Flask sees the JWT
+      if (req.headers.cookie) {
+        proxyReq.setHeader("Cookie", req.headers.cookie);
+      }
+    },
+  })
+);
 
 const openaiRouter = require("./router/OpenAiRouter");
 const foodRouter = require("./router/FoodRouter");

@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const passport = require("passport");
-require("../services/passportConfig");
+require("./services/passportConfig");
 
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
@@ -24,11 +24,11 @@ app.use(cookieParser());
 app.use(passport.initialize());
 // app.use(passport.session());
 
-const openaiRouter = require("../router/OpenAiRouter");
-const foodRouter = require("../router/FoodRouter");
-const userRouter = require("../router/UserRouter");
-const userAuth = require("../router/Auth");
-const recipeRouter = require("../router/RecipeRouter");
+const openaiRouter = require("./router/OpenAiRouter");
+const foodRouter = require("./router/FoodRouter");
+const userRouter = require("./router/UserRouter");
+const userAuth = require("./router/Auth");
+const recipeRouter = require("./router/RecipeRouter");
 
 app.use("/openai", openaiRouter);
 app.use("/food-api", foodRouter);

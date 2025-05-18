@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const controller = require("../controller/FoodController");
 const authenticateEither = require("../middleware/authEither");
-const upload = require("../../config/multerConfig");
+const upload = require("../config/multerConfig");
 
 const createLimiter = require("../utils/limiter.js");
 

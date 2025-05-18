@@ -1,7 +1,7 @@
 const controller = require("../controller/OpenAiController");
 const express = require("express");
 const router = express.Router();
-const upload = require("../../config/multerConfig");
+const upload = require("../config/multerConfig");
 const authenticateEither = require("../middleware/authEither");
 const createLimiter = require("../utils/limiter.js");
 

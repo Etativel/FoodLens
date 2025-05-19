@@ -25,8 +25,13 @@ async function getUserById(userId) {
   });
 }
 
+async function getUserByGoogleId(googleId) {
+  return prisma.user.findUnique({ where: { googleId } });
+}
+
 module.exports = {
   getUserByUsername,
   getUserById,
   getUserByEmail,
+  getUserByGoogleId,
 };

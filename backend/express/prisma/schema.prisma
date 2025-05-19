@@ -14,6 +14,8 @@ model User {
   email                   String    @unique
   passwordHash            String
   name                    String?
+  googleId                String?   @unique
+  provider                String?
   isPremium               Boolean   @default(false)
   scanCreditsRemaining    Int       @default(5)
   weightGoal              Float?

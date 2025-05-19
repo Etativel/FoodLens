@@ -4,6 +4,7 @@ const prisma = new PrismaClient();
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const { Strategy: JWTStrategy, ExtractJwt } = require("passport-jwt");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const bcrypt = require("bcryptjs");
 const userService = require("./userService");
 
@@ -102,6 +103,64 @@ passport.use(
       try {
         const user = await userService.getUserById(payload.id);
         return cb(null, user || false);
+      } catch (err) {
+        return cb(err, false);
+      }
+    }
+  )
+);
+const allowedDomains = [
+  "gmail.com",
+  "outlook.com",
+  "yahoo.com",
+  "protonmail.com",
+];
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+    },
+    async (accessToken, refreshToken, profile, cb) => {
+      try {
+        const email = profile.emails?.[0]?.value;
+        if (!email) return cb(null, false, { message: "No email from Google" });
+
+        const domain = email.split("@")[1];
+        if (!allowedDomains.includes(domain)) {
+          return cb(null, false, { message: "Email domain not allowed" });
+        }
+
+        let user = await userService.getUserByGoogleId(profile.id);
+
+        // If user not found by Google ID, check for existing user by email
+        if (!user) {
+          user = await userService.getUserByEmail(email);
+          if (user) {
+            // Link Google to existing local account
+            await prisma.user.update({
+              where: { id: user.id },
+              data: {
+                googleId: profile.id,
+                provider: "google",
+              },
+            });
+          } else {
+            // Create new user
+            user = await prisma.user.create({
+              data: {
+                email,
+                name: profile.displayName,
+                googleId: profile.id,
+                provider: "google",
+              },
+            });
+          }
+        }
+
+        return cb(null, user);
       } catch (err) {
         return cb(err, false);
       }

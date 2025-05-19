@@ -61,49 +61,32 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      console.log("Creating user");
-      const response = await fetch(`${variable.API_URL}/user/create`, {
+      const response = await fetch(`${variable.API_URL}/auth/request-code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          userData: { email, fullName, password },
+          email,
         }),
       });
 
       if (!response.ok) {
-        setIsLoading(false);
-        console.log(response.statusText);
-        return;
-      } else {
-        await response.json();
-        try {
-          const response = await fetch(`${variable.API_URL}/auth/login`, {
-            method: "POST",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              credential: email,
-              password,
-            }),
-          });
-          if (!response.ok) {
-            setIsLoading(false);
-            console.log(response.statusText);
-            return;
-          }
-          await response.json();
-          setIsLoading(false);
-          navigate("/onboarding");
-        } catch (err) {
-          console.log(err);
+        if (response.status === 409) {
+          setErrors({ email: "Email is already registered" });
+        } else if (response.status === 403) {
+          setErrors({ email: "Email domain not allowed." });
+        } else {
+          setErrors({ email: "Something went wrong. Please try again." });
         }
+        setIsLoading(false);
+        return;
       }
-    } catch (error) {
-      console.log(error);
+      await response.json();
+      navigate("/verify", { state: { email, fullName, password } });
+      return;
+    } catch (err) {
+      console.log("Failed to request code, ", err);
     }
   };
 
@@ -126,7 +109,7 @@ export default function Signup() {
             >
               Full Name
             </label>
-            <div className="relative">
+            <div className="relative h-12">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <User size={18} className="text-gray-400" />
               </div>
@@ -157,7 +140,7 @@ export default function Signup() {
             >
               Email Address
             </label>
-            <div className="relative">
+            <div className="relative h-12">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Mail size={18} className="text-gray-400" />
               </div>
@@ -188,7 +171,7 @@ export default function Signup() {
             >
               Password
             </label>
-            <div className="relative">
+            <div className="relative h-12">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock size={18} className="text-gray-400" />
               </div>
@@ -235,7 +218,7 @@ export default function Signup() {
             >
               Confirm Password
             </label>
-            <div className="relative">
+            <div className="relative h-12">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Lock size={18} className="text-gray-400" />
               </div>
@@ -323,10 +306,13 @@ export default function Signup() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-3">
-            <div className="py-3 px-4 rounded-md border border-neutral-600 bg-neutral-700 text-gray-300 text-sm font-medium hover:bg-neutral-600 transition-all flex items-center justify-center cursor-pointer">
+            <a
+              href={`${variable.API_URL}/auth/google`}
+              className="py-3 px-4 rounded-md border border-neutral-600 bg-neutral-700 text-gray-300 text-sm font-medium hover:bg-neutral-600 transition-all flex items-center justify-center cursor-pointer"
+            >
               <img className="size-6 mx-2" src={googleIcon} alt="" />
               Google
-            </div>
+            </a>
           </div>
         </div>
       </div>

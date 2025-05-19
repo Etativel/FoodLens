@@ -311,14 +311,15 @@ export default function Login() {
           </div>
 
           <div className="mt-6 grid grid-cols-1 gap-3">
-            <button
+            <a
+              href={`${variable.API_URL}/auth/google`}
               aria-label="google login"
               type="button"
               className="py-3 px-4 rounded-md border border-neutral-600 bg-neutral-700 text-gray-300 text-sm font-medium hover:bg-neutral-600 transition-all flex items-center justify-center"
             >
               <img className="size-6 mx-2" src={googleIcon} alt="" />
               Google
-            </button>
+            </a>
           </div>
           <div className="mt-3 grid grid-cols-1 gap-3">
             <button

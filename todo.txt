@@ -1,3 +1,15 @@
-use cloudinary cdn utils
+logic: new user free credit on vision model
 
-the vision middle should check the database first after getting the dishname before continuing to the image vision model
+feature: upgrade user into premium
+
+logic: prevent account creation exploit
+
+feature: google login
+
+fix: hide url bar
+
+fix: set min font to md
+
+fix: flashing component on recipe
+
+the vision middle should check the database first after getting the dish name before continuing to the image vision model

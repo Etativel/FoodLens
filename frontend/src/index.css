@@ -4,21 +4,21 @@ html {
   background-color: black;
   scrollbar-width: none;
   /* IE 10+ */
+  height: 100%;
   -ms-overflow-style: none;
 }
 
-html,
 body {
   height: 100%;
 }
 
-@layer base {
+/* @layer base {
   *,
   *::before,
   *::after {
     @apply box-border;
   }
-}
+} */
 
 /* hide-scrollbar utility */
 .hide-scrollbar {

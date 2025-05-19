@@ -16,7 +16,7 @@ export default function Ingredients({ food }) {
 
             return (
               <div key={group.id ?? groupIndex} className="mb-3">
-                <p className="text-md font-sm font-semibold text-white mb-1 pl-1">
+                <p className="text-md  font-semibold text-white mb-1 pl-1">
                   {title}
                 </p>
                 <ul className="space-y-2 pl-3">

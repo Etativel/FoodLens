@@ -40,21 +40,21 @@ function NutrientTrackerComponent({
       name: "Protein",
       current: normalize("protein") || 0,
       target: proteinLimit,
-      color: "bg-blue-500",
+      color: "bg-blue-400",
       accentColor: "bg-blue-600",
     },
     {
       name: "Carbs",
       current: normalize("carbs") || 0,
       target: carbohydrateLimit,
-      color: "bg-green-500",
+      color: "bg-green-400",
       accentColor: "bg-green-600",
     },
     {
       name: "Fat",
       current: normalize("fat") || 0,
       target: fatLimit,
-      color: "bg-yellow-500",
+      color: "bg-yellow-400",
       accentColor: "bg-yellow-600",
     },
   ];
@@ -129,7 +129,7 @@ export default function NutrientInfoGraph({ totals, date }) {
       key: "sodium",
       max: sodiumLimit,
       unit: "mg",
-      color: "bg-red-500",
+      color: "bg-red-400",
       accentColor: "bg-red-600",
     },
     {
@@ -137,7 +137,7 @@ export default function NutrientInfoGraph({ totals, date }) {
       key: "fiber",
       max: fiberLimit,
       unit: "g",
-      color: "bg-purple-500",
+      color: "bg-purple-400",
       accentColor: "bg-purple-600",
     },
     {
@@ -145,7 +145,7 @@ export default function NutrientInfoGraph({ totals, date }) {
       key: "sugar",
       max: sugarLimit,
       unit: "g",
-      color: "bg-orange-500",
+      color: "bg-orange-400",
       accentColor: "bg-orange-600",
     },
   ];

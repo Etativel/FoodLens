@@ -71,7 +71,7 @@ export default function NutritionFacts({
                     {item.value}
                     {item.unit}
                   </span>
-                  <span className="text-xs text-neutral-300">{item.name}</span>
+                  <span className="text-sm text-neutral-300">{item.name}</span>
                 </div>
               ))
             : Array(4)
@@ -97,7 +97,7 @@ export default function NutritionFacts({
                   {item.value}
                   {item.unit}
                 </span>
-                <span className="text-xs text-neutral-300">{item.name}</span>
+                <span className="text-sm text-neutral-300">{item.name}</span>
               </div>
             ))}
           </div>

@@ -1,8 +1,33 @@
 require("dotenv").config({ path: "../.env" });
 const express = require("express");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const passport = require("passport");
+const mailer = require("../utils/mailer");
+const userService = require("../services/userService");
+const createLimiter = require("../utils/limiter.js");
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+
+const userCreationLimiter = createLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 10,
+});
+const allowedDomains = [
+  "gmail.com",
+  "outlook.com",
+  "yahoo.com",
+  "protonmail.com",
+];
+
+function isAllowedDomain(email) {
+  if (!email || typeof email !== "string") return false;
+
+  const domain = email.split("@")[1]?.toLowerCase();
+  return allowedDomains.includes(domain);
+}
 
 // Authentication middleware to verify JWT from httpOnly cookie
 function authenticateToken(req, res, next) {
@@ -24,6 +49,94 @@ function authenticateToken(req, res, next) {
     next();
   });
 }
+
+router.post("/request-code", userCreationLimiter, async (req, res) => {
+  const { email } = req.body;
+
+  if (!email || typeof email !== "string") {
+    return res.status(400).json({ error: "Email is required" });
+  }
+
+  if (!isAllowedDomain(email)) {
+    return res.status(403).json({ error: "Email domain not allowed" });
+  }
+
+  const existingUser = await userService.getUserByEmail(email);
+  console.log(existingUser);
+  if (existingUser) {
+    return res.status(409).json({ error: "Email already registered" });
+  }
+
+  const code = Array.from({ length: 4 }, () =>
+    crypto.randomBytes(1).toString("hex").slice(0, 1)
+  ).join("");
+
+  console.log(code);
+
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 mins
+
+  // delete existing codes for that email
+  await prisma.loginCode.deleteMany({
+    where: { email: email.toLowerCase() },
+  });
+
+  // create new code
+  await prisma.loginCode.create({
+    data: {
+      email: email.toLowerCase(),
+      code,
+      expiresAt,
+    },
+  });
+
+  // send code
+  await mailer.sendLoginCode(email, code);
+
+  return res.status(200).json({ message: "Code sent" });
+});
+
+router.post("/verify-code", userCreationLimiter, async (req, res) => {
+  const { email, fullName, password, code } = req.body;
+
+  try {
+    const record = await prisma.LoginCode.findUnique({
+      where: { email },
+    });
+
+    console.log("this is record, ", record);
+    console.log("this is the code, ", code);
+
+    if (
+      !record ||
+      record.code !== code ||
+      new Date() > record.expiresAt.getTime()
+    ) {
+      console.log("My date, ", new Date());
+      console.log("Database date, ", record.expiresAt);
+      console.log("Database date, ", record.expiresAt.getTime());
+      return res.status(400).json({ error: "Invalid or expired code" });
+    }
+
+    // Optional: clean up verification record
+    await prisma.LoginCode.delete({ where: { email } });
+
+    // Create user
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name: fullName,
+        passwordHash: hashedPassword,
+        provider: "email",
+      },
+    });
+
+    return res.status(200).json({ user });
+  } catch (err) {
+    console.error("Error verifying code:", err);
+    return res.status(500).json({ error: "Internal server error", err });
+  }
+});
 
 router.post("/login", (req, res, next) => {
   passport.authenticate("user-local", { session: false }, (err, user, info) => {
@@ -82,7 +195,7 @@ router.get(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect("/home");
+    res.redirect("http://localhost:5173/home");
   }
 );
 

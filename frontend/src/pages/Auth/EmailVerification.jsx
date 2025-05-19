@@ -153,14 +153,14 @@ export default function EmailVerification() {
         </div>
 
         {/* Resend Code Link */}
-        <div className="text-center mt-8">
+        {/* <div className="text-center mt-8">
           <p className="text-sm text-gray-400">
             Didn't receive a code?{" "}
             <span className="text-blue-400 hover:text-blue-300 font-medium cursor-pointer">
               Resend Code
             </span>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

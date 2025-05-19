@@ -51,8 +51,11 @@ export default function Signup() {
     if (password !== confirmPassword)
       newErrors.confirmPassword = "Passwords don't match";
 
+    console.log("validateForm errors:", newErrors);
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    const isValid = Object.keys(newErrors).length === 0;
+    console.log("validateForm returns:", isValid);
+    return isValid;
   };
 
   const handleSubmit = async () => {
@@ -124,7 +127,7 @@ export default function Signup() {
                 onChange={(e) => setFullName(e.target.value)}
               />
               {errors.fullName && (
-                <div className="flex items-center mt-1 text-red-500 text-xs">
+                <div className="flex items-center mt-1 text-red-400 text-xs">
                   <AlertCircle size={12} className="mr-1" />
                   {errors.fullName}
                 </div>
@@ -155,7 +158,7 @@ export default function Signup() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               {errors.email && (
-                <div className="flex items-center mt-1 text-red-500 text-xs">
+                <div className="flex items-center mt-1 text-red-400 text-xs">
                   <AlertCircle size={12} className="mr-1" />
                   {errors.email}
                 </div>
@@ -202,7 +205,7 @@ export default function Signup() {
                 )}
               </div>
               {errors.password && (
-                <div className="flex items-center mt-1 text-red-500 text-xs">
+                <div className="flex items-center mt-1 text-red-400 text-xs">
                   <AlertCircle size={12} className="mr-1" />
                   {errors.password}
                 </div>
@@ -251,7 +254,7 @@ export default function Signup() {
                 )}
               </div>
               {errors.confirmPassword && (
-                <div className="flex items-center mt-1 text-red-500 text-xs">
+                <div className="flex items-center mt-1 text-red-400 text-xs">
                   <AlertCircle size={12} className="mr-1" />
                   {errors.confirmPassword}
                 </div>

@@ -12,7 +12,7 @@ export default function EmailVerification() {
   const navigate = useNavigate();
   const { email, fullName, password } = location.state || {};
 
-  console.log(location);
+  console.log(errors);
 
   if (!email) {
     return <Navigate to="/sign-up" />;
@@ -29,7 +29,6 @@ export default function EmailVerification() {
   async function handleVerify() {
     if (!validateForm()) return;
     setIsLoading(true);
-
     try {
       const response = await fetch(`${variable.API_URL}/auth/verify-code`, {
         method: "POST",
@@ -44,11 +43,38 @@ export default function EmailVerification() {
         }),
       });
       if (!response.ok) {
+        console.log(response);
+        if (response.status === 400) {
+          setErrors({ code: "Invalid or expired code" });
+        }
+        setIsLoading(false);
         console.log("Failed to verify code, ", response.statusText);
+      } else {
+        await response.json();
+        try {
+          const response = await fetch(`${variable.API_URL}/auth/login`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              credential: email,
+              password,
+            }),
+          });
+          if (!response.ok) {
+            setIsLoading(false);
+            console.log(response.statusText);
+            return;
+          }
+          await response.json();
+          setIsLoading(false);
+          navigate("/onboarding");
+        } catch (err) {
+          console.log(err);
+        }
       }
-      await response.json();
-      navigate("/onboarding");
-      return;
     } catch (err) {
       console.log("Internal server error, ", err);
     }
@@ -74,7 +100,7 @@ export default function EmailVerification() {
             </p>
             <div className="flex items-center mt-1">
               <Mail size={18} className="text-gray-400 mr-2" />
-              <p className="text-white break-all">{email}</p>
+              <p className="text-white break-all text-sm">{email}</p>
             </div>
           </div>
 
@@ -98,8 +124,8 @@ export default function EmailVerification() {
                 onChange={(e) => setVerificationCode(e.target.value)}
               />
               {errors.code && (
-                <div className="flex items-center mt-1 text-red-500 text-xs">
-                  <AlertCircle size={12} className="mr-1" />
+                <div className="flex items-center mt-1 text-red-400 text-md">
+                  <AlertCircle size={20} className="mr-1" />
                   {errors.code}
                 </div>
               )}

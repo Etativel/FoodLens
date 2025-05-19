@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 import "./index.css";
@@ -19,12 +19,14 @@ import UpdateField from "./pages/UpdateField/UpdateField.jsx";
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
 import SignIn from "./pages/Auth/SingIn.jsx";
 import Signup from "./pages/Auth/SignUp.jsx";
+import EmailVerification from "./pages/Auth/EmailVerification.jsx";
 
 import Redirection from "./Redirection.jsx";
 
 const router = createBrowserRouter([
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-up", element: <Signup /> },
+  { path: "/verify", element: <EmailVerification /> },
   { path: "/", element: <Redirection /> },
   {
     element: <AppLayout />,

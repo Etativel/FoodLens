@@ -13,7 +13,7 @@ function RecipeCard({ recipe }) {
   return (
     <div
       onClick={() => redirectRecipe(recipe.idMeal)}
-      className="bg-white shadow-lg rounded overflow-hidden m-4  w-full"
+      className="bg-neutral-800 shadow-lg rounded overflow-hidden m-4  w-full"
     >
       {recipe.strMealThumb && (
         <div className="relative">
@@ -22,7 +22,7 @@ function RecipeCard({ recipe }) {
             alt={recipe.strMeal}
             className="w-full h-48 object-cover"
           />
-          <div className="absolute bottom-0 left-0 right-0 bg-neutral-800 bg-opacity-50 text-white p-2">
+          <div className="absolute bottom-0 left-0 right-0 bg-neutral-800 opacity-[90%] bg-opacity-50 text-white p-2">
             <h2 className="text-xl font-bold truncate">{recipe.strMeal}</h2>
           </div>
         </div>
@@ -30,10 +30,10 @@ function RecipeCard({ recipe }) {
 
       <div className="p-2">
         <div className="mb-1">
-          <p className="text-gray-600">
+          <p className="text-neutral-200">
             <strong>Category:</strong> {recipe.strCategory}
           </p>
-          <p className="text-gray-600">
+          <p className="text-neutral-200">
             <strong>Cuisine:</strong> {recipe.strArea}
           </p>
         </div>

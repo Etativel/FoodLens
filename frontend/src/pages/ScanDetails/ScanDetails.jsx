@@ -71,14 +71,14 @@ export default function ScanDetails() {
           <div>
             <div className="flex justify-between">
               {food ? (
-                <p className="text-lg font-semibold text-white">{food.name}</p>
+                <p className="text-xl font-semibold text-white">{food.name}</p>
               ) : (
                 <p className="py-2 h-10 mt-4 w-full bg-neutral-700 rounded animate-pulse"></p>
               )}
             </div>
 
             {food ? (
-              <p className="py-2 text-sm text-neutral-300">{food.summary}</p>
+              <p className="py-2 text-md text-neutral-300">{food.summary}</p>
             ) : (
               <div className="py-2 h-10 mt-4 w-full bg-neutral-700 rounded animate-pulse"></div>
             )}

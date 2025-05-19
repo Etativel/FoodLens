@@ -42,7 +42,7 @@ export default function Variations({
                       <span className="px-2 py-1 bg-green-800 text-green-100 text-xs font-medium rounded w-[45px] flex justify-center shrink-0">
                         Add
                       </span>
-                      <p className="text-gray-300 text-sm">{variation.add}</p>
+                      <p className="text-gray-300 text-md">{variation.add}</p>
                     </div>
                   )}
 
@@ -51,7 +51,7 @@ export default function Variations({
                       <span className="px-2 py-1 bg-purple-800 text-purple-100 text-xs font-medium rounded">
                         Swap
                       </span>
-                      <p className="text-gray-300 text-sm">{variation.swap}</p>
+                      <p className="text-gray-300 text-md">{variation.swap}</p>
                     </div>
                   )}
                 </div>

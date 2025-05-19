@@ -97,7 +97,7 @@ export default function NutrientInfoGraph({ totals, date }) {
   if (!profile?.user) {
     return (
       <div className="flex">
-        <div className="h-60 w-full mt-10 mx-3 rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
+        <div className="h-98 w-full mt-10 mx-3 rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
       </div>
     );
   }
@@ -255,8 +255,8 @@ export default function NutrientInfoGraph({ totals, date }) {
             </div>
           </>
         ) : (
-          <div className="flex mt-10">
-            <div className="h-60 w-full mt-1 mx-3  rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
+          <div className="flex mt-1">
+            <div className="h-98 w-full mt-1 mx-3  rounded-sm flex flex-col animate-pulse bg-neutral-800"></div>
           </div>
         )}
       </div>

@@ -115,9 +115,9 @@ function BottomNavigation() {
       navigate("/results", {
         state: { image: capturedImage, prediction: data },
       });
-
-      setIsProcessing(false);
-      console.log("Prediction result:", data);
+      return;
+      // setIsProcessing(false);
+      // console.log("Prediction result:", data);
     } catch (error) {
       setIsProcessing(false);
       console.error("Prediction error:", error);

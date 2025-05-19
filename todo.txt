@@ -6,8 +6,6 @@ logic: prevent account creation exploit
 
 feature: google login
 
-fix: hide url bar
-
 fix: set min font to md
 
 fix: flashing component on recipe

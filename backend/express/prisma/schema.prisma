@@ -161,3 +161,10 @@ model OpenAIResponse {
   createdAt  DateTime @default(now())
 }
 
+model LoginCode {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  code      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}

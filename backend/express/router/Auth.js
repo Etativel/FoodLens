@@ -15,6 +15,7 @@ const userCreationLimiter = createLimiter({
   windowMs: 10 * 60 * 1000,
   max: 10,
 });
+
 const allowedDomains = [
   "gmail.com",
   "outlook.com",
@@ -62,13 +63,13 @@ router.post("/request-code", userCreationLimiter, async (req, res) => {
   }
 
   const existingUser = await userService.getUserByEmail(email);
-  console.log(existingUser);
+
   if (existingUser) {
     return res.status(409).json({ error: "Email already registered" });
   }
 
   const code = Array.from({ length: 4 }, () =>
-    crypto.randomBytes(1).toString("hex").slice(0, 1)
+    Math.floor(crypto.randomInt(0, 10))
   ).join("");
 
   console.log(code);
@@ -103,17 +104,11 @@ router.post("/verify-code", userCreationLimiter, async (req, res) => {
       where: { email },
     });
 
-    console.log("this is record, ", record);
-    console.log("this is the code, ", code);
-
     if (
       !record ||
       record.code !== code ||
       new Date() > record.expiresAt.getTime()
     ) {
-      console.log("My date, ", new Date());
-      console.log("Database date, ", record.expiresAt);
-      console.log("Database date, ", record.expiresAt.getTime());
       return res.status(400).json({ error: "Invalid or expired code" });
     }
 
@@ -198,6 +193,124 @@ router.get(
     res.redirect("https://foodlens.up.railway.app/home");
   }
 );
+
+router.post("/create-reset-token", async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+    if (!user) {
+      return res
+        .status(200)
+        .json({ message: "If that email exists, a reset link has been sent." });
+    }
+
+    // Remove any existing tokens for this user
+    await prisma.passwordResetToken.deleteMany({
+      where: { userId: user.id },
+    });
+
+    const rawToken = crypto.randomBytes(32).toString("hex");
+    const tokenHash = crypto
+      .createHash("sha256")
+      .update(rawToken)
+      .digest("hex");
+
+    // compute expiry (1 hour from now)
+    const expiresAt = new Date(Date.now() + 1000 * 60 * 60);
+
+    // store hashed token
+    await prisma.passwordResetToken.create({
+      data: {
+        userId: user.id,
+        tokenHash,
+        expiresAt,
+        used: false,
+      },
+    });
+
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${rawToken}`;
+    console.log(resetLink);
+    await mailer.sendPasswordReset(email, resetLink);
+
+    // always respond 200 to prevent email enumeration
+    return res
+      .status(200)
+      .json({ message: "If that email exists, a reset link has been sent." });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res.status(500).json({ message: "Internal server error, ", err });
+  }
+});
+
+router.post("/check-reset-token", async (req, res) => {
+  const { token } = req.body;
+
+  if (!token || typeof token !== "string") {
+    return res.status(400).json({ valid: false, message: "Token is required" });
+  }
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  try {
+    const record = await prisma.passwordResetToken.findUnique({
+      where: { tokenHash },
+    });
+
+    if (!record || record.used || record.expiresAt.getTime() < Date.now()) {
+      return res
+        .status(200)
+        .json({ valid: false, message: "Invalid or expired token" });
+    }
+
+    return res.status(200).json({ valid: true });
+  } catch (err) {
+    console.log("internal server error, ", err);
+    return res.status(500).json({ message: "Internal server error, ", err });
+  }
+});
+
+router.patch("/change-user-password", async (req, res) => {
+  const { newPassword, token } = req.body;
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const tokenHash = crypto.createHash("sha256").update(token).digest("hex");
+  try {
+    const record = await prisma.passwordResetToken.findUnique({
+      where: { tokenHash },
+    });
+
+    if (!record || record.used || record.expiresAt.getTime() < Date.now()) {
+      return res
+        .status(200)
+        .json({ valid: false, message: "Invalid or expired token" });
+    }
+
+    await prisma.user.update({
+      where: {
+        id: record.userId,
+      },
+      data: {
+        passwordHash: hashedPassword,
+      },
+    });
+
+    await prisma.passwordResetToken.update({
+      where: { tokenHash },
+      data: {
+        used: true,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ message: "Successfully change your password" });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res.status(500).json({ message: "Internal server error, ", err });
+  }
+});
 
 router.post("/logout", (req, res) => {
   res.clearCookie("token", {

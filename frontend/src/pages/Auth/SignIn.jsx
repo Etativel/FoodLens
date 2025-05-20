@@ -3,6 +3,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import googleIcon from "../../assets/svg/google.svg";
 import { variable } from "../../shared";
+import { requestResetToken } from "../../utils";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -153,34 +154,10 @@ export default function Login() {
     }
   }
 
-  async function requestReestToken() {
-    try {
-      const response = await fetch(
-        `${variable.API_URL}/auth/create-reset-token`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-          }),
-        }
-      );
-      if (!response.ok) {
-        console.log("Failed to request token, ", response.statusText);
-        return;
-      }
-      await response.json();
-    } catch (err) {
-      console.log(err);
-    }
-  }
-
   async function forgotPassword() {
-    await requestReestToken();
+    await requestResetToken();
     navigate("/email-token-sent", {
-      state: { email: email, requestReestToken: requestReestToken() },
+      state: { email: email },
     });
     return;
   }

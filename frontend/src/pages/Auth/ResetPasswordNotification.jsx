@@ -2,21 +2,22 @@ import { Mail, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
+import { requestResetToken } from "../../utils";
 
 export default function ResetPasswordEmailSent() {
   const location = useLocation();
   const navigate = useNavigate();
   const [sentCount, setSentCount] = useState(0);
-  const { email, requestReestToken } = location.state || {};
+  const { email } = location.state || {};
   const [loading, setLoading] = useState(null);
 
-  // if (!email) {
-  //   return <Navigate to="/sign-in" />;
-  // }
+  if (!email) {
+    return <Navigate to="/sign-in" />;
+  }
 
   async function resendToken() {
     setLoading(true);
-    await requestReestToken(email);
+    await requestResetToken(email);
     setLoading(false);
     setSentCount((prev) => prev + 1);
   }

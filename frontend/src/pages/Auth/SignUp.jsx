@@ -127,8 +127,8 @@ export default function Signup() {
                 onChange={(e) => setFullName(e.target.value)}
               />
               {errors.fullName && (
-                <div className="flex items-center mt-1 text-red-400 text-xs">
-                  <AlertCircle size={12} className="mr-1" />
+                <div className="flex items-center mt-1 text-red-400 text-sm">
+                  <AlertCircle size={15} className="mr-1" />
                   {errors.fullName}
                 </div>
               )}
@@ -158,8 +158,8 @@ export default function Signup() {
                 onChange={(e) => setEmail(e.target.value)}
               />
               {errors.email && (
-                <div className="flex items-center mt-1 text-red-400 text-xs">
-                  <AlertCircle size={12} className="mr-1" />
+                <div className="flex items-center mt-1 text-red-400 text-sm">
+                  <AlertCircle size={15} className="mr-1" />
                   {errors.email}
                 </div>
               )}
@@ -205,8 +205,8 @@ export default function Signup() {
                 )}
               </div>
               {errors.password && (
-                <div className="flex items-center mt-1 text-red-400 text-xs">
-                  <AlertCircle size={12} className="mr-1" />
+                <div className="flex items-center mt-1 text-red-400 text-sm">
+                  <AlertCircle size={15} className="mr-1" />
                   {errors.password}
                 </div>
               )}
@@ -254,8 +254,8 @@ export default function Signup() {
                 )}
               </div>
               {errors.confirmPassword && (
-                <div className="flex items-center mt-1 text-red-400 text-xs">
-                  <AlertCircle size={12} className="mr-1" />
+                <div className="flex items-center mt-1 text-red-400 text-sm">
+                  <AlertCircle size={15} className="mr-1" />
                   {errors.confirmPassword}
                 </div>
               )}
@@ -265,7 +265,7 @@ export default function Signup() {
           {/* Signup Button */}
           <div
             onClick={!isLoading ? handleSubmit : undefined}
-            className={`w-full py-3 px-4 rounded-md text-white font-medium text-center transition duration-300 ease-in-out ${
+            className={`mt-10 w-full py-3 px-4 rounded-md text-white font-medium text-center transition duration-300 ease-in-out ${
               isLoading
                 ? "bg-blue-600 cursor-not-allowed"
                 : "bg-blue-500 hover:bg-blue-600 hover:shadow-lg cursor-pointer"

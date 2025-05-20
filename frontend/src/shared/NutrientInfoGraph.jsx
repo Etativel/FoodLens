@@ -101,6 +101,9 @@ export default function NutrientInfoGraph({ totals, date }) {
       </div>
     );
   }
+  const newDate = new Date();
+  const currentDate = newDate.toISOString().split("T")[0];
+
   const {
     calorieLimit,
     sodiumLimit,
@@ -156,11 +159,13 @@ export default function NutrientInfoGraph({ totals, date }) {
         {/* Date */}
         <div className="text-white text-lg font-sm mt-5 mx-3">
           <div className="text-white text-lg font-sm   font-semibold">
-            {new Date(date).toLocaleDateString(undefined, {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            })}
+            {currentDate === date
+              ? "Today"
+              : new Date(date).toLocaleDateString(undefined, {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
           </div>
         </div>
 

@@ -16,6 +16,11 @@ const userCreationLimiter = createLimiter({
   max: 10,
 });
 
+const resetTokenLimiter = createLimiter({
+  windowMs: 10 * 60 * 1000,
+  max: 5,
+});
+
 const allowedDomains = [
   "gmail.com",
   "outlook.com",
@@ -194,7 +199,7 @@ router.get(
   }
 );
 
-router.post("/create-reset-token", async (req, res) => {
+router.post("/create-reset-token", resetTokenLimiter, async (req, res) => {
   const { email } = req.body;
 
   try {

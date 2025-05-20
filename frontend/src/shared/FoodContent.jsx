@@ -89,6 +89,7 @@ function FoodCard({ food, redirectToDetails }) {
 }
 
 export default function FoodContent({ foods }) {
+  console.log("This how food look like, ", foods);
   const navigate = useNavigate();
   function redirectToDetails(id, recipe, image) {
     console.log(image);

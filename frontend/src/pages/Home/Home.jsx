@@ -2,7 +2,7 @@ import SearchBar from "../../components/SearchBar/SearchBar";
 import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
 import { useEffect, useState } from "react";
 import { UseDailyTotals } from "../../utils";
-import { NutrientInfoGraph } from "../../shared";
+import { NutrientInfoGraph, FoodContent } from "../../shared";
 import { useNavigate } from "react-router-dom";
 
 function Home() {
@@ -19,12 +19,14 @@ function Home() {
     sugar: { current: 0, unit: "g" },
   });
 
+  console.log(dailyTotals);
+
   const now = new Date();
   const pad = (n) => String(n).padStart(2, "0");
   const currentDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
     now.getDate()
   )}`;
-
+  console.log(currentDate);
   useEffect(() => {
     if (dailyTotals?.length > 0 && dailyTotals[0].date === currentDate) {
       setTotals(dailyTotals[0].totals);
@@ -55,7 +57,13 @@ function Home() {
         <div className="flex flex-col pb-20 mt-5">
           {totals ? (
             // <div className="mt-1">
-            <NutrientInfoGraph totals={totals} date={currentDate} />
+            <>
+              <NutrientInfoGraph totals={totals} date={currentDate} />
+              {dailyTotals?.length > 0 &&
+                currentDate === dailyTotals[0].date && (
+                  <FoodContent foods={dailyTotals[0].recipes} />
+                )}
+            </>
           ) : (
             // </div>
             <div className="flex mt-10">

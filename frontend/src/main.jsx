@@ -17,9 +17,11 @@ import ScanDetails from "./pages/ScanDetails/ScanDetails.jsx";
 import UpdateField from "./pages/UpdateField/UpdateField.jsx";
 
 import Onboarding from "./pages/Onboarding/Onboarding.jsx";
-import SignIn from "./pages/Auth/SingIn.jsx";
+import SignIn from "./pages/Auth/SignIn.jsx";
 import Signup from "./pages/Auth/SignUp.jsx";
 import EmailVerification from "./pages/Auth/EmailVerification.jsx";
+import ResetPassword from "./pages/Auth/ResetPassword.jsx";
+import ResetPasswordEmailSent from "./pages/Auth/ResetPasswordNotification.jsx";
 
 import Redirection from "./Redirection.jsx";
 
@@ -27,6 +29,8 @@ const router = createBrowserRouter([
   { path: "/sign-in", element: <SignIn /> },
   { path: "/sign-up", element: <Signup /> },
   { path: "/verify", element: <EmailVerification /> },
+  { path: "/reset-password", element: <ResetPassword /> },
+  { path: "/email-token-sent", element: <ResetPasswordEmailSent /> },
   { path: "/", element: <Redirection /> },
   {
     element: <AppLayout />,

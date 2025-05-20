@@ -153,6 +153,38 @@ export default function Login() {
     }
   }
 
+  async function requestReestToken() {
+    try {
+      const response = await fetch(
+        `${variable.API_URL}/auth/create-reset-token`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+          }),
+        }
+      );
+      if (!response.ok) {
+        console.log("Failed to request token, ", response.statusText);
+        return;
+      }
+      await response.json();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function forgotPassword() {
+    await requestReestToken();
+    navigate("/email-token-sent", {
+      state: { email: email, requestReestToken: requestReestToken() },
+    });
+    return;
+  }
+
   return (
     <div className="min-h-screen bg-neutral-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full bg-neutral-800 rounded-lg shadow-xl p-8">
@@ -160,7 +192,6 @@ export default function Login() {
           <h1 className="text-2xl font-bold text-white mb-2">Welcome Back</h1>
           <p className="text-gray-400 text-sm">
             Sign in to continue your food journey
-            {errors.passwordError}
           </p>
         </div>
 
@@ -206,7 +237,7 @@ export default function Login() {
               </label>
               {tryCount > 0 && (
                 <a
-                  href="#"
+                  onClick={forgotPassword}
                   className="text-sm text-blue-400 hover:text-blue-300"
                 >
                   Forgot password?

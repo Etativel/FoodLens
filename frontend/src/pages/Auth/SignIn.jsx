@@ -16,6 +16,7 @@ export default function Login() {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [tryCount, setTryCount] = useState(0);
+  const [loadingTokenRequest, setLoadingTokenRequest] = useState(null);
   useEffect(() => {
     fetch(`${variable.API_URL}/auth/profile`, {
       credentials: "include",
@@ -155,7 +156,9 @@ export default function Login() {
   }
 
   async function forgotPassword() {
+    setLoadingTokenRequest(true);
     await requestResetToken(email);
+    setLoadingTokenRequest(false);
     navigate("/email-token-sent", {
       state: { email: email },
     });
@@ -212,14 +215,18 @@ export default function Login() {
               >
                 Password
               </label>
-              {tryCount > 0 && (
-                <a
-                  onClick={forgotPassword}
-                  className="text-sm text-blue-400 hover:text-blue-300"
-                >
-                  Forgot password?
-                </a>
-              )}
+
+              {tryCount > 0 &&
+                (loadingTokenRequest ? (
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-400 mr-2"></div>
+                ) : (
+                  <a
+                    onClick={forgotPassword}
+                    className="text-sm text-blue-400 hover:text-blue-300"
+                  >
+                    Forgot password?
+                  </a>
+                ))}
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -283,7 +290,7 @@ export default function Login() {
           <button
             aria-label="submit"
             type="submit"
-            disabled={isLoading || isValidating}
+            disabled={isLoading || isValidating || loadingTokenRequest}
             className={`w-full py-3 px-4 rounded-md text-white font-medium transition duration-300 ease-in-out mt-2  ${
               isLoading || isValidating
                 ? "bg-blue-600 cursor-not-allowed"

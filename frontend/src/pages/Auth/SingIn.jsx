@@ -14,6 +14,7 @@ export default function Login() {
   const [isValidating, setIsValidating] = useState(false);
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [tryCount, setTryCount] = useState(0);
   useEffect(() => {
     fetch(`${variable.API_URL}/auth/profile`, {
       credentials: "include",
@@ -90,12 +91,15 @@ export default function Login() {
         if (message.toLowerCase().includes("not registered")) {
           setErrors({ emailError: message });
         } else if (message.toLowerCase().includes("incorrect password")) {
+          setTryCount((prev) => prev + 1);
           setErrors({ passwordError: message });
         } else if (
           message.toLowerCase().includes("your account has been suspended")
         ) {
+          setTryCount((prev) => prev + 1);
           setErrors({ suspendedError: message });
         } else {
+          setTryCount((prev) => prev + 1);
           setErrors({ loginError: message });
         }
         setIsLoading(false);
@@ -200,9 +204,14 @@ export default function Login() {
               >
                 Password
               </label>
-              {/* <a href="#" className="text-sm text-blue-400 hover:text-blue-300">
-                Forgot password?
-              </a> */}
+              {tryCount > 0 && (
+                <a
+                  href="#"
+                  className="text-sm text-blue-400 hover:text-blue-300"
+                >
+                  Forgot password?
+                </a>
+              )}
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

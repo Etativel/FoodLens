@@ -4,10 +4,8 @@ feature: upgrade user into premium
 
 logic: prevent account creation exploit
 
-feature: google login
+fix: gmail that registered as google, will not return any error if they trying to log with password, check null then return the information
 
-fix: set min font to md
-
-fix: flashing component on recipe
+handle password change
 
 the vision middle should check the database first after getting the dish name before continuing to the image vision model

@@ -155,7 +155,7 @@ export default function Login() {
   }
 
   async function forgotPassword() {
-    await requestResetToken();
+    await requestResetToken(email);
     navigate("/email-token-sent", {
       state: { email: email },
     });

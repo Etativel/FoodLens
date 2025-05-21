@@ -170,7 +170,7 @@ export default function MyFood() {
   }
 
   return (
-    <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px] ">
+    <div className="flex flex-col h-screen lg:w-full ">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
           <div className="transform translate-y-1/2">
@@ -181,7 +181,9 @@ export default function MyFood() {
             />
           </div>
         </div>
-        {dailyTotals.length >= 1 && <FoodContent foods={filteredData} />}
+        <div className="lg:flex lg:flex-col lg:items-center">
+          {dailyTotals.length >= 1 && <FoodContent foods={filteredData} />}
+        </div>
       </div>
     </div>
   );

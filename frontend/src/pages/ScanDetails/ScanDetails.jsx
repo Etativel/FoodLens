@@ -58,16 +58,18 @@ export default function ScanDetails() {
 
   return (
     <>
-      <div className="w-screen overflow-y-auto lg:flex lg:justify-center bg-neutral-800 lg:max-w-[600px] lg:flex-col">
+      <div className="w-screen overflow-y-auto  bg-neutral-800  flex-col items-center">
         {/* Image Picture */}
-        <div
-          className="h-80 inset-0 bg-cover bg-center  lg:max-w-[600px]"
-          style={{
-            backgroundImage: `url(${image})`,
-          }}
-        ></div>
+        <div className=" lg:max-w-[1000px] mx-auto">
+          <div
+            className="h-80 inset-0 bg-cover bg-center "
+            style={{
+              backgroundImage: `url(${image})`,
+            }}
+          ></div>
+        </div>
 
-        <div className="px-3 py-3">
+        <div className="px-3 py-3 lg:max-w-[1000px] mx-auto">
           <div>
             <div className="flex justify-between">
               {food ? (

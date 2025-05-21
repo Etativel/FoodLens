@@ -41,7 +41,7 @@ export default function NutritionFacts({
 }) {
   return (
     <div className="mb-6 mt-3 flex justify-center">
-      <div className="max-w-[520px] w-full">
+      <div className="w-full">
         <div className="flex justify-between items-center">
           <div className="flex items-center">
             <HeartPulse className="mr-2 text-red-400" size={20} />
@@ -58,7 +58,7 @@ export default function NutritionFacts({
         </div>
 
         {/* Main nutrition stats */}
-        <div className="flex gap-2 mt-3 justify-around">
+        <div className="flex gap-2 mt-3 justify-around ">
           {food
             ? food.nutritionItems.slice(0, 4).map((item, index) => (
                 <div

@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { FaBowlFood } from "react-icons/fa6";
 import { useState, useRef, useEffect } from "react";
-
 import {
   CameraIcon,
   HomeIcon,
@@ -11,9 +10,8 @@ import {
   GearIcon,
   XIcon,
 } from "../../assets/icons";
-import "./BottomNavigation.css";
 
-function BottomNavigation() {
+function Sidebar() {
   const currentPage = location.pathname.split("/").pop();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -112,8 +110,6 @@ function BottomNavigation() {
         state: { image: capturedImage, prediction: data },
       });
       return;
-      // setIsProcessing(false);
-      // console.log("Prediction result:", data);
     } catch (error) {
       setIsProcessing(false);
       console.error("Prediction error:", error);
@@ -178,6 +174,43 @@ function BottomNavigation() {
     navigate(`/${target}`);
   }
 
+  // Navigation items configuration for easier management
+  const navItems = [
+    {
+      name: "Camera",
+      path: "camera",
+      icon: <CameraIcon />,
+      action: openCamera,
+      highlight: true,
+    },
+    {
+      name: "Home",
+      path: "home",
+      icon: <HomeIcon currentPage={currentPage} />,
+    },
+    {
+      name: "Calories",
+      path: "calories",
+      icon: <CalculatorIcon currentPage={currentPage} />,
+    },
+    {
+      name: "My Food",
+      path: "my-food",
+      icon: (
+        <FaBowlFood
+          className={`size-6 ${
+            currentPage === "my-food" ? "text-[#2b7fff]" : "text-[#8e8e8e]"
+          }`}
+        />
+      ),
+    },
+    {
+      name: "Settings",
+      path: "settings",
+      icon: <GearIcon currentPage={currentPage} />,
+    },
+  ];
+
   return (
     <>
       {isProcessing ? (
@@ -203,7 +236,7 @@ function BottomNavigation() {
       ) : (
         <>
           {isCameraOpen ? (
-            <div className="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50 ">
+            <div className="fixed inset-0 bg-black bg-opacity-90 flex flex-col items-center justify-center z-50">
               {/* hidden canvas for capturing images */}
               <canvas ref={canvasRef} className="hidden"></canvas>
 
@@ -221,7 +254,7 @@ function BottomNavigation() {
                     <button
                       aria-label="close camera"
                       onClick={closeCamera}
-                      className="bg-transparent text-[#cccccc] font-semibold py-2 px-6  rounded-full flex gap-1"
+                      className="bg-transparent text-[#cccccc] font-semibold py-2 px-6 z-50 rounded-full flex gap-1"
                     >
                       <XIcon stroke="oklch(64.5% 0.246 16.439)" size="6" />
                       Cancel
@@ -242,13 +275,13 @@ function BottomNavigation() {
                   <button
                     aria-label="close camera"
                     onClick={closeCamera}
-                    className=" absolute top-0 right-0 bg-transparent text-white py-2 px-2 mr-2 mt-2 rounded-full z-50"
+                    className=" absolute top-0 right-0 z-50 bg-transparent text-white py-2 px-2 mr-2 mt-2 rounded-full"
                   >
                     <XIcon stroke="#cccccc" size="6" />
                   </button>
                   <video
                     ref={videoRef}
-                    className="w-full max-h-[100vh] z-20"
+                    className="w-full max-h-[100vh] z-10"
                     autoPlay
                     playsInline
                     style={{ background: "#000" }}
@@ -325,97 +358,35 @@ function BottomNavigation() {
               )}
             </div>
           ) : (
-            <div className="fixed-bottom-nav lg:hidden">
-              <div className="flex  shadow h-20 justify-center gap-5 z-50 pt-2 absolute bottom-0 bg-neutral-800 w-full">
-                <div>
+            <div className="hidden pt-10 lg:flex flex-col h-screen bg-neutral-800 w-64 fixed left-0 top-0 shadow-lg ">
+              {navItems.map((item) => (
+                <div key={item.path} className="flex flex-col w-full">
                   <button
-                    aria-label="home button"
-                    onClick={() => redirection("home")}
-                    className="p-2 w-13 pt-4 flex flex-col items-center"
+                    aria-label={`${item.name} button`}
+                    onClick={
+                      item.action ? item.action : () => redirection(item.path)
+                    }
+                    className={`cursor-pointer p-4 my-3 flex items-center transition-all duration-200 ${
+                      item.highlight ? "bg-blue-500 mx-3 rounded-md" : ""
+                    } ${
+                      currentPage === item.path && !item.highlight
+                        ? "bg-neutral-700 mx-3 rounded-md"
+                        : ""
+                    }`}
                   >
-                    <HomeIcon currentPage={currentPage} />
+                    <div className="text-2xl mr-4">{item.icon}</div>
                     <p
-                      className={`text-sm font-semibold ${
-                        currentPage === "home"
-                          ? "text-[#2b7fff]"
+                      className={`text-base font-semibold ${
+                        currentPage === item.path || item.highlight
+                          ? "text-white"
                           : "text-[#8e8e8e]"
                       }`}
                     >
-                      Home
+                      {item.name}
                     </p>
                   </button>
                 </div>
-                <div>
-                  <button
-                    aria-label="redirect to calories page"
-                    onClick={() => redirection("calories")}
-                    className="p-2 w-13 pt-4 flex flex-col items-center"
-                  >
-                    <CalculatorIcon currentPage={currentPage} />
-                    <p
-                      className={`text-sm font-semibold ${
-                        currentPage === "calories"
-                          ? "text-[#2b7fff]"
-                          : "text-[#8e8e8e]"
-                      }`}
-                    >
-                      Calories
-                    </p>
-                  </button>
-                </div>
-                <div>
-                  <button
-                    aria-label="open camera"
-                    onClick={openCamera}
-                    className="p-4 border-0 rounded-full bg-blue-500"
-                  >
-                    <CameraIcon />
-                  </button>
-                </div>
-                <div>
-                  <button
-                    aria-label="redirect to scan history"
-                    onClick={() => redirection("my-food")}
-                    className="p-2 w-13 pt-4 flex flex-col items-center"
-                  >
-                    <FaBowlFood
-                      className={`size-6 ${
-                        currentPage === "my-food"
-                          ? "text-[#2b7fff]"
-                          : "text-[#8e8e8e]"
-                      }`}
-                    />
-                    <p
-                      className={`whitespace-nowrap text-sm font-semibold ${
-                        currentPage === "my-food"
-                          ? "text-[#2b7fff]"
-                          : "text-[#8e8e8e]"
-                      }`}
-                    >
-                      My Food
-                    </p>
-                  </button>
-                </div>
-                <div>
-                  <button
-                    aria-label="redirect to settings"
-                    onClick={() => redirection("settings")}
-                    className="p-2 w-13 pt-4 flex flex-col items-center"
-                  >
-                    <GearIcon currentPage={currentPage} />
-
-                    <p
-                      className={`text-sm font-semibold ${
-                        currentPage === "settings"
-                          ? "text-[#2b7fff]"
-                          : "text-[#8e8e8e]"
-                      }`}
-                    >
-                      Settings
-                    </p>
-                  </button>
-                </div>
-              </div>
+              ))}
             </div>
           )}
         </>
@@ -424,4 +395,4 @@ function BottomNavigation() {
   );
 }
 
-export default BottomNavigation;
+export default Sidebar;

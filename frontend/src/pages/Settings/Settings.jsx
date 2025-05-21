@@ -47,8 +47,8 @@ function Settings() {
   }
 
   return (
-    <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
-      <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none px-5 py-6 mb-15">
+    <div className="flex flex-col h-screen lg:w-full">
+      <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none px-5 py-6 mb-15 lg:mb-0">
         <h1 className="text-3xl font-bold text-white mb-8">Settings</h1>
 
         {/* Account Section */}

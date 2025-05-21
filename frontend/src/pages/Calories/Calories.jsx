@@ -33,8 +33,8 @@ export default function Calories() {
   }
 
   return (
-    <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px] ">
-      <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
+    <div className="flex flex-col h-screen w-full">
+      <div className="lg:mx-20 flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end ">
           <div className="transform translate-y-1/2">
             <SearchBar
@@ -47,7 +47,7 @@ export default function Calories() {
 
         {dailyTotals.length >= 1 && (
           <>
-            <div className="text-white font-semibold text-lg mt-10 mx-3">
+            <div className="text-white font-semibold text-lg mt-10 mx-3 lg:mx-0">
               Calories chart
             </div>
             <CalorieChart dailyTotals={dailyTotals} />

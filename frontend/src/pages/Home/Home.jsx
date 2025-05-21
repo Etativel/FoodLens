@@ -42,7 +42,7 @@ function Home() {
   }
 
   return (
-    <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
+    <div className="flex flex-col h-screen w-full">
       <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end ">
         <div className="transform translate-y-1/2">
           <SearchBar
@@ -54,16 +54,17 @@ function Home() {
       </div>
 
       <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
-        <div className="flex flex-col pb-20 mt-5">
+        <div className="flex flex-col pb-20 mt-5 lg:pb-0">
           {totals ? (
             // <div className="mt-1">
-            <>
+
+            <div className=" lg:mx-20">
               <NutrientInfoGraph totals={totals} date={currentDate} />
               {dailyTotals?.length > 0 &&
                 currentDate === dailyTotals[0].date && (
                   <FoodContent foods={dailyTotals[0].recipes} />
                 )}
-            </>
+            </div>
           ) : (
             // </div>
             <div className="flex mt-10">
@@ -106,7 +107,7 @@ function Home() {
             </div> */}
             <div
               onClick={redirectRecipePage}
-              className="flex flex-col justify-center items-center h-30 w-full mx-3 py-4 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200"
+              className="flex flex-col justify-center items-center h-30 w-full lg:mx-20 lg:px-3 mx-3 py-4 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,7 +123,7 @@ function Home() {
             </div>
           </div>
 
-          <div className="h-30 flex justify-center items-center bg-neutral-800 text-white flex-col border-t border-neutral-600">
+          <div className="h-30  flex justify-center items-center bg-neutral-800 text-white flex-col border-t border-neutral-600 lg:bg-transparent lg:h-26">
             <img className="size-15" src={foodLensIcon} alt="" />
             <p className="text-[#8e8e8e] font-semibold">
               See What’s in Your Food

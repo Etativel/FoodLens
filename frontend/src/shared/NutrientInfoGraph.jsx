@@ -154,7 +154,8 @@ export default function NutrientInfoGraph({ totals, date }) {
   ];
 
   return (
-    <div className=" flex-1 bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
+    // bg-neutral-900
+    <div className=" bg-neutral-900 lg:mx-0 flex-1  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
       <div className="flex flex-col ">
         {/* Date */}
         <div className="text-white text-lg font-sm mt-5 mx-3">

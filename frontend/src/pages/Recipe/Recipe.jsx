@@ -13,7 +13,7 @@ function RecipeCard({ recipe }) {
   return (
     <div
       onClick={() => redirectRecipe(recipe.idMeal)}
-      className="bg-neutral-800 shadow-lg rounded overflow-hidden m-4  w-full"
+      className="bg-neutral-800 shadow-lg rounded overflow-hidden m-4  w-full lg:w-lg"
     >
       {recipe.strMealThumb && (
         <div className="relative">
@@ -100,7 +100,7 @@ export default function Recipe() {
   }
 
   return (
-    <div className="flex flex-col h-screen lg:max-w-[500px] md:max-w-[500px]">
+    <div className="flex flex-col h-screen lg:w-full">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
           <div className="transform translate-y-1/2">
@@ -113,7 +113,7 @@ export default function Recipe() {
           </div>
         </div>
 
-        <div className="flex flex-wrap justify-center mt-8 mb-20">
+        <div className="flex flex-wrap justify-center mt-8 mb-20 ">
           {filteredData.map((recipe) => (
             <RecipeCard key={recipe.idMeal} recipe={recipe} />
           ))}

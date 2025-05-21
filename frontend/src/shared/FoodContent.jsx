@@ -5,7 +5,7 @@ function FoodCard({ food, redirectToDetails }) {
   const [showNutrient, setShowNutrient] = useState(false);
 
   return (
-    <div className="flex gap-4 items-start">
+    <div className="flex gap-4 items-start ">
       <div
         onClick={() =>
           redirectToDetails(food.recipe.id, food.recipe, food.imageUrl)
@@ -99,7 +99,7 @@ export default function FoodContent({ foods }) {
     });
   }
   return (
-    <div className="flex mx-3 flex-col">
+    <div className="flex mx-3 flex-col ">
       <div className="text-white mb-2 text-lg font-semibold mt-4">
         Food you eat
       </div>

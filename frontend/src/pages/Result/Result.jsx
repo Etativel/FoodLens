@@ -33,7 +33,7 @@ function IntakeNotification({
     <>
       {food && intakeStatus !== "hidden" && scanData && (
         <div
-          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 ease-in-out mb-${mb} ${getAnimationClass()}`}
+          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 lg:max-w-[1000px] mx-auto ease-in-out mb-${mb} ${getAnimationClass()}`}
         >
           {intakeStatus === "question" ? (
             <>
@@ -367,16 +367,18 @@ export default function Results() {
       {!image ? (
         <div className="w-screen h-screen bg-white">No data</div>
       ) : (
-        <div className="w-screen overflow-y-auto lg:flex lg:justify-center bg-neutral-800 lg:max-w-[600px] lg:flex-col">
+        <div className="w-screen overflow-y-auto  bg-neutral-800  flex-col items-center">
           {/* Image Picture */}
-          <div
-            className="h-80 inset-0 bg-cover bg-center  lg:max-w-[600px]"
-            style={{
-              backgroundImage: `url(${image})`,
-            }}
-          >
+          <div className=" lg:max-w-[1000px] mx-auto">
+            <div
+              className="h-80 inset-0 bg-cover bg-center  "
+              style={{
+                backgroundImage: `url(${image})`,
+              }}
+            ></div>
+
             {!food && (
-              <div className="absolute inset-0 overflow-hidden h-80">
+              <div className="absolute inset-0 overflow-hidden h-80 lg:max-w-[1000px] mx-auto">
                 <div className="scan-line" />
               </div>
             )}
@@ -403,7 +405,7 @@ export default function Results() {
             userResponse={userResponse}
           />
 
-          <div className="px-3 py-3">
+          <div className="px-3 py-3 lg:max-w-[1000px] mx-auto">
             <div>
               <div className="flex justify-between">
                 {food ? (

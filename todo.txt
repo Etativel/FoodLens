@@ -1,11 +1,3 @@
 logic: new user free credit on vision model
 
 feature: upgrade user into premium
-
-logic: prevent account creation exploit
-
-fix: gmail that registered as google, will not return any error if they trying to log with password, check null then return the information
-
-handle password change
-
-the vision middle should check the database first after getting the dish name before continuing to the image vision model

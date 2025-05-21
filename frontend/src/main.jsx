@@ -23,6 +23,7 @@ import EmailVerification from "./pages/Auth/EmailVerification.jsx";
 import ResetPassword from "./pages/Auth/ResetPassword.jsx";
 import ResetPasswordEmailSent from "./pages/Auth/ResetPasswordNotification.jsx";
 
+import NotFoundPage from "./pages/NotFound/NotFound.jsx";
 import Redirection from "./Redirection.jsx";
 
 const router = createBrowserRouter([
@@ -52,6 +53,7 @@ const router = createBrowserRouter([
       { path: "/settings/:field", element: <UpdateField /> },
     ],
   },
+  { path: "*", element: <NotFoundPage /> },
 ]);
 
 createRoot(document.getElementById("root")).render(

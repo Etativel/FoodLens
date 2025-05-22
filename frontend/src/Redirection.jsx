@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { variable } from "./shared";
-import { Navigate } from "react-router-dom";
+import { variable, Loader } from "./shared";
 
 export default function Redirection() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,7 +25,11 @@ export default function Redirection() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <Loader />;
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

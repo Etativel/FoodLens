@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { variable } from "../../shared";
+import { variable, Loader } from "../../shared";
 // src/config/settingsFields.js
 import {
   Ruler,
@@ -188,7 +188,13 @@ export default function UpdateField() {
   }
 
   if (!cfg) return null;
-  if (loading) return <div className="p-6">Loading…</div>;
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <Loader />;
+      </div>
+    );
+  }
 
   const Icon = cfg.icon;
 

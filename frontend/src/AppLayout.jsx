@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import UserProvider from "./contexts/UserProvider";
 import { Navigate } from "react-router-dom";
-import { variable } from "./shared";
+import { Loader, variable } from "./shared";
 import { useLocation } from "react-router-dom";
 
 export default function AppLayout() {
@@ -37,7 +37,11 @@ export default function AppLayout() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading</div>;
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <Loader />;
+      </div>
+    );
   }
 
   if (!isAuthenticated) {

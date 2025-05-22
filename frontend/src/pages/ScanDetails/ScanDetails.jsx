@@ -1,6 +1,7 @@
 import { useLocation, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { variable } from "../../shared";
+import { variable, Loader } from "../../shared";
+
 import {
   DietaryBadges,
   NutritionFacts,
@@ -50,7 +51,11 @@ export default function ScanDetails() {
   }, [recipe, foodId]);
 
   if (!food) {
-    return <div>Loading</div>;
+    return (
+      <div className="h-screen w-full flex justify-center items-center">
+        <Loader />;
+      </div>
+    );
   }
 
   return (

@@ -13,6 +13,8 @@ router.post("/create", createUserLimiter, controller.createUser);
 
 router.post("/getProfile", authenticateEither, controller.getUserForApp);
 
+router.post("/reduceCredit", authenticateEither, controller.reduceCredit);
+
 router.patch(
   "/update-user",
   authenticateEither,

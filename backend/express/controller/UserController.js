@@ -23,6 +23,30 @@ async function createUser(req, res) {
   }
 }
 
+async function reduceCredit(req, res) {
+  const { userId } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    const response = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        scanCreditsRemaining: user.scanCreditsRemaining - 1,
+      },
+    });
+    return res.status(200).json({ response });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res.status(500).json({ message: "Internal server error, ", err });
+  }
+}
+
 // PATCH
 async function userInformationUpdate(req, res) {
   const { value, userId, fieldName } = req.body;
@@ -138,4 +162,5 @@ module.exports = {
   createUser,
   getUserForApp,
   userInformationUpdate,
+  reduceCredit,
 };

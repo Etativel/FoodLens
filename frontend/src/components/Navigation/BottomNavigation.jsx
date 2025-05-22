@@ -114,7 +114,12 @@ function BottomNavigation() {
       const data = await response.json();
 
       navigate("/results", {
-        state: { image: capturedImage, prediction: data },
+        state: {
+          image: capturedImage,
+          prediction: data,
+          isPremium: premium,
+          scanCredit: scanCredit,
+        },
       });
       return;
       // setIsProcessing(false);
@@ -162,9 +167,6 @@ function BottomNavigation() {
     setCapturedImage(null);
     setIsCameraReady(false);
   };
-
-  console.log(premium);
-  console.log(scanCredit);
 
   const handleSaveImage = async () => {
     setIsProcessing(true);

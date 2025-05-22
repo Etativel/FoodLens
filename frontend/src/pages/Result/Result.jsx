@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import { useEffect, useState, useRef, useContext } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, BadgeAlert } from "lucide-react";
 import { formatText, toSnakeCase, compressImage } from "../../utils";
 import UserContext from "../../contexts/createContext/UserContext";
 import { variable } from "../../shared";
@@ -16,76 +16,6 @@ import {
   CulturalContext,
   FunFacts,
 } from "../../components/Result";
-
-function IntakeNotification({
-  intakeStatus,
-  scanData,
-  food,
-  handleIntakeResponse,
-  getAnimationClass,
-  isFetchingScan,
-  userResponse,
-  px = "3",
-  pb = "3",
-  mb = "0",
-}) {
-  return (
-    <>
-      {food && intakeStatus !== "hidden" && scanData && (
-        <div
-          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 lg:max-w-[1000px] mx-auto ease-in-out mb-${mb} ${getAnimationClass()}`}
-        >
-          {intakeStatus === "question" ? (
-            <>
-              <div className="text-lg font-semibold text-white">
-                Help us track your daily intake
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="text-md text-neutral-300">
-                  Did you eat this today?
-                </div>
-                <div>
-                  <button
-                    aria-label="save intake"
-                    onClick={() => handleIntakeResponse("Yes")}
-                    className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
-                  >
-                    Yes
-                  </button>
-                  <button
-                    aria-label="do not save intake"
-                    onClick={() => handleIntakeResponse("No")}
-                    className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
-                  >
-                    No
-                  </button>
-                </div>
-              </div>
-            </>
-          ) : isFetchingScan ? (
-            <div className="animate-fadeIn flex flex-col items-center py-2">
-              <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
-              <span className="text-md text-white font-medium">
-                Saving your response...
-              </span>
-            </div>
-          ) : (
-            <div className="animate-fadeIn flex flex-col items-center py-2">
-              <div className="text-lg font-semibold text-white mb-1">
-                Thank you for your response!
-              </div>
-              <div className="text-md text-neutral-300">
-                {userResponse === "Yes"
-                  ? "We've logged this item to your daily intake."
-                  : "No problem, we won't add this to your tracking."}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-    </>
-  );
-}
 
 export default function Results() {
   const { state } = useLocation();
@@ -110,12 +40,13 @@ export default function Results() {
   ];
   const [currentMessage, setCurrentMessage] = useState(loadingMessages[0]);
   const [isVisible, setIsVisible] = useState(true);
-
+  const [showTooltip, setShowTooltip] = useState(false);
   // const [foodOnSave, setFoodOnSave] = useState(null);
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
 
   useEffect(() => {
+    if (food) return;
     let idx = 0;
     const interval = setInterval(() => {
       // fade-out
@@ -130,7 +61,7 @@ export default function Results() {
     }, 4000);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [food]);
 
   useEffect(() => {
     // Guard double fetch on strict mode
@@ -457,6 +388,52 @@ export default function Results() {
                   <p className="py-2 h-10 mt-4 w-full bg-neutral-700 rounded animate-pulse"></p>
                 )}
 
+                {food ? (
+                  <div className="relative inline-block">
+                    <button
+                      type="button"
+                      onMouseEnter={() => setShowTooltip(true)}
+                      onMouseLeave={() => setShowTooltip(false)}
+                      className="p-1 rounded-full hover:bg-red-50 transition-colors duration-200 focus:outline-none "
+                    >
+                      <BadgeAlert className="w-5 h-5 text-red-500" />
+                    </button>
+
+                    <div
+                      role="tooltip"
+                      className={`absolute z-50 px-4 py-3 text-sm text-white bg-neutral-700 rounded-xl shadow-lg border border-neutral-700 backdrop-blur-sm
+                      top-1/2 right-full mr-3 -translate-y-1/2 w-64
+                      transition-all duration-200 ease-out
+                      ${
+                        showTooltip
+                          ? "opacity-100 visible scale-100"
+                          : "opacity-0 invisible scale-95"
+                      }`}
+                    >
+                      <div className="space-y-2">
+                        <div className="font-medium text-white">
+                          {scanCredit <= 0 ? "Standard Model" : "Vision Model"}
+                        </div>
+                        <div className="text-gray-300 text-xs leading-relaxed">
+                          {scanCredit <= 0
+                            ? "Standard scanning is powered by the 101-food model, a curated dataset of 101 common foods without using any credits."
+                            : "Advanced scanning is enabled using vision AI. When credits are depleted, the system will automatically switch to the standard model."}
+                        </div>
+                        <div className="flex items-center justify-between pt-1 border-t border-gray-700">
+                          <span className="text-xs text-gray-400">
+                            Credits remaining
+                          </span>
+                          <span className="text-xs font-medium text-blue-400">
+                            {scanCredit === 0 ? scanCredit : scanCredit - 1}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Arrow */}
+                      <div className="absolute top-1/2 -right-1 -translate-y-1/2 w-2 h-2 bg-neutral-700 border-r border-b border-neutral-700 rotate-45"></div>
+                    </div>
+                  </div>
+                ) : null}
                 {/* {food ? (
                   <div className="relative w-48">
                     <button
@@ -545,6 +522,76 @@ export default function Results() {
               mb="10"
             />
           </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function IntakeNotification({
+  intakeStatus,
+  scanData,
+  food,
+  handleIntakeResponse,
+  getAnimationClass,
+  isFetchingScan,
+  userResponse,
+  px = "3",
+  pb = "3",
+  mb = "0",
+}) {
+  return (
+    <>
+      {food && intakeStatus !== "hidden" && scanData && (
+        <div
+          className={`bg-neutral-800 flex flex-col px-${px} pt-3 pb-${pb} transition-all duration-300 lg:max-w-[1000px] mx-auto ease-in-out mb-${mb} ${getAnimationClass()}`}
+        >
+          {intakeStatus === "question" ? (
+            <>
+              <div className="text-lg font-semibold text-white">
+                Help us track your daily intake
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="text-md text-neutral-300">
+                  Did you eat this today?
+                </div>
+                <div>
+                  <button
+                    aria-label="save intake"
+                    onClick={() => handleIntakeResponse("Yes")}
+                    className="w-10 bg-green-500 rounded-sm font-semibold text-white mx-2 hover:bg-green-600 transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    aria-label="do not save intake"
+                    onClick={() => handleIntakeResponse("No")}
+                    className="w-10 bg-red-500 rounded-sm font-semibold text-white ml-2 hover:bg-red-600 transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </>
+          ) : isFetchingScan ? (
+            <div className="animate-fadeIn flex flex-col items-center py-2">
+              <Loader2 className="animate-spin h-6 w-6 text-white mb-2" />
+              <span className="text-md text-white font-medium">
+                Saving your response...
+              </span>
+            </div>
+          ) : (
+            <div className="animate-fadeIn flex flex-col items-center py-2">
+              <div className="text-lg font-semibold text-white mb-1">
+                Thank you for your response!
+              </div>
+              <div className="text-md text-neutral-300">
+                {userResponse === "Yes"
+                  ? "We've logged this item to your daily intake."
+                  : "No problem, we won't add this to your tracking."}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </>

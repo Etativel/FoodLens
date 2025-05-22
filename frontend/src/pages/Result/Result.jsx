@@ -247,7 +247,7 @@ export default function Results() {
         ...recipe,
         predicted_name: formatPredictedName,
       };
-
+      await reduceUserCredit(profile.user.id);
       await storeScanAndRecipe(visionRecipe, "vision", imageUrl);
     } catch (err) {
       console.error("Vision fetch failed", err);
@@ -306,6 +306,27 @@ export default function Results() {
       }
     } catch (err) {
       console.error("Store recipe/scan failed", err);
+    }
+  }
+
+  async function reduceUserCredit(userId) {
+    try {
+      const response = await fetch(`${variable.API_URL}/user/reduceCredit`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+        }),
+      });
+      if (!response.ok) {
+        console.log(response.statusText);
+      }
+      return;
+    } catch (err) {
+      console.log("Internal server error", err);
     }
   }
 

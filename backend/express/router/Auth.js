@@ -195,7 +195,7 @@ router.get(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect("https://foodlens.up.railway.app/home");
+    res.redirect("https://foodlens.up.railway.app/onboarding");
   }
 );
 

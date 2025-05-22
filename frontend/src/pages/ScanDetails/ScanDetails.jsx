@@ -24,9 +24,6 @@ export default function ScanDetails() {
   const [showVariations, setShowVariations] = useState(true);
   const [food, setFood] = useState(recipe ?? null);
 
-  console.log("This is recipe", recipe);
-  console.log(state);
-
   useEffect(() => {
     async function fetchFoodDetails() {
       try {

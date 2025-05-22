@@ -17,7 +17,7 @@ model User {
   googleId                String?   @unique
   provider                String?
   isPremium               Boolean   @default(false)
-  scanCreditsRemaining    Int       @default(10)
+  scanCreditsRemaining    Int       @default(3)
   weightGoal              Float?
   height                  Float?
   weight                  Float?

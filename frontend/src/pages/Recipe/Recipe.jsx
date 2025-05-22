@@ -76,10 +76,9 @@ export default function Recipe() {
         return;
       }
       const data = await response.json();
-      console.log("this is data", data);
+
       setFilteredData(data.recipe.meals || []);
       setIsFetching(false);
-      console.log(data);
     } catch (err) {
       setIsFetching(false);
       console.log(err);

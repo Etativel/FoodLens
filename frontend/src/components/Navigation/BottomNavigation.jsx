@@ -29,9 +29,6 @@ function BottomNavigation() {
   const fileInputRef = useRef(null);
   const [facingMode, setFacingMode] = useState("environment");
 
-  console.log(premium);
-  console.log(scanCredit);
-
   const navigate = useNavigate();
 
   useEffect(() => {

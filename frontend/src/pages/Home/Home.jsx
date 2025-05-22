@@ -19,14 +19,12 @@ function Home() {
     sugar: { current: 0, unit: "g" },
   });
 
-  console.log(dailyTotals);
-
   const now = new Date();
   const pad = (n) => String(n).padStart(2, "0");
   const currentDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
     now.getDate()
   )}`;
-  console.log(currentDate);
+
   useEffect(() => {
     if (dailyTotals?.length > 0 && dailyTotals[0].date === currentDate) {
       setTotals(dailyTotals[0].totals);

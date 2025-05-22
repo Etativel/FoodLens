@@ -109,8 +109,6 @@ export default function Results() {
       });
       if (res.ok) {
         const json = await res.json();
-        console.log(json.data);
-
         localStorage.setItem("defaultModel", JSON.stringify(json.data));
 
         setFood(json.data);
@@ -206,7 +204,7 @@ export default function Results() {
         console.log("Error, ", response.statusText);
       }
       const data = await response.json();
-      console.log("this is scan data, ", data.scan);
+
       setScanData(data.scan);
       setIsFetchingScan(false);
     } catch (err) {

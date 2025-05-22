@@ -95,7 +95,7 @@ export default function Results() {
   const [showTips, setShowTips] = useState(true);
   const [showVariations, setShowVariations] = useState(true);
   const [food, setFood] = useState(null);
-  const { image, prediction } = state || {};
+  const { image, prediction, scanCredit, isPremium } = state || {};
   const fetchGuard = useRef(false);
   const { profile } = useContext(UserContext);
   const [intakeStatus, setIntakeStatus] = useState("question");
@@ -110,11 +110,10 @@ export default function Results() {
   ];
   const [currentMessage, setCurrentMessage] = useState(loadingMessages[0]);
   const [isVisible, setIsVisible] = useState(true);
+
   // const [foodOnSave, setFoodOnSave] = useState(null);
   // const [isOpen, setIsOpen] = useState(false);
   // const [selected, setSelected] = useState("Default");
-
-  const isPremium = false;
 
   useEffect(() => {
     let idx = 0;
@@ -137,8 +136,14 @@ export default function Results() {
     // Guard double fetch on strict mode
     if ((!prediction && !image) || fetchGuard.current) return;
     fetchGuard.current = true;
+    const defaultModelCache = JSON.parse(localStorage.getItem("defaultModel"));
+    const visionModelCache = JSON.parse(localStorage.getItem("visionModel"));
 
-    if (isPremium) {
+    if (isPremium || scanCredit > 0) {
+      if (visionModelCache) {
+        setFood(visionModelCache);
+        return;
+      }
       fetchByVision(image);
     } else {
       const label = prediction?.predicted_label;
@@ -146,7 +151,10 @@ export default function Results() {
         console.error("No label available for premium fetch");
         return;
       }
-
+      if (defaultModelCache) {
+        setFood(defaultModelCache);
+        return;
+      }
       fetchOldModel(label);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -172,7 +180,10 @@ export default function Results() {
         const json = await res.json();
         console.log(json.data);
 
+        localStorage.setItem("defaultModel", JSON.stringify(json.data));
+
         setFood(json.data);
+
         saveNewScan(json.data.id, "default");
       } else if (res.status === 404) {
         await fetchFromOpenAi(label, image);
@@ -287,6 +298,12 @@ export default function Results() {
 
       setFood(recipe);
       setScanData(scan);
+
+      if (scanMode === "default") {
+        localStorage.setItem("defaultModel", JSON.stringify(recipe));
+      } else {
+        localStorage.setItem("visionModel", JSON.stringify(recipe));
+      }
     } catch (err) {
       console.error("Store recipe/scan failed", err);
     }
@@ -323,7 +340,7 @@ export default function Results() {
     }
   }
 
-  if (!image || !prediction) {
+  if (!image) {
     return <Navigate to="/home" replace />;
   }
 
@@ -410,9 +427,10 @@ export default function Results() {
               <div className="flex justify-between">
                 {food ? (
                   <p className="text-xl font-semibold text-white">
-                    {isPremium
+                    {/* {isPremium
                       ? food.name
-                      : formatText(prediction.predicted_label)}
+                      : formatText(prediction.predicted_label)} */}
+                    {food.name}
                   </p>
                 ) : (
                   <p className="py-2 h-10 mt-4 w-full bg-neutral-700 rounded animate-pulse"></p>

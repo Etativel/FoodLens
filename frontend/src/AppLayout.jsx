@@ -3,9 +3,19 @@ import { useEffect, useState } from "react";
 import UserProvider from "./contexts/UserProvider";
 import { Navigate } from "react-router-dom";
 import { variable } from "./shared";
+import { useLocation } from "react-router-dom";
+
 export default function AppLayout() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+
+  const location = useLocation();
+  useEffect(() => {
+    if (location.pathname !== "/results") {
+      localStorage.removeItem("defaultModel");
+      localStorage.removeItem("visionModel");
+    }
+  }, [location]);
 
   useEffect(() => {
     fetch(`${variable.API_URL}/auth/profile`, {

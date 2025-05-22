@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { FaBowlFood } from "react-icons/fa6";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 
 import {
   CameraIcon,
@@ -12,8 +12,13 @@ import {
   XIcon,
 } from "../../assets/icons";
 import "./BottomNavigation.css";
+import { variable } from "../../shared";
+import UserContext from "../../contexts/createContext/UserContext";
 
 function BottomNavigation() {
+  const { profile } = useContext(UserContext);
+  const premium = profile?.user.isPremium;
+  const scanCredit = profile?.user.scanCreditsRemaining;
   const currentPage = location.pathname.split("/").pop();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -23,6 +28,9 @@ function BottomNavigation() {
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [facingMode, setFacingMode] = useState("environment");
+
+  console.log(premium);
+  console.log(scanCredit);
 
   const navigate = useNavigate();
 
@@ -92,14 +100,11 @@ function BottomNavigation() {
       const formData = new FormData();
       formData.append("file", blob, "image.jpg");
 
-      const response = await fetch(
-        "https://foodlens-backend-production.up.railway.app/model/predict",
-        {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${variable.API_URL}/model/predict`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
 
       if (!response.ok) {
         setIsProcessing(false);
@@ -158,9 +163,21 @@ function BottomNavigation() {
     setIsCameraReady(false);
   };
 
+  console.log(premium);
+  console.log(scanCredit);
+
   const handleSaveImage = async () => {
     setIsProcessing(true);
-
+    if (premium || scanCredit > 0) {
+      navigate("/results", {
+        state: {
+          image: capturedImage,
+          isPremium: premium,
+          scanCredit: scanCredit,
+        },
+      });
+      return;
+    }
     try {
       await predictImage(capturedImage);
     } catch (error) {

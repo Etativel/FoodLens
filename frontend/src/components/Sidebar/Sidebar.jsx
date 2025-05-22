@@ -10,6 +10,7 @@ import {
   GearIcon,
   XIcon,
 } from "../../assets/icons";
+import { variable } from "../../shared";
 
 function Sidebar() {
   const currentPage = location.pathname.split("/").pop();
@@ -90,14 +91,11 @@ function Sidebar() {
       const formData = new FormData();
       formData.append("file", blob, "image.jpg");
 
-      const response = await fetch(
-        "https://foodlens-backend-production.up.railway.app/model/predict",
-        {
-          method: "POST",
-          body: formData,
-          credentials: "include",
-        }
-      );
+      const response = await fetch(`${variable.API_URL}/model/predict`, {
+        method: "POST",
+        body: formData,
+        credentials: "include",
+      });
 
       if (!response.ok) {
         setIsProcessing(false);

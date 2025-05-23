@@ -1,18 +1,47 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { UseDailyTotals } from "../../utils";
 import { NutrientInfoGraph, FoodContent, Loader } from "../../shared";
 import { ScanIcon, Loader2 } from "lucide-react";
 import CalorieChart from "./CaloriesLineChart";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useContext } from "react";
+import UserContext from "../../contexts/createContext/UserContext";
+import { variable } from "../../shared";
 
 export default function Calories() {
-  const { dailyTotals, loading } = UseDailyTotals();
+  const { profile } = useContext(UserContext);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [data, setData] = useState(null);
   const navigate = useNavigate();
   function onSubmit() {
     navigate(`/recipe?query=${encodeURIComponent(search)}`);
   }
+  useEffect(() => {
+    if (!profile) return;
+    async function fetchHomeData() {
+      try {
+        const response = await fetch(`${variable.API_URL}/user/calories`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: profile.user.id,
+          }),
+        });
+        if (!response.ok) {
+          console.log("Failed to retrieve home data, ", response.statusText);
+        }
+        const result = await response.json();
+        setData(result);
+        setLoading(false);
+      } catch (err) {
+        console.log("internal server error, ", err);
+      }
+    }
+    fetchHomeData();
+  }, [profile]);
 
   // spinner while loading daily totals
   if (loading) {
@@ -20,7 +49,7 @@ export default function Calories() {
   }
 
   // if no entries after loading
-  if (!loading && dailyTotals.length === 0) {
+  if (!loading && data.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center text-white mt-50 mx-4 text-center">
         <ScanIcon size={48} className="text-gray-400 mb-4" />
@@ -45,14 +74,14 @@ export default function Calories() {
           </div>
         </div>
 
-        {dailyTotals.length >= 1 && (
+        {data.length >= 1 && (
           <>
             <div className="text-white font-semibold text-lg mt-10 mx-3 lg:mx-0">
               Calories chart
             </div>
-            <CalorieChart dailyTotals={dailyTotals} />
-            {dailyTotals.map((nutrient, index) => {
-              const isLast = index === dailyTotals.length - 1;
+            <CalorieChart dailyTotals={data} />
+            {data.map((nutrient, index) => {
+              const isLast = index === data.length - 1;
               return (
                 <div key={nutrient.date} className={`${isLast ? "pb-25" : ""}`}>
                   <NutrientInfoGraph

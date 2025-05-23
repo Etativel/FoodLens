@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { variable, Loader } from "./shared";
+import { Navigate } from "react-router-dom";
 
 export default function Redirection() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

@@ -13,14 +13,14 @@ export default function Ingredients({ food }) {
             // pick label available
             const title =
               group.groupName || group.group || `Group ${groupIndex + 1}`;
-
+            const items = group.items ?? [];
             return (
               <div key={group.id ?? groupIndex} className="mb-3">
                 <p className="text-md  font-semibold text-white mb-1 pl-1">
                   {title}
                 </p>
                 <ul className="space-y-2 pl-3">
-                  {group.items.map((entry, itemIndex) => {
+                  {items.map((entry, itemIndex) => {
                     // Handle different object structure
 
                     // if entry is a string, render it directly; otherwise pull out entry.item

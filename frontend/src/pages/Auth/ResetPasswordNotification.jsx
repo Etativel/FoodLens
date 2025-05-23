@@ -1,7 +1,6 @@
 import { Mail, ArrowLeft } from "lucide-react";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Navigate } from "react-router-dom";
+import { useLocation, useNavigate, Navigate } from "react-router-dom";
 import { requestResetToken } from "../../utils";
 
 export default function ResetPasswordEmailSent() {

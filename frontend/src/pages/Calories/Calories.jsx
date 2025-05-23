@@ -1,11 +1,10 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { NutrientInfoGraph, FoodContent, Loader } from "../../shared";
+import { NutrientInfoGraph, FoodContent, Loader, variable } from "../../shared";
 import { ScanIcon, Loader2 } from "lucide-react";
 import CalorieChart from "./CaloriesLineChart";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
 import UserContext from "../../contexts/createContext/UserContext";
-import { variable } from "../../shared";
 
 export default function Calories() {
   const { profile } = useContext(UserContext);

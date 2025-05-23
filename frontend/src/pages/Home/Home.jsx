@@ -1,35 +1,51 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
 import foodLensIcon from "../../assets/icons/FoodLensIcon.png";
 import { useEffect, useState } from "react";
-import { UseDailyTotals } from "../../utils";
-import { NutrientInfoGraph, FoodContent } from "../../shared";
+import { NutrientInfoGraph, FoodContent, variable } from "../../shared";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import UserContext from "../../contexts/createContext/UserContext";
 
 function Home() {
   const navigate = useNavigate();
+  const { profile } = useContext(UserContext);
   const [search, setSearch] = useState("");
-  const { dailyTotals } = UseDailyTotals();
-  const [totals, setTotals] = useState({
-    protein: { current: 0, unit: "g" },
-    carbs: { current: 0, unit: "g" },
-    fat: { current: 0, unit: "g" },
-    calories: { current: 0, unit: "kcal" },
-    fiber: { current: 0, unit: "g" },
-    sodium: { current: 0, unit: "mg" },
-    sugar: { current: 0, unit: "g" },
-  });
-
+  const [calories, setCalories] = useState(null);
+  const [food, setFood] = useState(null);
   const now = new Date();
   const pad = (n) => String(n).padStart(2, "0");
   const currentDate = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(
     now.getDate()
   )}`;
 
+  console.log(food);
+
   useEffect(() => {
-    if (dailyTotals?.length > 0 && dailyTotals[0].date === currentDate) {
-      setTotals(dailyTotals[0].totals);
+    if (!profile) return;
+    async function fetchHomeData() {
+      try {
+        const response = await fetch(`${variable.API_URL}/user/home`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: profile.user.id,
+          }),
+        });
+        if (!response.ok) {
+          console.log("Failed to retrieve home data, ", response.statusText);
+        }
+        const { totals, recipeObject } = await response.json();
+        setCalories(totals);
+        setFood(recipeObject);
+      } catch (err) {
+        console.log("internal server error, ", err);
+      }
     }
-  }, [dailyTotals, currentDate]);
+    fetchHomeData();
+  }, [profile]);
 
   function redirectRecipePage() {
     navigate("/recipe");
@@ -53,15 +69,13 @@ function Home() {
 
       <div className=" flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col pb-20 mt-5 lg:pb-0">
-          {totals ? (
+          {calories || food ? (
             // <div className="mt-1">
 
             <div className=" lg:mx-20">
-              <NutrientInfoGraph totals={totals} date={currentDate} />
-              {dailyTotals?.length > 0 &&
-                currentDate === dailyTotals[0].date && (
-                  <FoodContent foods={dailyTotals[0].recipes} />
-                )}
+              <NutrientInfoGraph totals={calories} date={currentDate} />
+
+              <FoodContent foods={food} />
             </div>
           ) : (
             // </div>
@@ -71,38 +85,6 @@ function Home() {
           )}
 
           <div className="flex justify-evenly mt-10 mb-10">
-            {/* <button className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="#b388ff"
-                className="h-8 w-8"
-              >
-                <path d="M12 9a3.75 3.75 0 1 0 0 7.5A3.75 3.75 0 0 0 12 9Z" />
-                <path
-                  fillRule="evenodd"
-                  d="M9.344 3.071a49.52 49.52 0 0 1 5.312 0c.967.052 1.83.585 2.332 1.39l.821 1.317c.24.383.645.643 1.11.71.386.054.77.113 1.152.177 1.432.239 2.429 1.493 2.429 2.909V18a3 3 0 0 1-3 3h-15a3 3 0 0 1-3-3V9.574c0-1.416.997-2.67 2.429-2.909.382-.064.766-.123 1.151-.178a1.56 1.56 0 0 0 1.11-.71l.822-1.315a2.942 2.942 0 0 1 2.332-1.39ZM6.75 12.75a5.25 5.25 0 1 1 10.5 0 5.25 5.25 0 0 1-10.5 0Zm12-1.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-
-              <p className="font-semibold text-md text-natural-400">Scan</p>
-            </button> */}
-            {/* <div className="flex flex-col justify-center items-center h-20 w-24 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="#feae30"
-                className="size-6"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M6.32 1.827a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V19.5a3 3 0 0 1-3 3H6.75a3 3 0 0 1-3-3V4.757c0-1.47 1.073-2.756 2.57-2.93ZM7.5 11.25a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H8.25Zm-.75 3a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H8.25a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V18a.75.75 0 0 0-.75-.75H8.25Zm1.748-6a.75.75 0 0 1 .75-.75h.007a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.007a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.335.75.75.75h.007a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75h-.007Zm-.75 3a.75.75 0 0 1 .75-.75h.007a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.007a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.335.75.75.75h.007a.75.75 0 0 0 .75-.75V18a.75.75 0 0 0-.75-.75h-.007Zm1.754-6a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75h-.008Zm-.75 3a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V18a.75.75 0 0 0-.75-.75h-.008Zm1.748-6a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75h-.008a.75.75 0 0 1-.75-.75v-.008Zm.75 1.5a.75.75 0 0 0-.75.75v.008c0 .414.336.75.75.75h.008a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75h-.008Zm-8.25-6A.75.75 0 0 1 8.25 6h7.5a.75.75 0 0 1 .75.75v.75a.75.75 0 0 1-.75.75h-7.5a.75.75 0 0 1-.75-.75v-.75Zm9 9a.75.75 0 0 0-1.5 0V18a.75.75 0 0 0 1.5 0v-2.25Z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <p className="font-semibold text-md">Calories</p>
-            </div> */}
             <div
               onClick={redirectRecipePage}
               className="flex flex-col justify-center items-center h-30 w-full lg:mx-20 lg:px-3 mx-3 py-4 bg-neutral-800 text-gray-300 hover:bg-blue-500 hover:text-white drop-shadow-xl hover:shadow-[0_0_16px_rgba(59,130,246,0.5)] rounded-sm transition-colors duration-200"

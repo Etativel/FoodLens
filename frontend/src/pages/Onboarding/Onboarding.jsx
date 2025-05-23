@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
 import OnboardingPage from "../../components/Onboarding/OnboardingPages";
 
 import pageOne from "../../assets/svg/page-1.svg";

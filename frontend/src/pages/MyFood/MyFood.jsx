@@ -1,20 +1,110 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { UseDailyTotals } from "../../utils";
 import { ClipboardList } from "lucide-react";
-import { Loader } from "../../shared";
+import { Loader, variable } from "../../shared";
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import UserContext from "../../contexts/createContext/UserContext";
+
+export default function MyFood() {
+  const { profile } = useContext(UserContext);
+  const [filteredData, setFilteredData] = useState([]);
+  const [filter, setFilter] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [scanHistory, setScanHistory] = useState([]);
+
+  useEffect(() => {
+    if (!profile) return;
+    async function fetchScanHistory() {
+      try {
+        const response = await fetch(`${variable.API_URL}/user/scan-history`, {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: profile.user.id,
+          }),
+        });
+        if (!response.ok) {
+          console.log("Failed to retrieve scan history, ", response.statusText);
+        }
+        const { scans } = await response.json();
+        setScanHistory(scans);
+        setLoading(false);
+      } catch (err) {
+        console.log("Internal server error, ", err);
+      }
+    }
+    fetchScanHistory();
+  }, [profile]);
+
+  useEffect(() => {
+    if (!scanHistory) return;
+    const lower = filter.trim().toLowerCase();
+
+    if (!lower) {
+      setFilteredData(scanHistory);
+    }
+
+    const matches = scanHistory.filter((items) => {
+      const { name, summary, badgeKeys } = items.recipe;
+      if (
+        name.toLowerCase().includes(lower) ||
+        summary.toLowerCase().includes(lower)
+      ) {
+        return true;
+      }
+      return badgeKeys.some((b) => b.toLowerCase().includes(lower));
+    });
+    setFilteredData(matches);
+  }, [filter, scanHistory]);
+
+  if (loading) {
+    return <Loader />;
+  }
+
+  if (!loading && scanHistory.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center text-white mt-50 mx-4 text-center">
+        <ClipboardList size={48} className="text-gray-400 mb-4" />
+        <h2 className="text-xl font-semibold mb-2">My Foods </h2>
+        <p className="text-gray-400 mb-6">
+          This page keeps track of all foods you've scanned for easy reference.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col h-screen lg:w-full ">
+      <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
+        <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
+          <div className="transform translate-y-1/2">
+            <SearchBar
+              filter={filter}
+              setFilter={setFilter}
+              name={"Search for history"}
+            />
+          </div>
+        </div>
+        <div className="lg:flex lg:flex-col lg:items-center">
+          {scanHistory?.length >= 1 && <FoodContent foods={filteredData} />}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FoodCard({ food, redirectToDetails }) {
   const [showNutrient, setShowNutrient] = useState(false);
-
+  console.log(food.recipe);
   return (
     <div className="flex gap-4 items-start">
       <div
-        onClick={() =>
-          redirectToDetails(food.recipe.id, food.recipe, food.imageUrl)
-        }
+        onClick={() => redirectToDetails(food.id, food.recipe, food.imageUrl)}
         className="h-20 w-[150px] min-w-[100px] bg-cover bg-center rounded-lg mt-2"
         style={{ backgroundImage: `url(${food.imageUrl})` }}
       ></div>
@@ -123,67 +213,6 @@ function FoodContent({ foods }) {
             redirectToDetails={redirectToDetails}
           />
         ))}
-      </div>
-    </div>
-  );
-}
-
-export default function MyFood() {
-  const { dailyTotals, history, loadingHistory } = UseDailyTotals();
-  const [filteredData, setFilteredData] = useState([]);
-  const [filter, setFilter] = useState("");
-
-  useEffect(() => {
-    const lower = filter.trim().toLowerCase();
-
-    if (!lower) {
-      setFilteredData(history);
-    }
-
-    const matches = history.filter((items) => {
-      const { name, summary, badgeKeys } = items.recipe;
-      if (
-        name.toLowerCase().includes(lower) ||
-        summary.toLowerCase().includes(lower)
-      ) {
-        return true;
-      }
-      return badgeKeys.some((b) => b.toLowerCase().includes(lower));
-    });
-    setFilteredData(matches);
-  }, [filter, history]);
-
-  if (loadingHistory) {
-    return <Loader />;
-  }
-
-  if (!loadingHistory && history.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center text-white mt-50 mx-4 text-center">
-        <ClipboardList size={48} className="text-gray-400 mb-4" />
-        <h2 className="text-xl font-semibold mb-2">My Foods </h2>
-        <p className="text-gray-400 mb-6">
-          This page keeps track of all foods you've scanned for easy reference.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-screen lg:w-full ">
-      <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
-        <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
-          <div className="transform translate-y-1/2">
-            <SearchBar
-              filter={filter}
-              setFilter={setFilter}
-              name={"Search for history"}
-            />
-          </div>
-        </div>
-        <div className="lg:flex lg:flex-col lg:items-center">
-          {dailyTotals.length >= 1 && <FoodContent foods={filteredData} />}
-        </div>
       </div>
     </div>
   );

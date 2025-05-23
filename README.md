@@ -135,7 +135,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 **Python Backend (backend/python/.env):**
 
 - `HUGGINGFACE_AUTH_TOKEN`= Hugging Face auth token
-- `JWT_SECRET`= JWT signing secret>
+- `JWT_SECRET`= JWT signing secret
 
 ## Development Roadmap
 

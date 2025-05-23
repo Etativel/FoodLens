@@ -7,9 +7,7 @@ function FoodCard({ food, redirectToDetails }) {
   return (
     <div className="flex gap-4 items-start ">
       <div
-        onClick={() =>
-          redirectToDetails(food.recipe.id, food.recipe, food.imageUrl)
-        }
+        onClick={() => redirectToDetails(food.id, food.recipe, food.imageUrl)}
         className="h-20 w-[150px] min-w-[100px] bg-cover bg-center rounded-lg mt-2"
         style={{ backgroundImage: `url(${food.imageUrl})` }}
       ></div>

@@ -22,6 +22,12 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 - [Contact Information](#contact-information)
 - [License](#license)
 
+## Live Demo
+
+**Production Environment:**
+
+- [Live Demo](https://foodlens.up.railway.app)
+
 ## Features
 
 - **Food Scanner**: Use your camera to scan your food.

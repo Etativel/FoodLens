@@ -111,7 +111,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
     npm run dev
    ```
 
-### Environment Configuration
+### Environment Variables
 
 **Express Backend (backend/express/.env):**
 

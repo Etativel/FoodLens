@@ -43,7 +43,7 @@ model Scan {
   imageUrl    String
   scanMode    ScanMode
   scannedAt   DateTime  @default(now())
-  recipe      Recipe?   @relation(fields: [recipeId], references: [id])
+  recipe      Recipe?   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
   recipeId    String?
   intakeLog   DailyIntakeLog?
   openAIResp  OpenAIResponse?
@@ -131,7 +131,7 @@ model DailyIntakeLog {
   id         String   @id @default(uuid())
   user       User     @relation(fields: [userId], references: [id])
   userId     String
-  scan       Scan     @relation(fields: [scanId], references: [id])
+  scan       Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
   scanId     String   @unique
   date       DateTime @default(now())
   notes      String?
@@ -156,7 +156,7 @@ model PersonalAssistantLog {
 
 model OpenAIResponse {
   id         String   @id @default(uuid())
-  scan       Scan     @relation(fields: [scanId], references: [id])
+  scan       Scan     @relation(fields: [scanId], references: [id], onDelete: Cascade)
   scanId     String   @unique
   raw        Json
   createdAt  DateTime @default(now())

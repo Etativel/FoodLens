@@ -320,7 +320,11 @@ async function getAllScanHistory(req, res) {
           include: {
             nutritionSnapshot: true,
             nutritionItems: true,
-            ingredients: true,
+            ingredients: {
+              include: {
+                items: true,
+              },
+            },
             instructions: true,
             variations: true,
           },
@@ -329,6 +333,7 @@ async function getAllScanHistory(req, res) {
         openAIResp: true,
       },
     });
+    console.log(scans);
     return res.status(200).json({ scans });
   } catch (err) {
     console.error("Internal server error:", err);

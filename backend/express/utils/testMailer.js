@@ -1,8 +1,10 @@
-require("dotenv").config({ path: "../.env" });
-const transporter = require("./mailer");
-const code = 1234;
+const path = require("path");
+require("dotenv").config({
+  path: path.resolve(__dirname, "../.env"),
+});
 
-const sendLoginCode = require("./mailer");
+const { transporter } = require("./mailer");
+const code = 1234;
 
 const generateVerificationEmail = (code) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
@@ -21,7 +23,7 @@ async function testEmail() {
   try {
     const info = await transporter.sendMail({
       from: `"FoodLens Support" <${process.env.EMAIL_USER}>`,
-      to: "farhanmaulana4444@gmail.com",
+      to: "iusdeav@gmail.com",
       subject: "Foodlens Code",
       html: generateVerificationEmail(code),
     });

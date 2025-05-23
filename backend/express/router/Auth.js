@@ -1,4 +1,8 @@
-require("dotenv").config({ path: "../.env" });
+const path = require("path");
+require("dotenv").config({
+  path: path.resolve(__dirname, "../.env"),
+});
+
 const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
@@ -195,7 +199,7 @@ router.get(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect("https://foodlens.up.railway.app/onboarding");
+    res.redirect("https://foodlens.up.railway.app/home");
   }
 );
 

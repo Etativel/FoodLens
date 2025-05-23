@@ -409,19 +409,19 @@ export default function Results() {
                       }`}
                     >
                       <div className="space-y-2">
-                        <div className="font-medium text-white">
+                        <div className="font-medium text-md text-white">
                           {scanCredit <= 0 ? "Standard Model" : "Vision Model"}
                         </div>
-                        <div className="text-gray-300 text-xs leading-relaxed">
+                        <div className="text-gray-300 text-sm leading-relaxed">
                           {scanCredit <= 0
                             ? "Standard scanning is powered by the 101-food model, a curated dataset of 101 common foods without using any credits."
                             : "Advanced scanning is enabled using vision AI. When credits are depleted, the system will automatically switch to the standard model."}
                         </div>
                         <div className="flex items-center justify-between pt-1 border-t border-gray-700">
-                          <span className="text-xs text-gray-400">
+                          <span className="text-sm text-gray-400">
                             Credits remaining
                           </span>
-                          <span className="text-xs font-medium text-blue-400">
+                          <span className="text-sm font-medium text-blue-400">
                             {scanCredit === 0 ? scanCredit : scanCredit - 1}
                           </span>
                         </div>

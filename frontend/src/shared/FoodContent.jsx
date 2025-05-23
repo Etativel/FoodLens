@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 function FoodCard({ food, redirectToDetails }) {
   const [showNutrient, setShowNutrient] = useState(false);
-
+  console.log(food);
   return (
     <div className="flex gap-4 items-start ">
       <div

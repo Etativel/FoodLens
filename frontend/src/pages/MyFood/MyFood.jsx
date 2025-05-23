@@ -100,7 +100,7 @@ export default function MyFood() {
 
 function FoodCard({ food, redirectToDetails }) {
   const [showNutrient, setShowNutrient] = useState(false);
-  console.log(food.recipe);
+
   return (
     <div className="flex gap-4 items-start">
       <div

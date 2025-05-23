@@ -127,7 +127,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 - `GOOGLE_CALLBACK_URL`= OAuth redirect URL
 - `EMAIL_USER`= Gmail address for nodemailer
 - `EMAIL_PASS`= Gmail app password
-- `FRONTEND_URL`= your frontend application URL
+- `FRONTEND_URL`= Frontend application URL
 
 **Python Backend (backend/python/.env):**
 

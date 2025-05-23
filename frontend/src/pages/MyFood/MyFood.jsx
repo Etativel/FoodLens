@@ -1,5 +1,5 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { ClipboardList } from "lucide-react";
+import { ClipboardList, Trash2 } from "lucide-react";
 import { Loader, variable } from "../../shared";
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -62,6 +62,10 @@ export default function MyFood() {
     setFilteredData(matches);
   }, [filter, scanHistory]);
 
+  function handleDeleteScan(scanId) {
+    setScanHistory((prev) => prev.filter((item) => item.id !== scanId));
+  }
+
   if (loading) {
     return <Loader />;
   }
@@ -91,16 +95,69 @@ export default function MyFood() {
           </div>
         </div>
         <div className="lg:flex lg:flex-col lg:items-center">
-          {scanHistory?.length >= 1 && <FoodContent foods={filteredData} />}
+          {scanHistory?.length >= 1 && (
+            <FoodContent foods={filteredData} onDeleteScan={handleDeleteScan} />
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function FoodCard({ food, redirectToDetails }) {
-  const [showNutrient, setShowNutrient] = useState(false);
+function FoodContent({ foods, onDeleteScan }) {
+  const navigate = useNavigate();
+  function redirectToDetails(id, recipe, image) {
+    navigate(`/scan/${id}`, {
+      state: { recipe, image },
+    });
+  }
+  return (
+    <div className="flex mx-3 flex-col mb-25">
+      <div className="text-white mb-2 text-lg font-semibold mt-10">
+        Your scan history
+      </div>
+      <div className="flex flex-col gap-2">
+        {foods.map((food, idx) => (
+          <FoodCard
+            key={idx}
+            food={food}
+            redirectToDetails={redirectToDetails}
+            onDeleteScan={onDeleteScan}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
 
+function FoodCard({ food, redirectToDetails, onDeleteScan }) {
+  const [showNutrient, setShowNutrient] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  async function deleteScan(scanId) {
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `${variable.API_URL}/food-api/delete-scan/${scanId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      if (!response.ok) {
+        console.log("Failed to delete scan, ", response.statusText);
+        setLoading(false);
+        return;
+      }
+      await response.json();
+      setLoading(false);
+      onDeleteScan(scanId);
+      setShowNutrient(false);
+    } catch (err) {
+      console.log("Internal server error, ", err);
+      setLoading(false);
+    }
+  }
   return (
     <div className="flex gap-4 items-start">
       <div
@@ -146,73 +203,65 @@ function FoodCard({ food, redirectToDetails }) {
             })}
           </p>
         </span>
+        <div
+          className={`flex flex-col gap-2 mt-1 ${showNutrient ? "" : "hidden"}`}
+        >
+          <div className="flex flex-wrap gap-2 mt-1">
+            {food.recipe.nutritionItems &&
+              food.recipe.nutritionItems.map((item) => {
+                let borderColor = "border-gray-400";
+                switch (item.name.toLowerCase()) {
+                  case "protein":
+                    borderColor = "border-blue-400";
+                    break;
+                  case "carbs":
+                    borderColor = "border-yellow-400";
+                    break;
+                  case "fat":
+                    borderColor = "border-green-400";
+                    break;
+                  case "calories":
+                    borderColor = "border-red-400";
+                    break;
+                  case "sodium":
+                    borderColor = "border-purple-400";
+                    break;
+                  case "fiber":
+                    borderColor = "border-teal-400";
+                    break;
+                  case "sugar":
+                    borderColor = "border-pink-400";
+                    break;
+                }
 
-        <div className="flex flex-wrap gap-2 mt-1">
-          {food.recipe.nutritionItems &&
-            food.recipe.nutritionItems.map((item) => {
-              let borderColor = "border-gray-400";
-              switch (item.name.toLowerCase()) {
-                case "protein":
-                  borderColor = "border-blue-400";
-                  break;
-                case "carbs":
-                  borderColor = "border-yellow-400";
-                  break;
-                case "fat":
-                  borderColor = "border-green-400";
-                  break;
-                case "calories":
-                  borderColor = "border-red-400";
-                  break;
-                case "sodium":
-                  borderColor = "border-purple-400";
-                  break;
-                case "fiber":
-                  borderColor = "border-teal-400";
-                  break;
-                case "sugar":
-                  borderColor = "border-pink-400";
-                  break;
-              }
-
-              return (
-                <div
-                  key={item.id || item.name}
-                  className={`bg-gray-800 border ${borderColor} px-3 py-1 rounded-full text-xs font-medium ${
-                    showNutrient ? "" : "hidden"
-                  }`}
-                >
-                  {item.name}: {item.value}
-                  {item.unit}
-                </div>
-              );
-            })}
+                return (
+                  <div
+                    key={`${item.name}-${item.value}-${item.unit}`}
+                    className={`bg-gray-800 border ${borderColor} px-3 py-1 rounded-full text-xs font-medium ${
+                      showNutrient ? "" : "hidden"
+                    }`}
+                  >
+                    {item.name}: {item.value}
+                    {item.unit}
+                  </div>
+                );
+              })}
+          </div>
+          <button
+            key={food.id}
+            onClick={() => deleteScan(food.id)}
+            disabled={loading}
+            className={`bg-red-500 text-white p-2 rounded-lg transition-colors duration-200 flex items-center justify-center ${
+              loading ? "opacity-50 cursor-not-allowed" : "hover:bg-red-600"
+            }`}
+          >
+            {loading ? (
+              <div className="h-5 w-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <Trash2 size={16} />
+            )}
+          </button>
         </div>
-      </div>
-    </div>
-  );
-}
-
-function FoodContent({ foods }) {
-  const navigate = useNavigate();
-  function redirectToDetails(id, recipe, image) {
-    navigate(`/scan/${id}`, {
-      state: { recipe, image },
-    });
-  }
-  return (
-    <div className="flex mx-3 flex-col mb-25">
-      <div className="text-white mb-2 text-lg font-semibold mt-10">
-        Your scan history
-      </div>
-      <div className="flex flex-col gap-2">
-        {foods.map((food, idx) => (
-          <FoodCard
-            key={idx}
-            food={food}
-            redirectToDetails={redirectToDetails}
-          />
-        ))}
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 function FoodCard({ food, redirectToDetails }) {
   const [showNutrient, setShowNutrient] = useState(false);
-  console.log(food);
+
   return (
     <div className="flex gap-4 items-start ">
       <div
@@ -40,46 +41,50 @@ function FoodCard({ food, redirectToDetails }) {
         >
           {food.summary}
         </span>
-        <div className="flex flex-wrap gap-2 mt-1">
-          {food.nutritionItems &&
-            food.nutritionItems.map((item) => {
-              let borderColor = "border-gray-400";
-              switch (item.name.toLowerCase()) {
-                case "protein":
-                  borderColor = "border-blue-400";
-                  break;
-                case "carbs":
-                  borderColor = "border-yellow-400";
-                  break;
-                case "fat":
-                  borderColor = "border-green-400";
-                  break;
-                case "calories":
-                  borderColor = "border-red-400";
-                  break;
-                case "sodium":
-                  borderColor = "border-purple-400";
-                  break;
-                case "fiber":
-                  borderColor = "border-teal-400";
-                  break;
-                case "sugar":
-                  borderColor = "border-pink-400";
-                  break;
-              }
+        <div
+          className={`flex flex-col gap-2 mt-1 ${showNutrient ? "" : "hidden"}`}
+        >
+          <div className={`flex flex-wrap gap-2 mt-1 `}>
+            {food.nutritionItems &&
+              food.nutritionItems.map((item) => {
+                let borderColor = "border-gray-400";
+                switch (item.name.toLowerCase()) {
+                  case "protein":
+                    borderColor = "border-blue-400";
+                    break;
+                  case "carbs":
+                    borderColor = "border-yellow-400";
+                    break;
+                  case "fat":
+                    borderColor = "border-green-400";
+                    break;
+                  case "calories":
+                    borderColor = "border-red-400";
+                    break;
+                  case "sodium":
+                    borderColor = "border-purple-400";
+                    break;
+                  case "fiber":
+                    borderColor = "border-teal-400";
+                    break;
+                  case "sugar":
+                    borderColor = "border-pink-400";
+                    break;
+                }
 
-              return (
-                <div
-                  key={item.id || item.name}
-                  className={`bg-gray-800 border ${borderColor} px-3 py-1 rounded-full text-xs font-medium ${
-                    showNutrient ? "" : "hidden"
-                  }`}
-                >
-                  {item.name}: {item.value}
-                  {item.unit}
-                </div>
-              );
-            })}
+                return (
+                  <>
+                    <div
+                      key={item.id || item.name}
+                      className={`bg-gray-800 border ${borderColor} px-3 py-1 rounded-full text-xs font-medium `}
+                    >
+                      {item.name}: {item.value}
+                      {item.unit}
+                    </div>
+                  </>
+                );
+              })}
+          </div>
         </div>
       </div>
     </div>

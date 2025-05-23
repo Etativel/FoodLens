@@ -1,10 +1,11 @@
 # FoodLens
 
-![FoodLens Icon](./public/FoodLens_icon.png)
+<p align="center">
+  <img src="./frontend/public/FoodLensIcon.png" alt="Nodes Platform" width="250" height="250" />
+</p>
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)  
-[![Node.js ≥16.0.0](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)  
-[![Python ≥3.8](https://img.shields.io/badge/python-%3E%3D3.8-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D%2016.0.0-brightgreen)](https://nodejs.org/)
 
 ## Overview
 
@@ -17,18 +18,17 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 - [Getting Started](#getting-started)
 - [Environment Variables](#environment-variables)
 - [Development Roadmap](#development-roadmap)
-- [Future Features](#future-features)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact Information](#contact-information)
+- [License](#license)
 
 ## Features
 
-- **Food Scanner**: Use your camera to scan labels or ingredients.
+- **Food Scanner**: Use your camera to scan your food.
 - **Nutrition Tracker**: Instant breakdown of calories, macros, vitamins, and minerals.
 - **Calorie Counter**: Log daily intake, set goals, and view progress charts.
-- **Diet Management**: Save scan history, review past meals, and export logs.
-- **Recipe Search**: Browse and fetch recipes based on ingredients.
+- **Diet Management**: Save scan history and review past meals.
+- **Recipe Search**: Browse and fetch recipes.
 - **Premium & Credit System**: Enhanced AI scanning for premium users with credit-based access.
 
 ## Tech Stack
@@ -36,8 +36,8 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 - **Frontend**: React, Vite, Tailwind CSS, React Query, Chart.js, Recharts
 - **Backend (Express)**: Node.js, Express 5, Prisma ORM, Passport (JWT & Google OAuth), Cloudinary, OpenAI SDK
 - **Backend (Python)**: Flask, PyTorch, Transformers, Pillow, Waitress/Gunicorn, PyJWT
-- **Database**: PostgreSQL (via Prisma Client)
-- **Utilities**: Multer, CORS, Rate Limiter, Nodemailer, dotenv
+- **Database**: PostgreSQL (via Prisma Client), Supabase
+- **Utilities**: Multer, CORS, Rate Limiter, Nodemailer, OpenAI API, Hugging Face
 
 ## Getting Started
 
@@ -48,13 +48,14 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 - PostgreSQL
 - Cloudinary account
 - OpenAI API key
+- Hugging Face auth key
 
 ### Installation
 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/YourUsername/FoodLens.git
+   git clone git@github.com:Etativel/FoodLens.git
    cd FoodLens
 
    ```
@@ -62,13 +63,26 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 2. **Setup Express Backend**
 
    ```bash
-    cd backend/express
-    npm install
-    cp .env.example .env
-    # Configure .env: DATABASE_URL, JWT_SECRET, SESSION_SECRET,
-    # CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, OPENAI_API_KEY
-    npx prisma migrate dev --name init
-    npm start
+   cd backend/express
+   npm install
+   cp .env.example .env
+   # Edit .env and add the following keys:
+   # DATABASE_URL
+   # DIRECT_URL
+   # OPENAI_API_KEY
+   # JWT_SECRET
+   # CLOUDINARY_CLOUD_NAME
+   # CLOUDINARY_API_KEY
+   # CLOUDINARY_API_SECRET
+   # GOOGLE_CLIENT_ID
+   # GOOGLE_CLIENT_SECRET
+   # GOOGLE_CALLBACK_URL
+   # EMAIL_USER
+   # EMAIL_PASS
+   # FRONTEND_URL
+
+   npx prisma migrate dev --name init
+   npm start
 
    ```
 
@@ -80,7 +94,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
     source venv/bin/activate
     pip install -r requirements.txt
     cp .env.example .env
-    # Configure .env: OPENAI_API_KEY, PYTHON_BACKEND_PORT
+    # Configure .env: HUGGINGFACE_AUTH_TOKEN, JWT_SECRET
 
     # Run with Waitress:
     waitress-serve --listen=*:5000 app:app
@@ -94,8 +108,6 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
    ```bash
     cd ../../frontend
     npm install
-    cp .env.example .env
-    # Configure .env: VITE_API_URL, VITE_PYTHON_API_URL
     npm run dev
    ```
 
@@ -103,23 +115,24 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 
 **Express Backend (backend/express/.env):**
 
-- `PORT`: API server port (default: 3000)
-- `JWT_SECRET`: Secret key for JWT token signing
-- `DATABASE_URL`: PostgreSQL connection string
-- `SESSION_SECRET`: Secret for cookie signing
-- `CLOUDINARY_CLOUD_NAME`: Cloudinary account name
-- `CLOUDINARY_API_KEY`: Cloudinary API key
-- `CLOUDINARY_API_SECRET`: Cloudinary API secret
+- `DATABASE_URL`= PostgreSQL connection string
+- `DIRECT_URL`= Direct database URL if separate
+- `OPENAI_API_KEY`= OpenAI API key
+- `JWT_SECRET`= JWT signing secret
+- `CLOUDINARY_CLOUD_NAME`= Cloudinary cloud name
+- `CLOUDINARY_API_KEY`= Cloudinary API key
+- `CLOUDINARY_API_SECRET`= Cloudinary API secret
+- `GOOGLE_CLIENT_ID`= OAuth client ID
+- `GOOGLE_CLIENT_SECRET`= OAuth client secret
+- `GOOGLE_CALLBACK_URL`= OAuth redirect URL
+- `EMAIL_USER`= Gmail address for nodemailer
+- `EMAIL_PASS`= Gmail app password
+- `FRONTEND_URL`= your frontend application URL
 
 **Python Backend (backend/python/.env):**
 
-- `PORT`: API server port (default: 3000)
-- `JWT_SECRET`: Secret key for JWT token signing
-- `DATABASE_URL`: PostgreSQL connection string
-- `SESSION_SECRET`: Secret for cookie signing
-- `CLOUDINARY_CLOUD_NAME`: Cloudinary account name
-- `CLOUDINARY_API_KEY`: Cloudinary API key
-- `CLOUDINARY_API_SECRET`: Cloudinary API secret
+- `HUGGINGFACE_AUTH_TOKEN`= Hugging Face auth token
+- `JWT_SECRET`= JWT signing secret>
 
 ## Development Roadmap
 
@@ -167,8 +180,8 @@ Feel free to submit a Pull Request.
 
 - Maintainer: Farhan
 - Email: farhanmaulana.dev@gmail.com
-- GitHub: github.com/YourUsername/FoodLens
+- GitHub: https://github.com/Etativel/FoodLens
 
 ## License
 
-[MIT](https://github.com/Etativel/Nodes-Blog/blob/main/LICENSE)
+[MIT](https://github.com/Etativel/Foodlens/blob/main/LICENSE)

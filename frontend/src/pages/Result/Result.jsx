@@ -394,7 +394,7 @@ export default function Results() {
                       onMouseLeave={() => setShowTooltip(false)}
                       className="p-1 rounded-full hover:bg-red-50 transition-colors duration-200 focus:outline-none "
                     >
-                      <BadgeAlert className="w-5 h-5 text-red-500" />
+                      <BadgeAlert className="w-6 h-6 text-red-500" />
                     </button>
 
                     <div

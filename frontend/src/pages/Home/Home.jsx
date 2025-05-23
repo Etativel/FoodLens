@@ -18,8 +18,6 @@ function Home() {
     now.getDate()
   )}`;
 
-  console.log(food);
-
   useEffect(() => {
     if (!profile) return;
     async function fetchHomeData() {

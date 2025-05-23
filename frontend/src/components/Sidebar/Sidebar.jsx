@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FaBowlFood } from "react-icons/fa6";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
+import UserContext from "../../contexts/createContext/UserContext";
 import {
   CameraIcon,
   HomeIcon,
@@ -13,6 +14,9 @@ import {
 import { variable } from "../../shared";
 
 function Sidebar() {
+  const { profile } = useContext(UserContext);
+  const premium = profile?.user.isPremium;
+  const scanCredit = profile?.user.scanCreditsRemaining;
   const currentPage = location.pathname.split("/").pop();
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -105,7 +109,12 @@ function Sidebar() {
       const data = await response.json();
 
       navigate("/results", {
-        state: { image: capturedImage, prediction: data },
+        state: {
+          image: capturedImage,
+          prediction: data,
+          isPremium: premium,
+          scanCredit: scanCredit,
+        },
       });
       return;
     } catch (error) {
@@ -154,7 +163,16 @@ function Sidebar() {
 
   const handleSaveImage = async () => {
     setIsProcessing(true);
-
+    if (premium || scanCredit > 0) {
+      navigate("/results", {
+        state: {
+          image: capturedImage,
+          isPremium: premium,
+          scanCredit: scanCredit,
+        },
+      });
+      return;
+    }
     try {
       await predictImage(capturedImage);
     } catch (error) {

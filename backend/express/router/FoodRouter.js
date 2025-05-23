@@ -11,6 +11,7 @@ const getFoodLimiter = createLimiter({
   max: 100,
 });
 
+// router.post("/scan", controller.getScannedItem);
 router.get("/:foodId", authenticateEither, controller.getFoodById);
 router.get("/food/getall", authenticateEither, controller.getAllRecipeName);
 router.get(
@@ -50,5 +51,11 @@ router.post(
 );
 
 router.post("/create", authenticateEither, getFoodLimiter, controller.saveFood);
+
+router.delete(
+  "/delete-scan/:scanId",
+  authenticateEither,
+  controller.deleteScanData
+);
 
 module.exports = router;

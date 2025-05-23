@@ -393,6 +393,25 @@ async function findRecipe(req, res) {
   }
 }
 
+// DELETE
+async function deleteScanData(req, res) {
+  const { scanId } = req.params;
+
+  try {
+    await prisma.scan.delete({
+      where: {
+        id: scanId,
+      },
+    });
+    return res.status(200).json({ message: "Success" });
+  } catch (err) {
+    console.log("Internal server error, ", err);
+    return res
+      .status(500)
+      .json({ message: "Internal server error", error: err });
+  }
+}
+
 module.exports = {
   saveFood,
   getFoodByPredictedName,
@@ -402,4 +421,5 @@ module.exports = {
   findRecipe,
   getFoodById,
   saveIntakeLog,
+  deleteScanData,
 };

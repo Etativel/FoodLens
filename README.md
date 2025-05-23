@@ -25,7 +25,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 ## Features
 
 - **Food Scanner**: Use your camera to scan your food.
-- **Nutrition Tracker**: Instant breakdown of calories, macros, vitamins, and minerals.
+- **Nutrition Tracker**: Instant breakdown of calories, macros, and minerals.
 - **Calorie Counter**: Log daily intake, set goals, and view progress charts.
 - **Diet Management**: Save scan history and review past meals.
 - **Recipe Search**: Browse and fetch recipes.
@@ -35,9 +35,10 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 
 - **Frontend**: React, Vite, Tailwind CSS, React Query, Chart.js, Recharts
 - **Backend (Express)**: Node.js, Express 5, Prisma ORM, Passport (JWT & Google OAuth), Cloudinary, OpenAI SDK
-- **Backend (Python)**: Flask, PyTorch, Transformers, Pillow, Waitress/Gunicorn, PyJWT
+- **Backend (Python)**: Flask, PyTorch, Transformers, Pillow, Waitress/Gunicorn, PyJWT, Hugging Face API
 - **Database**: PostgreSQL (via Prisma Client), Supabase
-- **Utilities**: Multer, CORS, Rate Limiter, Nodemailer, OpenAI API, Hugging Face
+- **Utilities**: Multer, CORS, Express Rate Limiter, Nodemailer
+- **Deployment & Hosting**: Railway
 
 ## Getting Started
 
@@ -95,11 +96,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
     pip install -r requirements.txt
     cp .env.example .env
     # Configure .env: HUGGINGFACE_AUTH_TOKEN, JWT_SECRET
-
-    # Run with Waitress:
-    waitress-serve --listen=*:5000 app:app
-
-    # Or with Gunicorn:
+    # Run with Gunicorn:
     gunicorn app:app --workers 4 --bind 0.0.0.0:5000
 
    ```

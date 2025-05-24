@@ -87,7 +87,7 @@ export default function MyFood() {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !fetchingMore) {
-          const newSkip = skip + 5;
+          const newSkip = skip + 6;
           setSkip(newSkip);
           fetchScanHistory(newSkip, false);
         }

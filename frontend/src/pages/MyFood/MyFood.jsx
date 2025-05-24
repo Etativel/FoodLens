@@ -77,6 +77,7 @@ export default function MyFood() {
     setLoading(true);
 
     fetchScanHistory(0, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [profile]);
 
   // Intersection observer effect

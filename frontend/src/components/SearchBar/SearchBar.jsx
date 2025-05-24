@@ -1,4 +1,9 @@
-function SearchBar({ filter, onSubmit, setFilter, name = "Search for foods" }) {
+function SearchBar({
+  filter,
+  onSubmit,
+  setFilter,
+  name = "Search for recipes",
+}) {
   function onChange(e) {
     setFilter(e.target.value);
   }

@@ -145,7 +145,7 @@ export default function MyFood() {
   }
 
   return (
-    <div className="flex flex-col h-screen lg:w-full ">
+    <div className="flex flex-col h-screen lg:w-full">
       <div className="flex-1 overflow-y-auto bg-neutral-900 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden -ms-overflow-style:none">
         <div className="flex flex-col bg-neutral-900 sticky z-10 top-0 h-10 justify-end">
           <div className="transform translate-y-1/2">
@@ -171,8 +171,7 @@ export default function MyFood() {
                 >
                   {fetchingMore && (
                     <div className="flex items-center gap-2 text-white text-sm">
-                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Loading more...
+                      <div className="h-4 w-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                   )}
                 </div>

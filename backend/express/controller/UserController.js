@@ -309,7 +309,7 @@ async function getAllScanHistory(req, res) {
   try {
     const scans = await prisma.scan.findMany({
       skip: skip,
-      take: 5,
+      take: 6,
       where: {
         userId,
       },

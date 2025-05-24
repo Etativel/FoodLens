@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-
+const cloudinary = require("../config/cloudinaryConfig");
 // GET
 
 async function getFoodByPredictedName(req, res) {
@@ -69,7 +69,7 @@ async function getAllRecipeName(req, res) {
 
 async function getFoodById(req, res) {
   const { foodId } = req.params;
-  console.log(foodId);
+
   try {
     const data = await prisma.recipe.findUnique({
       where: {
@@ -295,7 +295,6 @@ async function saveFood(req, res) {
 }
 
 async function createScan(req, res) {
-  console.log("Body", req.body);
   const { userId, scanMode, recipeId } = req.body;
 
   const imageUrl = req.file.path;
@@ -396,8 +395,17 @@ async function findRecipe(req, res) {
 // DELETE
 async function deleteScanData(req, res) {
   const { scanId } = req.params;
-
+  const { imageUrl } = req.body;
   try {
+    const parts = imageUrl.split("/");
+    const versionIndex = parts.findIndex((p) => p.startsWith("v"));
+    const publicId = parts
+      .slice(versionIndex + 1)
+      .join("/")
+      .replace(/\.[^/.]+$/, "");
+
+    await cloudinary.uploader.destroy(publicId);
+
     await prisma.scan.delete({
       where: {
         id: scanId,

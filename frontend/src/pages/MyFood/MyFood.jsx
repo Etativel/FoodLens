@@ -134,6 +134,8 @@ function FoodCard({ food, redirectToDetails, onDeleteScan }) {
   const [showNutrient, setShowNutrient] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  console.log("This food, ", food.imageUrl);
+
   async function deleteScan(scanId) {
     try {
       setLoading(true);
@@ -142,6 +144,12 @@ function FoodCard({ food, redirectToDetails, onDeleteScan }) {
         {
           method: "DELETE",
           credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            imageUrl: food.imageUrl,
+          }),
         }
       );
       if (!response.ok) {

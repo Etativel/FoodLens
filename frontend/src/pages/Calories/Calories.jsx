@@ -15,6 +15,9 @@ export default function Calories() {
   function onSubmit() {
     navigate(`/recipe?query=${encodeURIComponent(search)}`);
   }
+
+  console.log(data);
+
   useEffect(() => {
     if (!profile) return;
     async function fetchHomeData() {

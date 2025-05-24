@@ -1,10 +1,8 @@
 import SearchBar from "../../components/SearchBar/SearchBar";
-import { ClipboardList, Trash2 } from "lucide-react";
 import { Loader, variable } from "../../shared";
-import { useState, useEffect } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useEffect, useContext, useRef, useCallback } from "react";
+import { ChevronDown, ChevronUp, ClipboardList, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useContext } from "react";
 import UserContext from "../../contexts/createContext/UserContext";
 
 export default function MyFood() {
@@ -13,10 +11,18 @@ export default function MyFood() {
   const [filter, setFilter] = useState("");
   const [loading, setLoading] = useState(true);
   const [scanHistory, setScanHistory] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [fetchingMore, setFetchingMore] = useState(false);
+  const observerRef = useRef();
 
-  useEffect(() => {
-    if (!profile) return;
-    async function fetchScanHistory() {
+  const fetchScanHistory = useCallback(
+    async (currentSkip, isInitialLoad = false) => {
+      if (!profile || fetchingMore) return;
+
+      setFetchingMore(true);
+      const start = performance.now();
+
       try {
         const response = await fetch(`${variable.API_URL}/user/scan-history`, {
           method: "POST",
@@ -26,20 +32,75 @@ export default function MyFood() {
           },
           body: JSON.stringify({
             userId: profile.user.id,
+            skip: currentSkip,
           }),
         });
+
         if (!response.ok) {
           console.log("Failed to retrieve scan history, ", response.statusText);
+          return;
         }
+
         const { scans } = await response.json();
-        setScanHistory(scans);
-        setLoading(false);
+
+        // Check if fewer than 5 results (end of data)
+        if (scans.length < 5) {
+          setHasMore(false);
+        }
+
+        // Update scan history
+        if (isInitialLoad) {
+          setScanHistory(scans);
+        } else {
+          setScanHistory((prev) => [...prev, ...scans]);
+        }
+
+        const end = performance.now();
+        console.log(`Execution time ${end - start}ms`);
       } catch (err) {
         console.log("Internal server error, ", err);
+      } finally {
+        setFetchingMore(false);
+        if (isInitialLoad) {
+          setLoading(false);
+        }
       }
-    }
-    fetchScanHistory();
+    },
+    [profile, fetchingMore]
+  );
+
+  useEffect(() => {
+    if (!profile) return;
+    setScanHistory([]);
+    setSkip(0);
+    setHasMore(true);
+    setLoading(true);
+
+    fetchScanHistory(0, true);
   }, [profile]);
+
+  // Intersection observer effect
+  useEffect(() => {
+    if (!observerRef.current || !hasMore || loading || fetchingMore) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !fetchingMore) {
+          const newSkip = skip + 5;
+          setSkip(newSkip);
+          fetchScanHistory(newSkip, false);
+        }
+      },
+      { threshold: 1.0 }
+    );
+
+    const sentinel = observerRef.current;
+    observer.observe(sentinel);
+
+    return () => {
+      if (sentinel) observer.unobserve(sentinel);
+    };
+  }, [hasMore, loading, fetchingMore, skip, fetchScanHistory]);
 
   useEffect(() => {
     if (!scanHistory) return;
@@ -96,7 +157,26 @@ export default function MyFood() {
         </div>
         <div className="lg:flex lg:flex-col lg:items-center">
           {scanHistory?.length >= 1 && (
-            <FoodContent foods={filteredData} onDeleteScan={handleDeleteScan} />
+            <>
+              <FoodContent
+                foods={filteredData}
+                onDeleteScan={handleDeleteScan}
+                hasMore={hasMore}
+              />
+              {hasMore && (
+                <div
+                  ref={observerRef}
+                  className="h-20 mb-20 flex items-center justify-center"
+                >
+                  {fetchingMore && (
+                    <div className="flex items-center gap-2 text-white text-sm">
+                      <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      Loading more...
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -104,7 +184,7 @@ export default function MyFood() {
   );
 }
 
-function FoodContent({ foods, onDeleteScan }) {
+function FoodContent({ foods, onDeleteScan, hasMore }) {
   const navigate = useNavigate();
   function redirectToDetails(id, recipe, image) {
     navigate(`/scan/${id}`, {
@@ -112,7 +192,7 @@ function FoodContent({ foods, onDeleteScan }) {
     });
   }
   return (
-    <div className="flex mx-3 flex-col mb-25">
+    <div className={`flex mx-3 flex-col ${!hasMore ? "mb-25" : ""}`}>
       <div className="text-white mb-2 text-lg font-semibold mt-10">
         Your scan history
       </div>
@@ -133,8 +213,6 @@ function FoodContent({ foods, onDeleteScan }) {
 function FoodCard({ food, redirectToDetails, onDeleteScan }) {
   const [showNutrient, setShowNutrient] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  console.log("This food, ", food.imageUrl);
 
   async function deleteScan(scanId) {
     try {

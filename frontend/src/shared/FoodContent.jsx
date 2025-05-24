@@ -73,15 +73,13 @@ function FoodCard({ food, redirectToDetails }) {
                 }
 
                 return (
-                  <>
-                    <div
-                      key={item.id || item.name}
-                      className={`bg-gray-800 border ${borderColor} px-3 py-1 rounded-full text-xs font-medium `}
-                    >
-                      {item.name}: {item.value}
-                      {item.unit}
-                    </div>
-                  </>
+                  <div
+                    key={item.id || item.name}
+                    className={`bg-gray-800 border ${borderColor} px-3 py-1 rounded-full text-xs font-medium `}
+                  >
+                    {item.name}: {item.value}
+                    {item.unit}
+                  </div>
                 );
               })}
           </div>
@@ -104,9 +102,9 @@ export default function FoodContent({ foods }) {
         Food you eat
       </div>
       <div className="flex flex-col gap-2">
-        {foods.map((food, idx) => (
+        {foods.map((food) => (
           <FoodCard
-            key={idx}
+            key={food.id}
             food={food}
             redirectToDetails={redirectToDetails}
           />

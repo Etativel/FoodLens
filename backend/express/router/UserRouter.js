@@ -11,6 +11,7 @@ const createUserLimiter = createLimiter({
 
 router.post("/home", authenticateEither, controller.getTodaySummary);
 router.post("/calories", authenticateEither, controller.getAllDailySummaries);
+
 router.post("/scan-history", authenticateEither, controller.getAllScanHistory);
 
 router.post("/create", createUserLimiter, controller.createUser);

@@ -1,6 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-const { v4: uuidv4 } = require("uuid");
 const bcrypt = require("bcryptjs");
 
 // Utility
@@ -261,7 +260,7 @@ async function getAllDailySummaries(req, res) {
     if (!logs.length) {
       return res.status(200).json([]);
     }
-    console.log(logs);
+
     // Group by YYYY-MM-DD
     const byDate = {};
     logs.forEach((intake) => {
@@ -302,13 +301,15 @@ async function getAllDailySummaries(req, res) {
 }
 
 async function getAllScanHistory(req, res) {
-  const { userId } = req.body;
+  const { userId, skip } = req.body;
   if (!userId) {
     return res.status(400).json({ error: "Missing required field: userId" });
   }
 
   try {
     const scans = await prisma.scan.findMany({
+      skip: skip,
+      take: 5,
       where: {
         userId,
       },

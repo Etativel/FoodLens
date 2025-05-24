@@ -26,7 +26,7 @@ FoodLens helps you scan any food to instantly get nutrition facts, track calorie
 
 **Production Environment:**
 
-- [Live Demo](https://foodlens.up.railway.app)
+- Live Demo: https://foodlens.up.railway.app
 
 ## Features
 
@@ -183,7 +183,7 @@ Feel free to submit a Pull Request.
 
 - Maintainer: Farhan
 - Email: farhanmaulana.dev@gmail.com
-- GitHub: https://github.com/Etativel/FoodLens
+- GitHub: https://github.com/Etativel
 
 ## License
 

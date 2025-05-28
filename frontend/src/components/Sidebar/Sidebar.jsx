@@ -26,7 +26,7 @@ function Sidebar() {
   const canvasRef = useRef(null);
   const fileInputRef = useRef(null);
   const [facingMode, setFacingMode] = useState("environment");
-
+  const [isWakeUp, setIsWakeUp] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,6 +67,22 @@ function Sidebar() {
     };
   }, [isCameraOpen, capturedImage, facingMode]);
 
+  async function waitForModelReady(maxRetries = 10, delayMs = 1000) {
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const res = await fetch(`${variable.API_URL}/model`, {
+          credentials: "include",
+        });
+        if (res.ok) return;
+      } catch (err) {
+        console.log("Waiting for model to warm up...", err);
+      }
+      await new Promise((r) => setTimeout(r, delayMs));
+      setIsWakeUp(true);
+    }
+    throw new Error("Model is not ready after waiting.");
+  }
+
   const stopCameraStream = () => {
     if (videoRef.current && videoRef.current.srcObject) {
       const tracks = videoRef.current.srcObject.getTracks();
@@ -78,13 +94,20 @@ function Sidebar() {
     }
   };
 
-  const openCamera = () => {
+  const openCamera = async () => {
     stopCameraStream();
 
     setIsCameraOpen(true);
     setCapturedImage(null);
 
     console.log("Camera view opened");
+    try {
+      await fetch(`${variable.API_URL}/model`, { credentials: "include" });
+      setIsWakeUp(true);
+      console.log("Model warm-up ping sent");
+    } catch (err) {
+      console.warn("Model warm-up ping failed:", err);
+    }
   };
 
   async function predictImage(imageDataUrl) {
@@ -174,6 +197,7 @@ function Sidebar() {
       return;
     }
     try {
+      await waitForModelReady();
       await predictImage(capturedImage);
     } catch (error) {
       console.log(error);
@@ -245,7 +269,7 @@ function Sidebar() {
           </div>
 
           <div className="text-white text-sm mt-3 font-semibold">
-            Processing...
+            {!isWakeUp ? "Waking up the model..." : "Processing..."}
           </div>
           <div className="mt-4 w-5 h-5 border-t-2 border-blue-500 rounded-full animate-spin" />
         </div>
